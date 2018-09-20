@@ -8,5 +8,5 @@ import org.springframework.boot.runApplication
 class FCGCatalogApplication
 
 fun main(args: Array<String>) {
-    SpringApplication.run(FCGCatalogApplication::class.java, *args)
+    runApplication<FCGCatalogApplication>(*args)
 }
