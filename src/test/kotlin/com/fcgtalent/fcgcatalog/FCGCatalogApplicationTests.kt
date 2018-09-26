@@ -13,7 +13,6 @@ class FCGCatalogApplicationTests {
 
     @Before
     fun setUp() {
-
     }
 
     @Test

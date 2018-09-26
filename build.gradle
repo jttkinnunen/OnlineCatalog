@@ -4,12 +4,16 @@ buildscript {
         springBootVersion = '2.0.5.RELEASE'
     }
     repositories {
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
         mavenCentral()
     }
     dependencies {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${kotlinVersion}")
         classpath("org.jetbrains.kotlin:kotlin-allopen:${kotlinVersion}")
+        classpath "gradle.plugin.org.jlleitschuh.gradle:ktlint-gradle:6.0.0"
     }
 }
 
@@ -19,6 +23,7 @@ apply plugin: 'kotlin-spring'
 apply plugin: 'eclipse'
 apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
+apply plugin: "org.jlleitschuh.gradle.ktlint"
 
 group = 'com.fcgtalent'
 version = '0.0.1-SNAPSHOT'
@@ -38,6 +43,8 @@ compileTestKotlin {
 
 repositories {
     mavenCentral()
+    jcenter()
+
 }
 
 
@@ -58,5 +65,17 @@ jacocoTestReport {
         csv.enabled = false
         html.enabled = true
     }
+}
+
+import org.jlleitschuh.gradle.ktlint.reporter.ReporterType
+
+ktlint {
+    version = "0.22.0"
+    debug = true
+    verbose = true
+    android = false
+    outputToConsole = true
+    reporters = [ReporterType.PLAIN, ReporterType.CHECKSTYLE]
+    ignoreFailures = true
 }
 
