@@ -13,8 +13,11 @@ node {
     stage('Unit test') {
         // Make gradlew executable
         sh 'chmod +x gradlew'
-        sh "./gradlew test"
+        sh "./gradlew test jacocoTestReport"
+        junit '*/build/test-results/*.xml'
+        step( [ $class: 'JacocoPublisher' ] )
     }
+    
 
     stage('Build') {
         sh "./gradlew build"
