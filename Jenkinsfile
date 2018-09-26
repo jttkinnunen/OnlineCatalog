@@ -17,6 +17,6 @@ node {
     }
 
     stage('Build') {
-        sh "./gradlew test"
+        sh "./gradlew build"
     }
 }
