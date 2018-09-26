@@ -1,5 +1,7 @@
 package com.fcgtalent.fcgcatalog
 
+import org.junit.Assert
+import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.springframework.boot.test.context.SpringBootTest
@@ -9,8 +11,18 @@ import org.springframework.test.context.junit4.SpringRunner
 @SpringBootTest
 class FCGCatalogApplicationTests {
 
-    @Test
-    fun contextLoads() {
+    @Before
+    fun setUp() {
+
     }
 
+    @Test
+    fun testWorkingTest() {
+        Assert.assertTrue(true)
+    }
+
+    @Test
+    fun testFailingTest() {
+        Assert.fail()
+    }
 }
