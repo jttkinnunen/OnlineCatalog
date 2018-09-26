@@ -11,6 +11,7 @@ node {
     }
 
     stage('Unit test') {
+        // Make gradlew executable
         sh 'chmod +x gradlew'
         sh "./gradlew test"
     }
