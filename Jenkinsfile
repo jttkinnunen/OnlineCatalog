@@ -14,7 +14,7 @@ node {
         // Make gradlew executable
         sh 'chmod +x gradlew'
         sh "./gradlew test jacocoTestReport"
-        junit '*/build/test-results/test/*.xml'
+        junit 'build/test-results/test/*.xml'
         step( [ $class: 'JacocoPublisher' ] )
     }
 
