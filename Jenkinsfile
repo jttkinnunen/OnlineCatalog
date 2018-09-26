@@ -11,10 +11,10 @@ node {
     }
 
     stage('Unit test') {
-        sh "./OnlineCatalog/gradlew test"
+        sh "./gradlew test"
     }
 
     stage('Build') {
-        sh "./OnlineCatalog/gradlew test"
+        sh "./gradlew test"
     }
 }
