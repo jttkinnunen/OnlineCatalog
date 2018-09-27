@@ -8,8 +8,7 @@ import org.springframework.util.ResourceUtils
 import java.io.IOException
 import java.sql.Connection
 import java.sql.SQLException
-import java.util.*
-
+import java.util.Scanner
 
 abstract class DatabaseConnector(protected val configuration: DatabaseConfiguration) {
 
@@ -22,11 +21,11 @@ abstract class DatabaseConnector(protected val configuration: DatabaseConfigurat
             val statement = connection.prepareStatement(sql)
 
             statement.setString(1, name)
-            statement.setString(2, BCrypt.hashpw(password, BCrypt.gensalt(4)) )
+            statement.setString(2, BCrypt.hashpw(password, BCrypt.gensalt(4)))
             statement.setString(3, email)
 
             statement.executeUpdate()
-        } catch (e: SQLException) { //TODO error handling?
+        } catch (e: SQLException) { // TODO error handling?
             System.out.println(e.message)
             e.printStackTrace()
         }
@@ -42,14 +41,14 @@ abstract class DatabaseConnector(protected val configuration: DatabaseConfigurat
             val resultSet = statement.executeQuery()
             while (resultSet.next()) {
                 val user = JSONObject()
-                //TODO there has to be a better way to do this
+                // TODO there has to be a better way to do this
                 user.put("id", resultSet.getInt("id"))
                 user.put("name", resultSet.getString("name"))
                 user.put("password", resultSet.getString("password"))
                 user.put("email", resultSet.getString("email"))
                 users.put(user)
             }
-        } catch (e: SQLException) {//TODO error handling?
+        } catch (e: SQLException) { // TODO error handling?
             println(e.message)
             e.printStackTrace()
         }
@@ -77,5 +76,4 @@ abstract class DatabaseConnector(protected val configuration: DatabaseConfigurat
             ioe.printStackTrace()
         }
     }
-
 }

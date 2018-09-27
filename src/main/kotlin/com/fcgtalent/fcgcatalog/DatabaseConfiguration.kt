@@ -16,5 +16,4 @@ class DatabaseConfiguration() {
     var password: String? = null
 
     var sqlitememory: Boolean = false
-
 }
