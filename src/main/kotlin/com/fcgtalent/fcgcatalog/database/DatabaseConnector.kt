@@ -15,9 +15,7 @@ abstract class DatabaseConnector(protected val configuration: DatabaseConfigurat
 
     protected abstract val connection: Connection
 
-
     fun addUser(name: String, password: String, email: String) {
-        System.out.println("Got add user $name pass $password mail $email")
         val sql = "INSERT INTO users(name, password, email) VALUES(?,?,?)"
 
         try {
@@ -35,7 +33,6 @@ abstract class DatabaseConnector(protected val configuration: DatabaseConfigurat
     }
 
     fun getAllUsers(): JSONArray {
-        println("Geta ll users")
         val users = JSONArray()
 
         val sql = "SELECT * FROM users"

@@ -4,13 +4,11 @@ import com.fcgtalent.fcgcatalog.DatabaseConfiguration
 import org.springframework.boot.configurationprocessor.json.JSONArray
 import org.springframework.stereotype.Repository
 
+//TODO move configuration to spring style bean thingy.
 @Repository
 class DatabaseHandler(private val configuration: DatabaseConfiguration) {
 
-//
-//    @Value("\${database.type}")
-//    private lateinit var databaseType: String
-
+    //TODO move get this through Autowire or some other mnannter, shouldn't probably creat einstance
     private val databaseConnector = run {  when(configuration.type) {
         "sqlite" -> SQLiteConnector(configuration)
         "pgsql" -> PgSQLConnector(configuration)
