@@ -50,9 +50,16 @@ repositories {
 
 dependencies {
     compile('org.springframework.boot:spring-boot-starter-web')
+    
+    compile("org.springframework.boot:spring-boot-configuration-processor")
+    compile group: 'org.springframework.security', name: 'spring-security-crypto', version: '5.1.0.RELEASE'
+    
     compile("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     compile("org.jetbrains.kotlin:kotlin-reflect")
+    compile group: 'org.xerial', name: 'sqlite-jdbc', version: '3.23.1'    
     testCompile('org.springframework.boot:spring-boot-starter-test')
+
+
 }
 
 test {

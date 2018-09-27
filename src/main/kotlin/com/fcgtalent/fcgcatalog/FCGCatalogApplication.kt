@@ -1,6 +1,6 @@
 package com.fcgtalent.fcgcatalog
 
-import org.springframework.boot.SpringApplication
+import com.fcgtalent.fcgcatalog.database.DatabaseHandler
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 
@@ -8,5 +8,7 @@ import org.springframework.boot.runApplication
 class FCGCatalogApplication
 
 fun main(args: Array<String>) {
-    runApplication<FCGCatalogApplication>(*args)
+    val context = runApplication<FCGCatalogApplication>(*args)
+    val config = context.getBean(DatabaseConfiguration::class.java)
+    val databaseHandler = context.getBean(DatabaseHandler::class.java, config)
 }
