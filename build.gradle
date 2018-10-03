@@ -1,23 +1,29 @@
 buildscript {
     ext {
-        kotlinVersion = '1.2.51'
+        kotlinVersion = '1.2.71'
         springBootVersion = '2.0.5.RELEASE'
     }
     repositories {
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
         mavenCentral()
     }
     dependencies {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${kotlinVersion}")
         classpath("org.jetbrains.kotlin:kotlin-allopen:${kotlinVersion}")
+        classpath "gradle.plugin.org.jlleitschuh.gradle:ktlint-gradle:6.0.0"
     }
 }
 
+apply plugin: 'jacoco'
 apply plugin: 'kotlin'
 apply plugin: 'kotlin-spring'
 apply plugin: 'eclipse'
 apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
+apply plugin: "org.jlleitschuh.gradle.ktlint"
 
 group = 'com.fcgtalent'
 version = '0.0.1-SNAPSHOT'
@@ -37,6 +43,8 @@ compileTestKotlin {
 
 repositories {
     mavenCentral()
+    jcenter()
+
 }
 
 
@@ -46,3 +54,28 @@ dependencies {
     compile("org.jetbrains.kotlin:kotlin-reflect")
     testCompile('org.springframework.boot:spring-boot-starter-test')
 }
+
+test {
+    ignoreFailures = true
+}
+
+jacocoTestReport {
+    reports {
+        xml.enabled = true
+        csv.enabled = false
+        html.enabled = true
+    }
+}
+
+import org.jlleitschuh.gradle.ktlint.reporter.ReporterType
+
+ktlint {
+    version = "0.22.0"
+    debug = true
+    verbose = true
+    android = false
+    outputToConsole = true
+    reporters = [ReporterType.PLAIN, ReporterType.CHECKSTYLE]
+    ignoreFailures = true
+}
+
