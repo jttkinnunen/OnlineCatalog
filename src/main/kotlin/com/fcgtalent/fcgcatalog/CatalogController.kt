@@ -41,7 +41,7 @@ class CatalogController {
 
     // TODO ADD response entity stuff, Also accept email in the future
     @RequestMapping("/addUser", method = arrayOf(RequestMethod.POST))
-    fun addUser(@RequestBody user: SecurityProperties.User) : ResponseEntity<String> {
+    fun addUser(@RequestBody user: SecurityProperties.User): ResponseEntity<String> {
         System.out.println("Got user ${user.name}")
         // TODO probably handle the user better
         databaseHandler.addUser(user.name, user.password, "Moo@moo.fi")
@@ -54,18 +54,18 @@ class CatalogController {
     // TODO demand authentication to upload and check it. Also make sure file is correctly linked to what it belongs to
     // TODO maybe don't need to redirect, but return beter stuff? Something helpful
     @PostMapping("/upload")
-    fun imageUpload(@RequestParam("file") file: MultipartFile, redirectAttributes: RedirectAttributes) : String {
-        if(file.isEmpty) {
-            redirectAttributes.addFlashAttribute("message", "Please select a file to upload");
-            return "redirect:uploadStatus";
+    fun imageUpload(@RequestParam("file") file: MultipartFile, redirectAttributes: RedirectAttributes): String {
+        if (file.isEmpty) {
+            redirectAttributes.addFlashAttribute("message", "Please select a file to upload")
+            return "redirect:uploadStatus"
         }
 
-        when(file.contentType) {
+        when (file.contentType) {
             "image/jpeg", "image/png" -> println() // TODO maybe do name here, so you know to add correct ending
             else -> {
                 println("Attempted to upload ${file.contentType}")
-                redirectAttributes.addFlashAttribute("message", "Only upload jpeg or png files.");
-                return "redirect:uploadStatus";
+                redirectAttributes.addFlashAttribute("message", "Only upload jpeg or png files.")
+                return "redirect:uploadStatus"
             }
         }
 
@@ -79,10 +79,8 @@ class CatalogController {
 
             redirectAttributes.addFlashAttribute("message",
                     "You successfully uploaded ${file.originalFilename}")
-
-        } catch(e: IOException) {
-            redirectAttributes.addFlashAttribute("message", "Error uploading file.");
-
+        } catch (e: IOException) {
+            redirectAttributes.addFlashAttribute("message", "Error uploading file.")
             e.printStackTrace()
         }
         return "redirect:/uploadStatus"

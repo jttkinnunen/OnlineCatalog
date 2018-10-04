@@ -71,8 +71,8 @@ class DatabaseConnectorTest {
         every { statement.execute(createTable) } returns true
 
         // Recreate, so we can call protected function that we are testing
-        databaseConnector = object: DatabaseConnector(configuration) {
-            override val connection : Connection
+        databaseConnector = object : DatabaseConnector(configuration) {
+            override val connection: Connection
                 get() = databaseConnection
             init {
                 createInitialTables()
