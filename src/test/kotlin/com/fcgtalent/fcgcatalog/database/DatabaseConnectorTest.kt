@@ -1,6 +1,6 @@
 package com.fcgtalent.fcgcatalog.database
 
-import com.fcgtalent.fcgcatalog.DatabaseConfiguration
+import com.fcgtalent.fcgcatalog.configuration.DatabaseConfiguration
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkStatic
@@ -21,7 +21,6 @@ class DatabaseConnectorTest {
     private lateinit var configuration: DatabaseConfiguration
     private lateinit var preparedStatement: PreparedStatement
 
-
     @Before
     fun setUp() {
         databaseConnection = mockk()
@@ -30,7 +29,7 @@ class DatabaseConnectorTest {
 
         every { databaseConnection.prepareStatement(any()) } returns preparedStatement
 
-        databaseConnector = object: DatabaseConnector(configuration) {
+        databaseConnector = object : DatabaseConnector(configuration) {
             override val connection: Connection
                 get() = databaseConnection
         }
@@ -61,7 +60,6 @@ class DatabaseConnectorTest {
             preparedStatement.executeUpdate()
             BCrypt.hashpw(password, any())
         }
-
     }
 
     @Test
@@ -74,7 +72,7 @@ class DatabaseConnectorTest {
 
         // Recreate, so we can call protected function that we are testing
         databaseConnector = object: DatabaseConnector(configuration) {
-            override val connection: Connection
+            override val connection : Connection
                 get() = databaseConnection
             init {
                 createInitialTables()

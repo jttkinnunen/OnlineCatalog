@@ -1,6 +1,6 @@
 package com.fcgtalent.fcgcatalog.database
 
-import com.fcgtalent.fcgcatalog.DatabaseConfiguration
+import com.fcgtalent.fcgcatalog.configuration.DatabaseConfiguration
 import org.springframework.boot.configurationprocessor.json.JSONArray
 import org.springframework.stereotype.Repository
 

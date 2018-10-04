@@ -13,15 +13,12 @@ class FCGCatalogApplicationTests {
 
     @Before
     fun setUp() {
-
     }
-
 
 
     @Test
     fun testWorkingTest() {
         Assert.assertTrue(true)
     }
-
 
 }

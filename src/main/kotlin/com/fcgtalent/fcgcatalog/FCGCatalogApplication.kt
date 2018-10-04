@@ -1,5 +1,7 @@
 package com.fcgtalent.fcgcatalog
 
+import com.fcgtalent.fcgcatalog.configuration.DatabaseConfiguration
+import com.fcgtalent.fcgcatalog.configuration.UploadConfiguration
 import com.fcgtalent.fcgcatalog.database.DatabaseHandler
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
