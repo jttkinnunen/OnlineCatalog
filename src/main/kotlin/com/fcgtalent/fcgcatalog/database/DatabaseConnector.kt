@@ -15,7 +15,9 @@ abstract class DatabaseConnector(protected val configuration: DatabaseConfigurat
     protected abstract val connection: Connection
 
     fun addUser(name: String, password: String, email: String) {
-        val sql = "INSERT INTO users(name, password, email) VALUES(?,?,?)"
+        //val sql = "INSERT INTO users(name, password, email) VALUES (?, ?, ?)"
+
+        val sql = "INSERT INTO users(name, password, email) VALUES (?, ?, ?)"
 
         try {
             val statement = connection.prepareStatement(sql)
@@ -61,7 +63,12 @@ abstract class DatabaseConnector(protected val configuration: DatabaseConfigurat
             val input = Scanner(file)
 
             while (input.hasNextLine()) {
-                val line = input.nextLine()
+                var line = input.nextLine()
+
+                // Change SQL syntax to fit PGSQL if needed
+                if(configuration.type.equals("pgsql"))
+                    line = line.replace("INTEGER PRIMARY KEY", "SERIAL PRIMARY KEY")
+
                 if (line.startsWith("CREATE TABLE")) {
                     try {
                         val statement = connection.createStatement()

@@ -14,6 +14,7 @@ class DatabaseConfiguration() {
     lateinit var name: String
     var username: String? = null
     var password: String? = null
+    var port: String? = null
 
     var sqlitememory: Boolean = false
 }
