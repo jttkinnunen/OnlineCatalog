@@ -2,8 +2,11 @@ package com.fcgtalent.fcgcatalog
 
 import com.fcgtalent.fcgcatalog.configuration.UploadConfiguration
 import com.fcgtalent.fcgcatalog.database.DatabaseHandler
+import com.fcgtalent.fcgcatalog.database.SQLiteConnector
+import com.fcgtalent.fcgcatalog.util.AuthenticationException
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.autoconfigure.security.SecurityProperties
+import org.springframework.boot.configurationprocessor.json.JSONObject
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
@@ -16,9 +19,11 @@ import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.multipart.MultipartFile
 import org.springframework.web.servlet.mvc.support.RedirectAttributes
 import java.io.IOException
+import java.lang.Exception
 import java.nio.file.Files
 import java.nio.file.Paths
 import java.nio.file.StandardCopyOption
+import java.sql.SQLException
 import java.util.concurrent.atomic.AtomicLong
 
 // For basic testing purposes now, TODO remove later
@@ -33,13 +38,8 @@ class CatalogController {
     @Autowired
     private lateinit var uploadConfiguration: UploadConfiguration
 
-    // For basic testing purposes now, TODO remove later
-    val counter = AtomicLong()
-    @GetMapping("/greeting")
-    fun greeting(@RequestParam(value = "name", defaultValue = "World") name: String) =
-            Greeting(counter.incrementAndGet(), "Hello, $name")
 
-    // TODO ADD response entity stuff, Also accept email in the future
+    // TODO ADD response entity stuff, Also accept email in the future, checck authetnicaiton also
     @RequestMapping("/addUser", method = arrayOf(RequestMethod.POST))
     fun addUser(@RequestBody user: SecurityProperties.User): ResponseEntity<String> {
         System.out.println("Got user ${user.name}")
@@ -48,6 +48,7 @@ class CatalogController {
         return ResponseEntity<String>("Good", HttpStatus.CREATED)
     }
 
+    // TODO Authentication?
     @GetMapping("/showUsers")
     fun users() = databaseHandler.getAllUsers().toString()
 
@@ -91,4 +92,28 @@ class CatalogController {
     fun uploadStatus(): String {
         return "upload status"
     }
+
+
+    //TODO Move normal exception to something else
+    // TODO ADD response entity stuff, Also accept email in the future, checck authetnicaiton also
+    @PostMapping("/login")
+    fun login(
+        @RequestParam("username") username: String,
+        @RequestParam("password") password: String
+    ): ResponseEntity<String> {
+        System.out.println("Got user ${username} and pass $password")
+
+        try {
+            val token = databaseHandler.login(username, password)
+            println("Returning accepted")
+            return ResponseEntity(token.toString(), HttpStatus.OK)
+        } catch (e: SQLException) {
+            val error = JSONObject()
+            error.put("error", "Database Error")
+            return ResponseEntity(error.toString(), HttpStatus.INTERNAL_SERVER_ERROR)
+        } catch (e: AuthenticationException) {
+            return e.toResponseEntity()
+        }
+    }
 }
+

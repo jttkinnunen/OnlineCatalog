@@ -1,6 +1,7 @@
 package com.fcgtalent.fcgcatalog.database
 
 import com.fcgtalent.fcgcatalog.configuration.DatabaseConfiguration
+import com.fcgtalent.fcgcatalog.util.AuthenticationException
 import org.springframework.boot.configurationprocessor.json.JSONArray
 import org.springframework.boot.configurationprocessor.json.JSONObject
 import org.springframework.security.crypto.bcrypt.BCrypt
@@ -8,7 +9,7 @@ import org.springframework.util.ResourceUtils
 import java.io.IOException
 import java.sql.Connection
 import java.sql.SQLException
-import java.util.Scanner
+import java.util.*
 
 abstract class DatabaseConnector(protected val configuration: DatabaseConfiguration) {
 
@@ -55,6 +56,48 @@ abstract class DatabaseConnector(protected val configuration: DatabaseConfigurat
             e.printStackTrace()
         }
         return users
+    }
+
+    @Throws(Exception::class)
+    fun login(username: String, password: String): JSONObject {
+        val result = JSONObject()
+
+        val sql = "SELECT id, password FROM users WHERE email = ?"
+        try {
+            val statement = connection.prepareStatement(sql)
+            statement.setString(1, username)
+            val resultSet = statement.executeQuery()
+            while(resultSet.next()) {
+                if(BCrypt.checkpw(password, resultSet.getString("password"))) {
+                    result.put("token", addNewTokenForUse(resultSet.getInt("id")))
+                    return result
+                }
+            }
+            throw AuthenticationException()
+        } catch (e: SQLException) {
+            println(e.message)
+            throw SQLException("Database error")
+        }
+    }
+
+
+    //TODO maybe get a better exeption here
+    @Throws(SQLException::class)
+    private fun addNewTokenForUse(id: Int): String {
+        val token = UUID.randomUUID()
+
+        val sql = "UPDATE users SET token = ? WHERE id = ?"
+
+        val statement = connection.prepareStatement(sql)
+        statement.setString(1, token.toString())
+        statement.setInt(2, id)
+
+        // Update failed on 0
+        if(statement.executeUpdate() == 0) {
+            throw SQLException("Failed to update table, check log")
+        }
+
+        return token.toString()
     }
 
     protected fun createInitialTables() {
