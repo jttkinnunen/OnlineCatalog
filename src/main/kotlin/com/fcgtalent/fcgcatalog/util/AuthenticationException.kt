@@ -4,7 +4,7 @@ import org.springframework.boot.configurationprocessor.json.JSONObject
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 
-class AuthenticationException constructor(message: String): Exception(message) {
+class AuthenticationException constructor(message: String) : Exception(message) {
 
     constructor(): this("Authentication Error")
 

@@ -9,7 +9,8 @@ import org.springframework.util.ResourceUtils
 import java.io.IOException
 import java.sql.Connection
 import java.sql.SQLException
-import java.util.*
+import java.util.Scanner
+import java.util.UUID
 
 abstract class DatabaseConnector(protected val configuration: DatabaseConfiguration) {
 
@@ -67,8 +68,8 @@ abstract class DatabaseConnector(protected val configuration: DatabaseConfigurat
             val statement = connection.prepareStatement(sql)
             statement.setString(1, username)
             val resultSet = statement.executeQuery()
-            while(resultSet.next()) {
-                if(BCrypt.checkpw(password, resultSet.getString("password"))) {
+            while (resultSet.next()) {
+                if (BCrypt.checkpw(password, resultSet.getString("password"))) {
                     result.put("token", addNewTokenForUse(resultSet.getInt("id")))
                     return result
                 }
@@ -87,7 +88,7 @@ abstract class DatabaseConnector(protected val configuration: DatabaseConfigurat
             val statement = connection.prepareStatement(sql)
             statement.setString(1, null)
             statement.setString(2, token)
-            if(statement.executeUpdate() == 0) {
+            if (statement.executeUpdate() == 0) {
                 // Nothing was updated, so token must not have been valid
                 throw AuthenticationException()
             }
@@ -117,8 +118,7 @@ abstract class DatabaseConnector(protected val configuration: DatabaseConfigurat
         }
     }
 
-
-    //TODO maybe get a better exeption here
+    // TODO maybe get a better exeption here
     @Throws(SQLException::class)
     private fun addNewTokenForUse(id: Int): String {
         val token = UUID.randomUUID()
@@ -130,7 +130,7 @@ abstract class DatabaseConnector(protected val configuration: DatabaseConfigurat
         statement.setInt(2, id)
 
         // Update failed on 0
-        if(statement.executeUpdate() == 0) {
+        if (statement.executeUpdate() == 0) {
             throw SQLException("Failed to update table, check log")
         }
 

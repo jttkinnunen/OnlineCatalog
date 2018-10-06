@@ -40,7 +40,7 @@ class CatalogController {
             if (!databaseHandler.authenticateToken(token)) {
                 throw AuthenticationException("This requires admin permissions.")
             }
-        } catch (e: SQLException) { //TODO these try catch are repeating like crazy, think of a solution
+        } catch (e: SQLException) { // TODO these try catch are repeating like crazy, think of a solution
             val error = JSONObject()
             error.put("error", "Database Error")
             return ResponseEntity(error.toString(), HttpStatus.INTERNAL_SERVER_ERROR)
@@ -111,14 +111,14 @@ class CatalogController {
         }
     }
 
-    //TODO Move normal exception to something else
+    // TODO Move normal exception to something else
     // TODO ADD response entity stuff, Also accept email in the future, checck authetnicaiton also
     @PostMapping("/login")
     fun login(
         @RequestParam("username") username: String,
         @RequestParam("password") password: String
     ): ResponseEntity<String> {
-        System.out.println("Got user ${username} and pass $password")
+        System.out.println("Got user $username and pass $password")
 
         try {
             val token = databaseHandler.login(username, password)
@@ -133,4 +133,3 @@ class CatalogController {
         }
     }
 }
-
