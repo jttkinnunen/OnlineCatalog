@@ -1,6 +1,6 @@
 package com.fcgtalent.fcgcatalog.database
 
-import com.fcgtalent.fcgcatalog.DatabaseConfiguration
+import com.fcgtalent.fcgcatalog.configuration.DatabaseConfiguration
 import java.sql.DriverManager
 
 class SQLiteConnector(configuration: DatabaseConfiguration) : DatabaseConnector(configuration) {

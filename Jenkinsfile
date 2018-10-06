@@ -13,11 +13,11 @@ node {
     stage('Unit test') {
         // Make gradlew executable
         sh 'chmod +x gradlew'
-        sh "./gradlew ktlintCheck test jacocoTestReport"
+        sh "./gradlew ktlintMainCheck test jacocoTestReport"
         junit 'build/test-results/test/*.xml'
         step( [ $class: 'JacocoPublisher' ] )
         step([$class: 'hudson.plugins.checkstyle.CheckStylePublisher',
-              checkstyle: 'build/reports/ktlint/ktlintMainCheck.xml'])
+              pattern: 'build/reports/ktlint/ktlintMainCheck.xml'])
     }
 
 

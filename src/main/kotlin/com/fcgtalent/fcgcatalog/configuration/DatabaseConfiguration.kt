@@ -1,4 +1,4 @@
-package com.fcgtalent.fcgcatalog
+package com.fcgtalent.fcgcatalog.configuration
 
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.boot.context.properties.EnableConfigurationProperties

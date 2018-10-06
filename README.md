@@ -12,3 +12,10 @@ project2018FCG
 This might not work perfectly...
 
 ### https://github.com/shyiko/ktlint you can use instructions here for setting in editor
+
+### wild card imports
+Don't use wildcard imports, to disable automatic wild
+go to Idea settings -> search kotlin -> Under codestyle/kotlin 
+-> imports -> choose: single line imports.
+
+That is kinda bad instructions for now.
