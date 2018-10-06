@@ -69,6 +69,7 @@ class DatabaseConnectorTest {
         val statement: Statement = mockk()
         every { databaseConnection.createStatement() } returns statement
         every { statement.execute(createTable) } returns true
+        every { configuration.type } returns "sqlite"
 
         // Recreate, so we can call protected function that we are testing
         databaseConnector = object : DatabaseConnector(configuration) {
