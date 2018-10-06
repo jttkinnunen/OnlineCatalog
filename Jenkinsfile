@@ -1,5 +1,3 @@
-
-
 node {
 
     stage('Clone sources') {
@@ -14,7 +12,6 @@ node {
         // Make gradlew executable
         sh 'chmod +x gradlew'
         sh "./gradlew ktlintMainCheck test jacocoTestReport"
-        junit 'build/test-results/test/*.xml'
         step( [ $class: 'JacocoPublisher' ] )
         step([$class: 'hudson.plugins.checkstyle.CheckStylePublisher',
               pattern: 'build/reports/ktlint/ktlintMainCheck.xml'])
@@ -23,5 +20,12 @@ node {
 
     stage('Build') {
         sh "./gradlew build"
+    }
+
+    post {
+        always {
+            archiveArtifacts artifacts: 'build/libs/**/*.jar', 'build/reports/**/*.*', fingerprint: true
+            junit 'build/test-results/test/*.xml'
+        }
     }
 }
