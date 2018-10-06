@@ -80,6 +80,43 @@ abstract class DatabaseConnector(protected val configuration: DatabaseConfigurat
         }
     }
 
+    @Throws(Exception::class)
+    fun logout(token: String) {
+        val sql = "UPDATE users SET token = ? WHERE token = ?"
+        try {
+            val statement = connection.prepareStatement(sql)
+            statement.setString(1, null)
+            statement.setString(2, token)
+            if(statement.executeUpdate() == 0) {
+                // Nothing was updated, so token must not have been valid
+                throw AuthenticationException()
+            }
+            } catch (e: SQLException) {
+            println(e.message)
+            throw SQLException("Database error")
+        }
+    }
+
+    @Throws(Exception::class)
+    fun authenticateToken(token: String): Boolean {
+        // TODO check if admin or not, returning always admin atm
+        val sql = "SELECT * FROM users WHERE token = ?"
+        try {
+            val statement = connection.prepareStatement(sql)
+            statement.setString(1, token)
+            val resultSet = statement.executeQuery()
+            while (resultSet.next()) {
+                // TODO return if admin or not, also if more than one result, then something wrong
+                return true
+            }
+            // No results found, so token is wrong
+            throw AuthenticationException()
+        } catch (e: SQLException) {
+            println(e.message)
+            throw SQLException("Database error")
+        }
+    }
+
 
     //TODO maybe get a better exeption here
     @Throws(SQLException::class)

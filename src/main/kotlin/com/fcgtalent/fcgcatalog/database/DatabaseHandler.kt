@@ -20,5 +20,9 @@ class DatabaseHandler(private val configuration: DatabaseConfiguration) {
     fun getAllUsers(): JSONArray = databaseConnector.getAllUsers()
     fun addUser(name: String, pass: String, email: String) = databaseConnector.addUser(name, pass, email)
     @Throws(Exception::class)
+    fun logout(token: String) = databaseConnector.logout(token)
+    @Throws(Exception::class)
     fun login(username: String, password: String): JSONObject = databaseConnector.login(username, password)
+    @Throws(Exception::class)
+    fun authenticateToken(token: String): Boolean = databaseConnector.authenticateToken(token)
 }

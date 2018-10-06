@@ -2,32 +2,22 @@ package com.fcgtalent.fcgcatalog
 
 import com.fcgtalent.fcgcatalog.configuration.UploadConfiguration
 import com.fcgtalent.fcgcatalog.database.DatabaseHandler
-import com.fcgtalent.fcgcatalog.database.SQLiteConnector
 import com.fcgtalent.fcgcatalog.util.AuthenticationException
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.autoconfigure.security.SecurityProperties
 import org.springframework.boot.configurationprocessor.json.JSONObject
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RequestMethod
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.multipart.MultipartFile
 import org.springframework.web.servlet.mvc.support.RedirectAttributes
 import java.io.IOException
-import java.lang.Exception
 import java.nio.file.Files
 import java.nio.file.Paths
 import java.nio.file.StandardCopyOption
 import java.sql.SQLException
-import java.util.concurrent.atomic.AtomicLong
-
-// For basic testing purposes now, TODO remove later
-data class Greeting(val id: Long, val content: String)
 
 @RestController
 class CatalogController {
@@ -38,14 +28,28 @@ class CatalogController {
     @Autowired
     private lateinit var uploadConfiguration: UploadConfiguration
 
+    @PostMapping("/addUser")
+    fun addUser(
+        @RequestParam("name") name: String,
+        @RequestParam("password") password: String,
+        @RequestParam("email") email: String,
+        @RequestParam("token") token: String
+    ): ResponseEntity<String> {
+        val admin: Boolean
+        try {
+            if (!databaseHandler.authenticateToken(token)) {
+                throw AuthenticationException("This requires admin permissions.")
+            }
+        } catch (e: SQLException) { //TODO these try catch are repeating like crazy, think of a solution
+            val error = JSONObject()
+            error.put("error", "Database Error")
+            return ResponseEntity(error.toString(), HttpStatus.INTERNAL_SERVER_ERROR)
+        } catch (e: AuthenticationException) {
+            return e.toResponseEntity()
+        }
 
-    // TODO ADD response entity stuff, Also accept email in the future, checck authetnicaiton also
-    @RequestMapping("/addUser", method = arrayOf(RequestMethod.POST))
-    fun addUser(@RequestBody user: SecurityProperties.User): ResponseEntity<String> {
-        System.out.println("Got user ${user.name}")
-        // TODO probably handle the user better
-        databaseHandler.addUser(user.name, user.password, "Moo@moo.fi")
-        return ResponseEntity<String>("Good", HttpStatus.CREATED)
+        databaseHandler.addUser(name, password, email)
+        return ResponseEntity<String>("", HttpStatus.OK)
     }
 
     // TODO Authentication?
@@ -93,6 +97,19 @@ class CatalogController {
         return "upload status"
     }
 
+    @PostMapping("/logout")
+    fun logout(@RequestParam("token") token: String): ResponseEntity<String> {
+        try {
+            databaseHandler.logout(token)
+            return ResponseEntity("", HttpStatus.OK)
+        } catch (e: SQLException) {
+            val error = JSONObject()
+            error.put("error", "Database Error")
+            return ResponseEntity(error.toString(), HttpStatus.INTERNAL_SERVER_ERROR)
+        } catch (e: AuthenticationException) {
+            return e.toResponseEntity()
+        }
+    }
 
     //TODO Move normal exception to something else
     // TODO ADD response entity stuff, Also accept email in the future, checck authetnicaiton also
