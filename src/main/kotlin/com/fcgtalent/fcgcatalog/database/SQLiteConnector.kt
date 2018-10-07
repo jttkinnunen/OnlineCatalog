@@ -14,5 +14,7 @@ class SQLiteConnector(configuration: DatabaseConfiguration) : DatabaseConnector(
         // TODO Remove this test info
         addUser("test1", "testing", "test@test.com")
         addUser("test3", "testing3", "test@test3.com")
+
+        addUser("antti", "pantti", "elefantti@hiano.fi")
     }
 }
