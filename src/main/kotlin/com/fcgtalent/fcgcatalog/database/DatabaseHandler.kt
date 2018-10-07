@@ -17,7 +17,9 @@ class DatabaseHandler(private val configuration: DatabaseConfiguration) {
         else -> throw RuntimeException("Unsupported database configured.")
     } }
 
+    @Throws(Exception::class)
     fun getAllUsers(): JSONArray = databaseConnector.getAllUsers()
+    @Throws(Exception::class)
     fun addUser(name: String, pass: String, email: String) = databaseConnector.addUser(name, pass, email)
     @Throws(Exception::class)
     fun logout(token: String) = databaseConnector.logout(token)

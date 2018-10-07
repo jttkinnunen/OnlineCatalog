@@ -28,6 +28,22 @@ class CatalogController {
     @Autowired
     private lateinit var uploadConfiguration: UploadConfiguration
 
+    private fun encapsulateCall(token: String?, call: (Unit) -> Any): ResponseEntity<String> {
+        println("Inside the call")
+        return try {
+            if (token != null && !databaseHandler.authenticateToken(token)) {
+                throw AuthenticationException("This requires admin permissions.")
+            }
+            ResponseEntity(call(Unit).let { (it as? JSONObject)?.toString() ?: "" }, HttpStatus.OK)
+        } catch (e: SQLException) { // TODO these try catch are repeating like crazy, think of a solution
+            val error = JSONObject()
+            error.put("error", "Database Error")
+            ResponseEntity(error.toString(), HttpStatus.INTERNAL_SERVER_ERROR)
+        } catch (e: AuthenticationException) {
+            e.toResponseEntity()
+        }
+    }
+
     @PostMapping("/addUser")
     fun addUser(
         @RequestParam("name") name: String,
@@ -35,26 +51,14 @@ class CatalogController {
         @RequestParam("email") email: String,
         @RequestParam("token") token: String
     ): ResponseEntity<String> {
-        val admin: Boolean
-        try {
-            if (!databaseHandler.authenticateToken(token)) {
-                throw AuthenticationException("This requires admin permissions.")
-            }
-        } catch (e: SQLException) { // TODO these try catch are repeating like crazy, think of a solution
-            val error = JSONObject()
-            error.put("error", "Database Error")
-            return ResponseEntity(error.toString(), HttpStatus.INTERNAL_SERVER_ERROR)
-        } catch (e: AuthenticationException) {
-            return e.toResponseEntity()
-        }
-
-        databaseHandler.addUser(name, password, email)
-        return ResponseEntity<String>("", HttpStatus.OK)
+        return encapsulateCall(token) { databaseHandler.addUser(name, password, email) }
     }
 
     // TODO Authentication?
-    @GetMapping("/showUsers")
-    fun users() = databaseHandler.getAllUsers().toString()
+    @PostMapping("/showUsers")
+    fun users(@RequestParam("token") token: String): ResponseEntity<String> {
+        return encapsulateCall(token) { databaseHandler.getAllUsers().toString() }
+    }
 
     // TODO demand authentication to upload and check it. Also make sure file is correctly linked to what it belongs to
     // TODO maybe don't need to redirect, but return beter stuff? Something helpful
@@ -99,16 +103,7 @@ class CatalogController {
 
     @PostMapping("/logout")
     fun logout(@RequestParam("token") token: String): ResponseEntity<String> {
-        try {
-            databaseHandler.logout(token)
-            return ResponseEntity("", HttpStatus.OK)
-        } catch (e: SQLException) {
-            val error = JSONObject()
-            error.put("error", "Database Error")
-            return ResponseEntity(error.toString(), HttpStatus.INTERNAL_SERVER_ERROR)
-        } catch (e: AuthenticationException) {
-            return e.toResponseEntity()
-        }
+        return encapsulateCall(token) { databaseHandler.logout(token) }
     }
 
     // TODO Move normal exception to something else
@@ -118,18 +113,6 @@ class CatalogController {
         @RequestParam("username") username: String,
         @RequestParam("password") password: String
     ): ResponseEntity<String> {
-        System.out.println("Got user $username and pass $password")
-
-        try {
-            val token = databaseHandler.login(username, password)
-            println("Returning accepted")
-            return ResponseEntity(token.toString(), HttpStatus.OK)
-        } catch (e: SQLException) {
-            val error = JSONObject()
-            error.put("error", "Database Error")
-            return ResponseEntity(error.toString(), HttpStatus.INTERNAL_SERVER_ERROR)
-        } catch (e: AuthenticationException) {
-            return e.toResponseEntity()
-        }
+        return encapsulateCall(null) { databaseHandler.login(username, password) }
     }
 }

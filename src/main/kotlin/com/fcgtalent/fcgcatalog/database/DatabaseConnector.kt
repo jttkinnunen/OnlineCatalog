@@ -120,7 +120,7 @@ abstract class DatabaseConnector(protected val configuration: DatabaseConfigurat
 
     // TODO maybe get a better exeption here
     @Throws(SQLException::class)
-    private fun addNewTokenForUse(id: Int): String {
+    private fun addNewTokenForUse(id: Int): JSONObject {
         val token = UUID.randomUUID()
 
         val sql = "UPDATE users SET token = ? WHERE id = ?"
@@ -134,7 +134,9 @@ abstract class DatabaseConnector(protected val configuration: DatabaseConfigurat
             throw SQLException("Failed to update table, check log")
         }
 
-        return token.toString()
+        val json = JSONObject()
+        json.put("token", token.toString())
+        return json
     }
 
     protected fun createInitialTables() {
