@@ -12,6 +12,7 @@ import java.sql.SQLException
 import java.util.Scanner
 import java.util.UUID
 
+// TODO maybe clean this kinda like how the REST interface was cleaned up a bit
 abstract class DatabaseConnector(protected val configuration: DatabaseConfiguration) {
 
     protected abstract val connection: Connection
@@ -92,7 +93,7 @@ abstract class DatabaseConnector(protected val configuration: DatabaseConfigurat
                 // Nothing was updated, so token must not have been valid
                 throw AuthenticationException()
             }
-            } catch (e: SQLException) {
+        } catch (e: SQLException) {
             println(e.message)
             throw SQLException("Database error")
         }

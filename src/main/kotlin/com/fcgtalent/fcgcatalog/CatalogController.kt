@@ -28,14 +28,26 @@ class CatalogController {
     @Autowired
     private lateinit var uploadConfiguration: UploadConfiguration
 
-    private fun encapsulateCall(token: String?, call: (Unit) -> Any): ResponseEntity<String> {
-        println("Inside the call")
+    /**
+     * Helper function used to reduce the clutter, by moving any call inside the common try catch
+     * Also includes checking for authentication, (admin)
+     * @param token Users current token, used to authenticate the user. Maybe null if user is logging in
+     * @param adminOnly This call requires admin permissions
+     * @param call Call or lambda we wish to call inside our try catches.
+     * @return Returns a ResponseEntity that is then returned as REST interface answer
+     */
+    private fun encapsulateCall(
+        token: String?,
+        adminOnly: Boolean,
+        call: (Unit) -> Any
+    ): ResponseEntity<String> {
         return try {
-            if (token != null && !databaseHandler.authenticateToken(token)) {
+            // Checks that user has token and if command is adminOnly, check that use is admin
+            if (token != null && (adminOnly && !databaseHandler.authenticateToken(token))) {
                 throw AuthenticationException("This requires admin permissions.")
             }
             ResponseEntity(call(Unit).let { (it as? JSONObject)?.toString() ?: "" }, HttpStatus.OK)
-        } catch (e: SQLException) { // TODO these try catch are repeating like crazy, think of a solution
+        } catch (e: SQLException) {
             val error = JSONObject()
             error.put("error", "Database Error")
             ResponseEntity(error.toString(), HttpStatus.INTERNAL_SERVER_ERROR)
@@ -51,17 +63,17 @@ class CatalogController {
         @RequestParam("email") email: String,
         @RequestParam("token") token: String
     ): ResponseEntity<String> {
-        return encapsulateCall(token) { databaseHandler.addUser(name, password, email) }
+        return encapsulateCall(token, true) { databaseHandler.addUser(name, password, email) }
     }
 
-    // TODO Authentication?
-    @PostMapping("/showUsers")
-    fun users(@RequestParam("token") token: String): ResponseEntity<String> {
-        return encapsulateCall(token) { databaseHandler.getAllUsers().toString() }
+    @PostMapping("/getUsers")
+    fun getUsers(@RequestParam("token") token: String): ResponseEntity<String> {
+        return encapsulateCall(token, true) { databaseHandler.getAllUsers() }
     }
 
     // TODO demand authentication to upload and check it. Also make sure file is correctly linked to what it belongs to
     // TODO maybe don't need to redirect, but return beter stuff? Something helpful
+    // TODO needs to be updated to match current style, look at the others
     @PostMapping("/upload")
     fun imageUpload(@RequestParam("file") file: MultipartFile, redirectAttributes: RedirectAttributes): String {
         if (file.isEmpty) {
@@ -95,7 +107,7 @@ class CatalogController {
         return "redirect:/uploadStatus"
     }
 
-    // TODO do this
+    // TODO do this or remove this, part of imageUpload interface so do at the same time
     @GetMapping("uploadStatus")
     fun uploadStatus(): String {
         return "upload status"
@@ -103,7 +115,7 @@ class CatalogController {
 
     @PostMapping("/logout")
     fun logout(@RequestParam("token") token: String): ResponseEntity<String> {
-        return encapsulateCall(token) { databaseHandler.logout(token) }
+        return encapsulateCall(token, false) { databaseHandler.logout(token) }
     }
 
     // TODO Move normal exception to something else
@@ -113,6 +125,6 @@ class CatalogController {
         @RequestParam("username") username: String,
         @RequestParam("password") password: String
     ): ResponseEntity<String> {
-        return encapsulateCall(null) { databaseHandler.login(username, password) }
+        return encapsulateCall(null, false) { databaseHandler.login(username, password) }
     }
 }
