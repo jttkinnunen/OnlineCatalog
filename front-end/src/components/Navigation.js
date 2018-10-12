@@ -33,7 +33,7 @@ class Navigation extends React.Component {
         });
     }
 
-    // Add functions for click checks
+    // Add functions for click event checks
 
     render() {
         return (
@@ -65,11 +65,24 @@ class Navigation extends React.Component {
                             <Button type="submit">Hae</Button>
                         </Form>
 
-                        <div>
-                        <NavItem>
-                            <NavLink href="/">Keijo Käyttäjä</NavLink>
-                        </NavItem>
-                        </div>
+                        <UncontrolledDropdown nav inNavbar>
+                            <DropdownToggle nav caret>
+                                Keijo Käyttäjä
+                            </DropdownToggle>
+                            <DropdownMenu right>
+                                <DropdownItem>
+                                    Oma profiili
+                                </DropdownItem>
+                                <DropdownItem>
+                                    Hallitse käyttäjiä (Admin)
+                                </DropdownItem>
+                                <DropdownItem divider />
+                                <DropdownItem>
+                                    Kirjaudu ulos
+                                </DropdownItem>
+                            </DropdownMenu>
+                        </UncontrolledDropdown>
+
                     </Nav>
                 </Navbar>
         );

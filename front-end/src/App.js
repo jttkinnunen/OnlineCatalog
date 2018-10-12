@@ -32,7 +32,7 @@ class App extends Component {
                         <Events />
                     </div>
 
-                    <div>
+                    <div class="container-fluid">
                         <Body />
                     </div>
 
