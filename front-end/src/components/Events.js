@@ -54,16 +54,6 @@ class Events extends React.Component {
         </div>
     );
 
-
-
-        /* Render either the preview event or list of all events (NOT DONE)*/
-        /*return (
-            <div className="events-component" class = "flex-events">
-                <div class = "event-text">
-                    12.12.2018 -1 kpl  "Paita, hieno, XL" Keijo K. 20:45
-                </div>
-            </div>
-        );*/
     }
 }
 

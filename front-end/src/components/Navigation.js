@@ -60,7 +60,7 @@ class Navigation extends React.Component {
                             <NavLink href="/">Matsku</NavLink>
                         </NavItem>
 
-                        <Form className = "flex-nav-form">
+                        <Form className = "nav-form">
                             <Input type="text" id="textSearch" placeholder="Hae tuotetta..." />
                             <Button type="submit">Hae</Button>
                         </Form>

@@ -4,6 +4,7 @@ import './App.css';
 import Body from './components/Body.js';
 import Events from './components/Events.js';
 import Navigation_bar from './components/Navigation.js';
+import Footer from './components/Footer.js';
 
 class App extends Component {
     constructor(props) {
@@ -24,19 +25,24 @@ class App extends Component {
             <div className="App">
 
                 <header className="App-header">
+
+
                     <div class="container-fluid" className = "navigation-bar">
                         <Navigation_bar />
                     </div>
 
-                    <div class="container-fluid" className = "event-bar">
-                        <Events />
-                    </div>
 
-                    <div class="container-fluid" className = "body">
+
+                    <div class="container" className = "body">
+                        <div className="container-fluid" className="event-bar">
+                            <Events/>
+                        </div>
                         <Body />
                     </div>
 
-                    <img src={logo} className="App-logo" alt="logo" />
+                    <div className="container-fluid" className="footer">
+                        <Footer/>
+                    </div>
 
                 </header>
             </div>

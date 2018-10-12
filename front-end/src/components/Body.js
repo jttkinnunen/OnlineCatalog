@@ -1,5 +1,5 @@
 import React from "react";
-
+import {Button} from "reactstrap";
 
 // Täältä löytyy kaikenlaista:
 // https://reactstrap.github.io/components/form/
@@ -10,7 +10,9 @@ class Body extends React.Component {
 
         return (
             <div className="body" class="flex-body">
-                Body
+                <Button className = "button">
+                    Lisää uusi tuote
+                </Button>
             </div>
         );
     }

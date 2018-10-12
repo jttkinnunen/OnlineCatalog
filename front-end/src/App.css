@@ -21,7 +21,13 @@
   justify-content: flex-start;
 }
 
-.flex-nav-form {
+.button {
+  display: flex;
+  margin: 5px;
+  align-self: flex-start;
+}
+
+.nav-form {
   display: flex;
   align-self: center;
   flex-direction: row;
@@ -36,10 +42,32 @@
   padding: 5px;
 }
 
+.footer {
+  display: flex;
+  justify-content: flex-start;
+  flex-direction: column;
+  background-color: #556666;
+  color: #000000;
+  padding: 5px;
+}
+
 .event-text {
   display: flex;
   flex-direction: row;
   align-self: flex-start;
   font-size: calc(15px + 0vmin);
   color: #000000;
+}
+
+.body {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  align-content: flex-start;
+  justify-content: flex-start;
+  align-self: center;
+  min-width: 768px;
+  width: 50%;
+  font-size: calc(15px + 0vmin);
+  background-color: #242a30;
 }
