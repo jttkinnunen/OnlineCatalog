@@ -76,6 +76,9 @@ class Navigation extends React.Component {
                                 <DropdownItem>
                                     Hallitse käyttäjiä (Admin)
                                 </DropdownItem>
+                                <DropdownItem>
+                                    Tapahtumat (Admin)
+                                </DropdownItem>
                                 <DropdownItem divider />
                                 <DropdownItem>
                                     Kirjaudu ulos

@@ -27,15 +27,19 @@
   flex-direction: row;
 }
 
-.flex-events {
+.event-list {
   display: flex;
-  width: 100%;
-  flex-direction: row;
-  font-size: calc(20px + 0vmin);
+  justify-content: flex-start;
+  flex-direction: column;
+  background-color: #6fcc6a;
   color: #000000;
-  background-color: #9ed87f;
+  padding: 5px;
 }
 
-.item {
-  align-self: flex-end;
+.event-text {
+  display: flex;
+  flex-direction: row;
+  align-self: flex-start;
+  font-size: calc(15px + 0vmin);
+  color: #000000;
 }

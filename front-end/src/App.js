@@ -24,15 +24,15 @@ class App extends Component {
             <div className="App">
 
                 <header className="App-header">
-                    <div class="container-fluid">
+                    <div class="container-fluid" className = "navigation-bar">
                         <Navigation_bar />
                     </div>
 
-                    <div class="container-fluid">
+                    <div class="container-fluid" className = "event-bar">
                         <Events />
                     </div>
 
-                    <div class="container-fluid">
+                    <div class="container-fluid" className = "body">
                         <Body />
                     </div>
 
