@@ -12,7 +12,7 @@ class App extends Component {
         this.state = {
             // Tähän kaikki mahdolliset muuttujat mitä sivulla voi olla. Päivitetään alielementeille tarvittaessa.
 
-            current_view: "articles", // articles, audit-log, article-detailed, login, manage-users, forgot-pass, change-pass, profile-page
+            current_view: "articles", // articles, add-article, audit-log, article-detailed, login, manage-users, forgot-pass, change-pass, profile-page
             user: null,
             user_token: null,
             user_rights: null,
