@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
-import Body from './Components/Body.js';
-import Events from './Components/Events.js';
-import Navigation_bar from './Components/Navigation.js';
+import Body from './components/Body.js';
+import Events from './components/Events.js';
+import Navigation_bar from './components/Navigation.js';
 
 class App extends Component {
     constructor(props) {
@@ -24,11 +24,11 @@ class App extends Component {
             <div className="App">
 
                 <header className="App-header">
-                    <div>
+                    <div class="container-fluid">
                         <Navigation_bar />
                     </div>
 
-                    <div>
+                    <div class="container-fluid">
                         <Events />
                     </div>
 

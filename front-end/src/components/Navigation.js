@@ -37,8 +37,7 @@ class Navigation extends React.Component {
 
     render() {
         return (
-            <div className = "flex-nav-bar">
-                <Navbar color="light" light expand="sm">
+                <Navbar color="light" light  expand="sm">
                     <Nav navbar>
                         <UncontrolledDropdown nav inNavbar>
                             <DropdownToggle nav caret>
@@ -57,7 +56,7 @@ class Navigation extends React.Component {
                             </DropdownMenu>
                         </UncontrolledDropdown>
 
-                        <NavItem className = "flex-homebutton">
+                        <NavItem>
                             <NavLink href="/">Matsku</NavLink>
                         </NavItem>
 
@@ -66,12 +65,13 @@ class Navigation extends React.Component {
                             <Button type="submit">Hae</Button>
                         </Form>
 
+                        <div>
                         <NavItem>
                             <NavLink href="/">Keijo Käyttäjä</NavLink>
                         </NavItem>
+                        </div>
                     </Nav>
                 </Navbar>
-            </div>
         );
     }
 }

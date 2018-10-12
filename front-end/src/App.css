@@ -15,11 +15,10 @@
   color: white;
 }
 
-.flex-nav-bar {
+
+.container {
   display: flex;
-  flex-direction: row;
-  align-items: center;
-  font-size: calc(20px + 0vmin);
+  justify-content: flex-start;
 }
 
 .flex-nav-form {
@@ -35,4 +34,8 @@
   font-size: calc(20px + 0vmin);
   color: #000000;
   background-color: #9ed87f;
+}
+
+.item {
+  align-self: flex-end;
 }
