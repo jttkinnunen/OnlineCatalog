@@ -1,5 +1,5 @@
 import React from "react";
-import {Button} from "reactstrap";
+import Articles from './body-components/Articles.js';
 
 // Täältä löytyy kaikenlaista:
 // https://reactstrap.github.io/components/form/
@@ -7,13 +7,12 @@ import {Button} from "reactstrap";
 class Body extends React.Component {
 
     render() {
-
-        return (
-            <div className="body" class="flex-body">
-                <Button className = "button">
-                    Lisää uusi tuote
-                </Button>
-            </div>
+        if (this.props.current_view === "articles")
+            return (
+                <Articles articles = {this.props.articles}/>
+            );
+        else return(
+            <div></div>
         );
     }
 }
