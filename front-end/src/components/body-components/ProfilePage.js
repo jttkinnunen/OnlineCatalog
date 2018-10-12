@@ -1,6 +1,6 @@
 import React from "react";
 
-class ChangePassword extends React.Component {
+class ProfilePage extends React.Component {
     render() {
         return(
             <div></div>
@@ -8,4 +8,4 @@ class ChangePassword extends React.Component {
     }
 }
 
-export default ChangePassword;
+export default ProfilePage;
