@@ -88,3 +88,19 @@ ktlint {
     ignoreFailures = true
 }
 
+task testUnit(type: Test) {
+    group = "verification"
+    useJUnit {
+        includeCategories 'com.fcgtalent.fcgcatalog.UnitTests'
+        excludeCategories 'com.fcgtalent.fcgcatalog.IntegrationTests'
+    }
+}
+
+task testIntegration(type: Test) {
+    group = "verification"
+
+    useJUnit {
+        includeCategories 'com.fcgtalent.fcgcatalog.IntegrationTests'
+        excludeCategories 'com.fcgtalent.fcgcatalog.UnitTests'
+    }
+}

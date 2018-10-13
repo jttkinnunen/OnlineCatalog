@@ -58,12 +58,14 @@ class CatalogController {
 
     @PostMapping("/addUser")
     fun addUser(
-        @RequestParam("name") name: String,
+        @RequestParam("name") firstName: String,
+        @RequestParam("lastname") lastName: String,
         @RequestParam("password") password: String,
         @RequestParam("email") email: String,
+        @RequestParam("admin") admin: Boolean,
         @RequestParam("token") token: String
     ): ResponseEntity<String> {
-        return encapsulateCall(token, true) { databaseHandler.addUser(name, password, email) }
+        return encapsulateCall(token, true) { databaseHandler.addUser(firstName, lastName, password, email, admin) }
     }
 
     @PostMapping("/getUsers")
