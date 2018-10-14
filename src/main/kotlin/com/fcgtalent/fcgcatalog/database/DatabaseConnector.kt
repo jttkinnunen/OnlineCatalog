@@ -110,7 +110,7 @@ abstract class DatabaseConnector(protected val configuration: DatabaseConfigurat
             article.put(FIELD_BRAND, resultSet.getString(FIELD_BRAND))
             article.put(FIELD_QUANTITY, resultSet.getInt(FIELD_QUANTITY))
             article.put(FIELD_LAST_CHANGE, resultSet.getDate(FIELD_LAST_CHANGE))
-            article.put(FIELD_SHELF, resultSet.getInt(FIELD_SHELF) == 1)
+            article.put(FIELD_SHELF, resultSet.getString(FIELD_SHELF))
 
             articles.put(article)
         }
