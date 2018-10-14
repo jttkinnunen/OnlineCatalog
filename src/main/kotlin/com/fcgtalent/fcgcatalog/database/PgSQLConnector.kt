@@ -36,12 +36,4 @@ class PgSQLConnector(configuration: DatabaseConfiguration) : DatabaseConnector(c
 //        addUser("test1", "testlast", "testing", "test@test.com", true)
 //        addUser("test3", "tes3last", "testing3", "test@test3.com", false)
     }
-
-    override fun createInitialTables() {
-
-//        val statement = connection.createStatement()
-//        statement.execute("CREATE DATABASE ${configuration.name}")
-
-        super.createInitialTables()
-    }
 }

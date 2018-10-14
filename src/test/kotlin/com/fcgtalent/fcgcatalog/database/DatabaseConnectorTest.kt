@@ -38,7 +38,7 @@ class DatabaseConnectorTest(
     companion object {
         @JvmStatic
         @Parameterized.Parameters(name = "{index}: {0}")
-        fun data() : List<Array<Any>> {
+        fun data(): List<Array<Any>> {
             val sqliteConfiguration: DatabaseConfiguration = mockk()
             every { sqliteConfiguration.sqlitememory } returns true
             every { sqliteConfiguration.type } returns "sqlite"
@@ -160,6 +160,26 @@ class DatabaseConnectorTest(
             databaseHandler.logout("39e1c6a4-a206-48cd-8b17-6c94104dc421")
             Assert.fail()
         } catch (e: AuthenticationException) { }
+    }
+
+    @Test
+    fun testAddArticle() {
+        val name1 = "moo1"
+        val brand1 = "moo2"
+        val count1 = 1;
+        val shelf1 = "korkein"
+
+        val name2 = "moo1"
+        val brand2 = "moo2"
+        val count2 = 1;
+        val shelf2 = "korkein"
+
+        Assert.assertThat(databaseHandler.addArticle(name1, brand1, count1, shelf1), `is`(1))
+
+        Assert.assertThat(databaseHandler.addArticle(name2, brand2, count2, shelf2), `is`(2))
+
+
+
     }
 
     private fun addTestUsers() {

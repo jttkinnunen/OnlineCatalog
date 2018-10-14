@@ -8,11 +8,11 @@ CREATE TABLE IF NOT EXISTS users (
   token TEXT UNIQUE
 );
 
-CREATE TABLE IF NOT EXISTS article (
+CREATE TABLE IF NOT EXISTS articles (
   id INTEGER PRIMARY KEY,
   name TEXT NOT NULL,
   brand TEXT,
   quantity INTEGER DEFAULT 0 NOT NULL,
-  lastchange DATE,
+  last_change DATE,
   shelf TEXT
 );

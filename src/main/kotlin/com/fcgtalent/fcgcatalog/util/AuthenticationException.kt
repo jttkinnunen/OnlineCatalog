@@ -4,10 +4,7 @@ import org.springframework.boot.configurationprocessor.json.JSONObject
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 
-class AuthenticationException constructor(message: String) : Exception(message) {
-
-    constructor(): this("Authentication Error")
-
+class AuthenticationException constructor(message: String = "Authentication Error") : Exception(message) {
     fun toResponseEntity(): ResponseEntity<String> {
         val errorJSON = JSONObject()
         errorJSON.put("error", message)

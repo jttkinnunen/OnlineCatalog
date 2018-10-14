@@ -3,6 +3,7 @@ package com.fcgtalent.fcgcatalog
 import com.fcgtalent.fcgcatalog.configuration.UploadConfiguration
 import com.fcgtalent.fcgcatalog.database.DatabaseHandler
 import com.fcgtalent.fcgcatalog.util.AuthenticationException
+import com.fcgtalent.fcgcatalog.util.FileTypeException
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.configurationprocessor.json.JSONObject
 import org.springframework.http.HttpStatus
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.multipart.MultipartFile
 import org.springframework.web.servlet.mvc.support.RedirectAttributes
 import java.io.IOException
+import java.lang.Exception
 import java.nio.file.Files
 import java.nio.file.Paths
 import java.nio.file.StandardCopyOption
@@ -73,40 +75,27 @@ class CatalogController {
         return encapsulateCall(token, true) { databaseHandler.getAllUsers() }
     }
 
-    // TODO demand authentication to upload and check it. Also make sure file is correctly linked to what it belongs to
-    // TODO maybe don't need to redirect, but return beter stuff? Something helpful
-    // TODO needs to be updated to match current style, look at the others
-    @PostMapping("/upload")
-    fun imageUpload(@RequestParam("file") file: MultipartFile, redirectAttributes: RedirectAttributes): String {
-        if (file.isEmpty) {
-            redirectAttributes.addFlashAttribute("message", "Please select a file to upload")
-            return "redirect:uploadStatus"
+    @PostMapping("/addArticle")
+    fun addArticle(
+        @RequestParam("name") name: String,
+        @RequestParam("brand") brand: String?,
+        @RequestParam("quantity") quantity: Int = 0,
+        @RequestParam("shelf") shelf: String,
+        @RequestParam("image") image: MultipartFile? ,
+        @RequestParam("token") token: String
+    ): ResponseEntity<String> {
+        return encapsulateCall(token, false) {
+            val id = databaseHandler.addArticle(name, brand, quantity, shelf)
+
+            image?.let { uploadImage(it, "article_$id") }
+
+            Any()
         }
+    }
 
-        when (file.contentType) {
-            "image/jpeg", "image/png" -> println() // TODO maybe do name here, so you know to add correct ending
-            else -> {
-                println("Attempted to upload ${file.contentType}")
-                redirectAttributes.addFlashAttribute("message", "Only upload jpeg or png files.")
-                return "redirect:uploadStatus"
-            }
-        }
-
-        try {
-            // TODO set correct name, based on the id of the item
-            val path = Paths.get("${uploadConfiguration.path}${file.originalFilename}")
-
-            println(path.toAbsolutePath())
-
-            Files.copy(file.inputStream, path, StandardCopyOption.REPLACE_EXISTING)
-
-            redirectAttributes.addFlashAttribute("message",
-                    "You successfully uploaded ${file.originalFilename}")
-        } catch (e: IOException) {
-            redirectAttributes.addFlashAttribute("message", "Error uploading file.")
-            e.printStackTrace()
-        }
-        return "redirect:/uploadStatus"
+    @PostMapping("/getArticles")
+    fun getArticles(@RequestParam("token") token: String): ResponseEntity<String> {
+        return encapsulateCall(token, false) { databaseHandler.getAllArticles() }
     }
 
     // TODO do this or remove this, part of imageUpload interface so do at the same time
@@ -128,5 +117,22 @@ class CatalogController {
         @RequestParam("password") password: String
     ): ResponseEntity<String> {
         return encapsulateCall(null, false) { databaseHandler.login(username, password) }
+    }
+
+
+    @Throws(Exception::class)
+    private fun uploadImage(image: MultipartFile, name: String) {
+        val fileEnding: String
+        when (image.contentType) {
+            "image/jpeg" -> fileEnding = "jpg"
+            "image/png" -> fileEnding = ".png"
+            else -> {
+                throw FileTypeException()
+            }
+        }
+        // TODO set correct name, based on the id of the item
+        val path = Paths.get("${uploadConfiguration.path}$name$fileEnding")
+        println(path.toAbsolutePath())
+        Files.copy(image.inputStream, path, StandardCopyOption.REPLACE_EXISTING)
     }
 }
