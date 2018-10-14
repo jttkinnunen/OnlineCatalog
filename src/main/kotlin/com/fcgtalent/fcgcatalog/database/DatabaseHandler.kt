@@ -6,7 +6,7 @@ import org.springframework.boot.configurationprocessor.json.JSONObject
 import org.springframework.stereotype.Repository
 import java.lang.Exception
 
-// TODO move configuration to spring style bean thingy.
+// TODO move configuration to spring style bean thingy. Or maybe not, easier to mock this way
 @Repository
 class DatabaseHandler(private val configuration: DatabaseConfiguration) {
 
@@ -20,7 +20,13 @@ class DatabaseHandler(private val configuration: DatabaseConfiguration) {
     @Throws(Exception::class)
     fun getAllUsers(): JSONArray = databaseConnector.getAllUsers()
     @Throws(Exception::class)
-    fun addUser(name: String, pass: String, email: String) = databaseConnector.addUser(name, pass, email)
+    fun addUser(firstName: String, lastName: String, pass: String, email: String, admin: Boolean) =
+            databaseConnector.addUser(firstName, lastName, pass, email, admin)
+    @Throws(Exception::class)
+    fun addArticle(name: String, brand: String?, quantity: Int, shelf: String): Int =
+            databaseConnector.addArticle(name, brand, quantity, shelf)
+    @Throws(Exception::class)
+    fun getAllArticles(): JSONArray = databaseConnector.getAllArticles()
     @Throws(Exception::class)
     fun logout(token: String) = databaseConnector.logout(token)
     @Throws(Exception::class)
