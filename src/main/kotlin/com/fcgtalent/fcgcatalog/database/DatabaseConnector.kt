@@ -48,7 +48,7 @@ abstract class DatabaseConnector(protected val configuration: DatabaseConfigurat
         statement.setString(2, lastName)
         statement.setString(3, BCrypt.hashpw(password, BCrypt.gensalt(4)))
         statement.setString(4, email)
-        statement.setInt(5, if(admin) 1 else 0)
+        statement.setInt(5, if (admin) 1 else 0)
 
         statement.executeUpdate()
     }
@@ -186,16 +186,16 @@ abstract class DatabaseConnector(protected val configuration: DatabaseConfigurat
         } catch (e: Exception) {
             // TODO just ignoring does not exist error, entire thingy should be cleaned anyway, fix then
         }
-        val file = when(configuration.type) {
-            "sqlite"-> ResourceUtils.getFile("classpath:database-layout-sqlite.sql")
+        val file = when (configuration.type) {
+            "sqlite" -> ResourceUtils.getFile("classpath:database-layout-sqlite.sql")
             "pgsql" -> ResourceUtils.getFile("classpath:database-layout-pgsql.sql")
             // TODO probably change this to different exception, maybe customn
             else -> throw SQLException("Unknown database configuration")
         }
 
         // TODO, maybe rethink this. Kinda annoything how it doens't support just executing entire file
-        for(s in file.readText(Charsets.UTF_8).split(";")) {
-            if(!s.contains("CREATE TABLE")) {
+        for (s in file.readText(Charsets.UTF_8).split(";")) {
+            if (!s.contains("CREATE TABLE")) {
                 continue
             }
             connection.createStatement().execute(s)

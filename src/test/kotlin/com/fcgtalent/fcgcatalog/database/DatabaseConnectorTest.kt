@@ -71,17 +71,14 @@ class DatabaseConnectorTest(
         private const val admin2 = false
     }
 
-
     @Before
     fun setUp() {
         databaseHandler = DatabaseHandler(configuration)
         addTestUsers()
-
     }
 
     @After
     fun tearDown() {
-
     }
 
     @Test
@@ -166,20 +163,17 @@ class DatabaseConnectorTest(
     fun testAddArticle() {
         val name1 = "moo1"
         val brand1 = "moo2"
-        val count1 = 1;
+        val count1 = 1
         val shelf1 = "korkein"
 
         val name2 = "moo1"
         val brand2 = "moo2"
-        val count2 = 1;
+        val count2 = 1
         val shelf2 = "korkein"
 
         Assert.assertThat(databaseHandler.addArticle(name1, brand1, count1, shelf1), `is`(1))
 
         Assert.assertThat(databaseHandler.addArticle(name2, brand2, count2, shelf2), `is`(2))
-
-
-
     }
 
     private fun addTestUsers() {

@@ -14,9 +14,8 @@ class PgSQLConnector(configuration: DatabaseConfiguration) : DatabaseConnector(c
             var conn: Connection
             try {
                 conn = DriverManager.getConnection("jdbc:postgresql://${configuration.address}:${configuration.port}/${configuration.name}", configuration.username, configuration.password)
-
             } catch (e: PSQLException) {
-                if(e.message!!.contains("database \"${configuration.name}\" does not exist")) {
+                if (e.message!!.contains("database \"${configuration.name}\" does not exist")) {
                     conn = DriverManager.getConnection("jdbc:postgresql://${configuration.address}:${configuration.port}/", configuration.username, configuration.password)
                     val statement = conn.createStatement()
                     statement.execute("CREATE DATABASE ${configuration.name}")
@@ -27,7 +26,6 @@ class PgSQLConnector(configuration: DatabaseConfiguration) : DatabaseConnector(c
                 }
             }
             return conn
-
         }
     init {
         createInitialTables()

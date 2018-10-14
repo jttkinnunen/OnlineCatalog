@@ -11,7 +11,6 @@ class SQLiteConnector(configuration: DatabaseConfiguration) : DatabaseConnector(
     init {
         createInitialTables()
 
-
         // TODO Remove this test info
 //        addUser("test1", "testlast", "testing", "test@test.com", true)
 //        addUser("test3", "tes3last", "testing3", "test@test3.com", false)

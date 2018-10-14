@@ -13,8 +13,6 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.multipart.MultipartFile
-import org.springframework.web.servlet.mvc.support.RedirectAttributes
-import java.io.IOException
 import java.lang.Exception
 import java.nio.file.Files
 import java.nio.file.Paths
@@ -81,7 +79,7 @@ class CatalogController {
         @RequestParam("brand") brand: String?,
         @RequestParam("quantity") quantity: Int = 0,
         @RequestParam("shelf") shelf: String,
-        @RequestParam("image") image: MultipartFile? ,
+        @RequestParam("image") image: MultipartFile?,
         @RequestParam("token") token: String
     ): ResponseEntity<String> {
         return encapsulateCall(token, false) {
@@ -118,7 +116,6 @@ class CatalogController {
     ): ResponseEntity<String> {
         return encapsulateCall(null, false) { databaseHandler.login(username, password) }
     }
-
 
     @Throws(Exception::class)
     private fun uploadImage(image: MultipartFile, name: String) {
