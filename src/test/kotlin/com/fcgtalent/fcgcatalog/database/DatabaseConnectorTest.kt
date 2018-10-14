@@ -46,7 +46,8 @@ class DatabaseConnectorTest(
             val pgsqlConfiguration: DatabaseConfiguration = mockk()
             // TODO Add support for pgsql
             every { pgsqlConfiguration.type } returns "pgsql"
-            every { pgsqlConfiguration.address } returns "localhost"
+            // TODO do proper connection to database for tests
+            every { pgsqlConfiguration.address } returns "192.168.1.129"
             every { pgsqlConfiguration.port } returns "5432"
             every { pgsqlConfiguration.name } returns "fcgcatalog"
             every { pgsqlConfiguration.username } returns "postgres"
