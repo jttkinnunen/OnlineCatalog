@@ -6,7 +6,7 @@ import ChangePassword from './body-components/ChangePassword.js';
 import ProfilePage from './body-components/ProfilePage.js';
 import ArticleDetailed from './body-components/ArticleDetailed.js';
 import ForgotPassword from './body-components/ForgotPassword.js';
-import AddArticle from './body-components/ForgotPassword.js';
+import AddArticle from './body-components/AddArticle.js';
 
 // Täältä löytyy kaikenlaista:
 // https://reactstrap.github.io/components/form/
@@ -26,7 +26,7 @@ class Body extends React.Component {
 
         if (this.props.current_view === "login")
             return (
-                <Login/>
+                <Login login = {this.props.login} />
             );
 
         if (this.props.current_view === "manage-users")

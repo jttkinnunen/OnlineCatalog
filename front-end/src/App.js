@@ -7,16 +7,20 @@ import Navigation_bar from './components/Navigation.js';
 import Footer from './components/Footer.js';
 
 
+// TODO: See if parts of fetchArticle() and login() can be combined into a postQuery(mapping, payload) function to reduce redundant code
+
 class App extends Component {
     constructor(props) {
         super(props);
         this.setView = this.setView.bind(this);
+        this.login = this.login.bind(this);
         this.state = {
             // Tähän kaikki mahdolliset muuttujat mitä sivulla voi olla. Päivitetään alielementeille tarvittaessa.
 
             current_view: "articles", // articles, add-article, audit-log, article-detailed, login, manage-users, forgot-pass, change-pass, profile-page
             user: null,
-            user_token: null,
+            debug: '',
+            user_token: "123456789",
             user_rights: "admin", // admin/user
             articles: [
                 {
@@ -64,7 +68,50 @@ class App extends Component {
         };
     }
 
+
+
+    fetchArticles() {
+        // TODO: Edit as needed and catch the promise and change this.state.articles[] based on result
+        // TODO: Add .env(?) variable instead of hardcoded IP
+        // Confirmed to send properly, but receive (.then) is not done
+
+        var token = this.state.user_token;
+
+        //this.state.debug = this.state.debug + ' ' + token;
+
+        fetch('http://localhost:8080/getArticles/', {
+            method: "post",
+            headers: {
+                'Content-Type': "application/x-www-form-urlencoded"
+            },
+            body: "token="+{token}
+        })
+        .then(function(myJson) {
+            this.state.debug = this.state.debug + JSON.stringify(myJson);
+        })
+    }
+
+    login(user, pass) {
+        // TODO: Edit as needed and catch the promise and change this.state.articles[] based on result
+        // Confirmed to send properly, but receive (.then) is not done
+
+
+        fetch('http://localhost:8080/login/', {
+            method: "post",
+            headers: {
+                'Content-Type': "application/x-www-form-urlencoded"
+            },
+            body: "username="+{user}+"&password="+{pass}
+        })
+            .then(function(myJson) {
+                this.state.debug = this.state.debug + JSON.stringify(myJson);
+            })
+    }
+
     setView(new_view) {
+        if(new_view === "articles")
+            this.fetchArticles();
+
         this.setState({
             current_view: new_view,
         })
@@ -77,20 +124,19 @@ class App extends Component {
                 <header className="App-header">
 
                     <div class="container-fluid" className = "navigation-bar" >
-
                         <Navigation_bar setView = {this.setView} />
                     </div>
-                    (Debug) näkymä: {this.state.current_view}
+
                     <div class="container" className = "body">
                         <div className="container-fluid" className="event-bar">
                             <Events/>
 
                         </div>
-                        <Body  current_view = {this.state.current_view} articles = {this.state.articles} />
+                        <Body  current_view = {this.state.current_view} articles = {this.state.articles} login = {this.login}/>
                     </div>
 
                     <div className="container-fluid" className="footer">
-                        <Footer/>
+                        <Footer view = {this.state.current_view} debug = {this.state.debug}/>
                     </div>
 
                 </header>

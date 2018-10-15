@@ -5,9 +5,7 @@ class Footer extends React.Component {
     render() {
         return (
             <div className="event-text">
-                Footer
-                Footer
-                Footer
+                Current view: {this.props.view} Debug: {this.props.debug}
             </div>
         );
     }

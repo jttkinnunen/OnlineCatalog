@@ -1,21 +1,5 @@
 import React from "react";
-import { Collapse,
-    Navbar,
-    NavbarToggler,
-    NavbarBrand,
-    Nav,
-    NavItem,
-    NavLink,
-    UncontrolledDropdown,
-    DropdownToggle,
-    DropdownMenu,
-    Button,
-    FormGroup,
-    Label,
-    Input,
-    Form,
-    DropdownItem,
-UncontrolledCollapse,} from 'reactstrap';
+import {UncontrolledCollapse} from 'reactstrap';
 
 // Kannattaa katsoa navbaria ja sen collapse ominaisuutta ainakin.
 // https://reactstrap.github.io/components/navbar/
