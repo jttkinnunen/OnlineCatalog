@@ -10,13 +10,14 @@ import Footer from './components/Footer.js';
 class App extends Component {
     constructor(props) {
         super(props);
+        this.setView = this.setView.bind(this);
         this.state = {
             // Tähän kaikki mahdolliset muuttujat mitä sivulla voi olla. Päivitetään alielementeille tarvittaessa.
 
             current_view: "articles", // articles, add-article, audit-log, article-detailed, login, manage-users, forgot-pass, change-pass, profile-page
             user: null,
             user_token: null,
-            user_rights: null,
+            user_rights: "admin", // admin/user
             articles: [
                 {
                     "id": 1,
@@ -63,22 +64,29 @@ class App extends Component {
         };
     }
 
+    setView(new_view) {
+        this.setState({
+            current_view: new_view,
+        })
+    }
+
     render() {
         return (
             <div className="App">
 
                 <header className="App-header">
 
-                    <div class="container-fluid" className = "navigation-bar">
+                    <div class="container-fluid" className = "navigation-bar" >
 
-                        <Navigation_bar />
+                        <Navigation_bar setView = {this.setView} />
                     </div>
-
+                    (Debug) näkymä: {this.state.current_view}
                     <div class="container" className = "body">
                         <div className="container-fluid" className="event-bar">
                             <Events/>
+
                         </div>
-                        <Body  current_view = {this.state.current_view} articles = {this.state.articles}/>
+                        <Body  current_view = {this.state.current_view} articles = {this.state.articles} />
                     </div>
 
                     <div className="container-fluid" className="footer">

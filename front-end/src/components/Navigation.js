@@ -55,7 +55,7 @@ class Navigation extends React.Component {
                         <NavbarBrand href="/" className="mr-auto">Matsku</NavbarBrand>
                         <Form className = "nav-form">
                             <Input type="text" id="textSearch" placeholder="Hae tuotetta..." />
-                            <Button type="submit">Hae</Button>
+                            <Button type="submit" onClick={() => this.props.setView("articles")}>Hae</Button>
                         </Form>
 
                             <NavbarToggler onClick={this.toggleNavbar} className="mr-2" />
@@ -70,27 +70,27 @@ class Navigation extends React.Component {
 
                                       </DropdownToggle>
                             <DropdownMenu left>
-                                <DropdownItem>
+                                <DropdownItem onClick={() => this.props.setView("profile")}>
                                     Profiili
                                 </DropdownItem>
-                                <DropdownItem>
+                                <DropdownItem onClick={() => this.props.setView("articles")}>
                                     Etusivu
                                 </DropdownItem>
-                                <DropdownItem>
+                                <DropdownItem onClick={() => this.props.setView("add-article")}>
                                     Lisää tuote
                                 </DropdownItem>
                                 <DropdownItem divider />
-                                <DropdownItem>
+                                <DropdownItem onClick={() => this.props.setView("manage-users")}>
                                     Käyttäjien hallinta (Admin)
                                 </DropdownItem>
-                                <DropdownItem>
+                                <DropdownItem onClick={() => this.props.setView("audit-log")}>
                                     Tapahtumat (Admin)
                                 </DropdownItem>
                             </DropdownMenu>
                         </UncontrolledDropdown>
 
                         <NavItem >
-                            <NavLink href="/">  Kirjaudu ulos</NavLink>
+                            <NavLink onClick={() => this.props.setView("login")}>  Kirjaudu ulos</NavLink>
                         </NavItem>
 
 

@@ -2,7 +2,6 @@ import React from "react";
 import {Card, CardImg, CardText, CardBody,
     CardTitle, CardSubtitle, Button, Col, Row, CardGroup, ButtonGroup, Media } from 'reactstrap';
 
-import Chart from 'chart.js';
 import Layout from './TestChar'
 import './Articles.css';
 
