@@ -3,9 +3,14 @@ package com.fcgtalent.fcgcatalog.database
 import com.fcgtalent.fcgcatalog.IntegrationTests
 import com.fcgtalent.fcgcatalog.configuration.DatabaseConfiguration
 import com.fcgtalent.fcgcatalog.database.DatabaseConnector.Companion.FIELD_ADMIN
+import com.fcgtalent.fcgcatalog.database.DatabaseConnector.Companion.FIELD_BRAND
 import com.fcgtalent.fcgcatalog.database.DatabaseConnector.Companion.FIELD_EMAIL
 import com.fcgtalent.fcgcatalog.database.DatabaseConnector.Companion.FIELD_FIRST_NAME
+import com.fcgtalent.fcgcatalog.database.DatabaseConnector.Companion.FIELD_ID
 import com.fcgtalent.fcgcatalog.database.DatabaseConnector.Companion.FIELD_LAST_NAME
+import com.fcgtalent.fcgcatalog.database.DatabaseConnector.Companion.FIELD_NAME
+import com.fcgtalent.fcgcatalog.database.DatabaseConnector.Companion.FIELD_QUANTITY
+import com.fcgtalent.fcgcatalog.database.DatabaseConnector.Companion.FIELD_SHELF
 import com.fcgtalent.fcgcatalog.database.DatabaseConnector.Companion.FIELD_TOKEN
 import com.fcgtalent.fcgcatalog.util.AuthenticationException
 import io.mockk.every
@@ -69,6 +74,17 @@ class DatabaseConnectorTest(
         private const val password2 = "hiawefno"
         private const val email2 = "joowefwe@fwefwe.org"
         private const val admin2 = false
+
+        // Article related info, used for testing
+        private const val name1 = "moo1"
+        private const val brand1 = "moo2"
+        private const val count1 = 1
+        private const val shelf1 = "korkein"
+
+        private const val name2 = "moo1"
+        private const val brand2 = "moo2"
+        private const val count2 = 1
+        private const val shelf2 = "korkein"
     }
 
     @Before
@@ -82,7 +98,7 @@ class DatabaseConnectorTest(
     }
 
     @Test
-    fun testAddUser_GetUsers() {
+    fun testAddUser_GetUsers_success() {
         val results = databaseHandler.getAllUsers()
 
         // This test could fail, because the results could come in a different order?
@@ -160,24 +176,41 @@ class DatabaseConnectorTest(
     }
 
     @Test
-    fun testAddArticle() {
-        val name1 = "moo1"
-        val brand1 = "moo2"
-        val count1 = 1
-        val shelf1 = "korkein"
-
-        val name2 = "moo1"
-        val brand2 = "moo2"
-        val count2 = 1
-        val shelf2 = "korkein"
-
+    fun testAddArticle_success() {
         Assert.assertThat(databaseHandler.addArticle(name1, brand1, count1, shelf1), `is`(1))
-
         Assert.assertThat(databaseHandler.addArticle(name2, brand2, count2, shelf2), `is`(2))
+    }
+
+    @Test
+    fun testGetArticles() {
+        addTestArticles()
+
+        val results = databaseHandler.getAllArticles()
+        Assert.assertThat(results.length(), `is`(2))
+        val firstResult = results[0] as JSONObject
+        println(firstResult.toString())
+        Assert.assertThat(firstResult.getInt(FIELD_ID), `is`(1))
+        Assert.assertThat(firstResult.getString(FIELD_NAME), `is`(name1))
+        Assert.assertThat(firstResult.getString(FIELD_BRAND), `is`(brand1))
+        Assert.assertThat(firstResult.getInt(FIELD_QUANTITY), `is`(count1))
+        Assert.assertThat(firstResult.getString(FIELD_SHELF), `is`(shelf1))
+
+        val secondResult = results[1] as JSONObject
+        Assert.assertThat(secondResult.getInt(FIELD_ID), `is`(2))
+        Assert.assertThat(secondResult.getString(FIELD_NAME), `is`(name2))
+        Assert.assertThat(secondResult.getString(FIELD_BRAND), `is`(brand2))
+        Assert.assertThat(secondResult.getInt(FIELD_QUANTITY), `is`(count2))
+        Assert.assertThat(secondResult.getString(FIELD_SHELF), `is`(shelf2))
+
     }
 
     private fun addTestUsers() {
         databaseHandler.addUser(firstName1, lastName1, password1, email1, admin1)
         databaseHandler.addUser(firstName2, lastName2, password2, email2, admin2)
+    }
+
+    private fun addTestArticles() {
+        databaseHandler.addArticle(name1, brand1, count1, shelf1)
+        databaseHandler.addArticle(name2, brand2, count2, shelf2)
     }
 }
