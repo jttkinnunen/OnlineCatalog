@@ -83,5 +83,8 @@
 }
 @media only screen and (max-width: 400px) {
 
+}
 
+div.col-sm-6, div.text-right.col-sm-6{
+  padding: 0px;
 }

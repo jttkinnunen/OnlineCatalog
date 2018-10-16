@@ -69,7 +69,7 @@ class Article extends React.Component {
         return(
             <Row >
 
-                <Col sm="6" >
+                <Col sm="6">
                     <Card body className="text-left">
                         <Row>
                             <Col>
