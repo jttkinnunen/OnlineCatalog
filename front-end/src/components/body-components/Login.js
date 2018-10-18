@@ -10,25 +10,50 @@ import { Col, Button, Form, FormGroup, Label, Input, FormText } from 'reactstrap
 // TODO: https://reactstrap.github.io/components/form/
 
 class Login extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            user: '',
+            pass: '',
+        };
+        this.handleUserChange = this.handleUserChange.bind(this);
+        this.handlePassChange = this.handlePassChange.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
+    }
+
+    handleUserChange(event) {
+        this.setState({
+            user: event.target.value,
+        })
+    }
+
+    handlePassChange(event) {
+        this.setState({
+            pass: event.target.value,
+        })
+    }
+
+    handleSubmit() {
+        this.props.login(this.state.user, this.state.pass);
+    }
+
     render() {
         return(
             <Form>
                 <h5>Kirjaudu sisään</h5>
                 <FormGroup row>
-                    <Label for="exampleEmail" sm={2}>Sähköposti</Label>
                     <Col sm={10}>
-                        <Input type="email" name="email" id="exampleEmail" placeholder="Sähköposti" />
+                        <Input type="email" name="email" id="exampleEmail" placeholder="Sähköposti" value = {this.state.user} onChange = {this.handleUserChange}/>
                     </Col>
                 </FormGroup>
                 <FormGroup row>
-                    <Label for="examplePassword" sm={2}>Salasana</Label>
                     <Col sm={10}>
-                        <Input type="password" name="password" id="examplePassword" placeholder="Salasana" />
+                        <Input type="password" name="password" id="examplePassword" placeholder="Salasana" value = {this.state.pass} onChange = {this.handlePassChange} />
                     </Col>
                 </FormGroup>
                 <FormGroup check row>
-                    <Col sm={{ size: 10, offset: 2 }}>
-                        <Button onClick={() => this.props.login("urpo","turpo")}>Kirjaudu</Button>
+                    <Col sm={{ size: 10, offset: 1 }}>
+                        <Button onClick={this.handleSubmit}>Kirjaudu</Button>
                     </Col>
                 </FormGroup>
             </Form>

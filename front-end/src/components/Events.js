@@ -22,21 +22,23 @@ class Events extends React.Component {
     }
 
     render() {
-    return (
-        <div className = "event-list" id="toggler">
-            <div className="event-text">12.12.2018 -1 kpl  "Paita, hieno, XL" Keijo K. 20:45</div>
-            <UncontrolledCollapse toggler="#toggler">
+        if (this.props.current_view === "articles")
+        return (
+            <div className = "event-list" id="toggler">
                 <div className="event-text">12.12.2018 -1 kpl  "Paita, hieno, XL" Keijo K. 20:45</div>
-                <div className="event-text">12.12.2018 -1 kpl  "Paita, hieno, XL" Keijo K. 20:45</div>
-                <div className="event-text">12.12.2018 -1 kpl  "Paita, hieno, XL" Keijo K. 20:45</div>
-                <div className="event-text">12.12.2018 -1 kpl  "Paita, hieno, XL" Keijo K. 20:45</div>
-                <div className="event-text">12.12.2018 -1 kpl  "Paita, hieno, XL" Keijo K. 20:45</div>
-                <div className="event-text">12.12.2018 -1 kpl  "Paita, hieno, XL" Keijo K. 20:45</div>
-                <div className="event-text">12.12.2018 -1 kpl  "Paita, hieno, XL" Keijo K. 20:45</div>
-                <div className="event-text">12.12.2018 -1 kpl  "Paita, hieno, XL" Keijo K. 20:45</div>
-            </UncontrolledCollapse>
-        </div>
-    );
+                <UncontrolledCollapse toggler="#toggler">
+                    <div className="event-text">12.12.2018 -1 kpl  "Paita, hieno, XL" Keijo K. 20:45</div>
+                    <div className="event-text">12.12.2018 -1 kpl  "Paita, hieno, XL" Keijo K. 20:45</div>
+                    <div className="event-text">12.12.2018 -1 kpl  "Paita, hieno, XL" Keijo K. 20:45</div>
+                    <div className="event-text">12.12.2018 -1 kpl  "Paita, hieno, XL" Keijo K. 20:45</div>
+                    <div className="event-text">12.12.2018 -1 kpl  "Paita, hieno, XL" Keijo K. 20:45</div>
+                    <div className="event-text">12.12.2018 -1 kpl  "Paita, hieno, XL" Keijo K. 20:45</div>
+                    <div className="event-text">12.12.2018 -1 kpl  "Paita, hieno, XL" Keijo K. 20:45</div>
+                    <div className="event-text">12.12.2018 -1 kpl  "Paita, hieno, XL" Keijo K. 20:45</div>
+                </UncontrolledCollapse>
+            </div>
+        );
+        return(<div></div>);
 
     }
 }

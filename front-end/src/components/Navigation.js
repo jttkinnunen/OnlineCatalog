@@ -48,11 +48,11 @@ class Navigation extends React.Component {
     // Add functions for click event checks
 
     render() {
+        if (this.props.current_view !== "login")
         return (
                 <div>
-
                     <Navbar color="light" light  expand="sm">
-                        <NavbarBrand href="/" className="mr-auto">Matsku</NavbarBrand>
+                        <NavbarBrand href="/" className="mr-auto">Matsku &nbsp;</NavbarBrand>
                         <Form className = "nav-form">
                             <Input type="text" id="textSearch" placeholder="Hae tuotetta..." />
                             <Button type="submit" onClick={() => this.props.setView("articles")}>Hae</Button>
@@ -61,8 +61,6 @@ class Navigation extends React.Component {
                             <NavbarToggler onClick={this.toggleNavbar} className="mr-2" />
                             <Collapse isOpen={!this.state.collapsed} navbar>
                                 <Nav classname="ml-auto" navbar>
-
-
 
                                   <UncontrolledDropdown nav inNavbar>
 
@@ -92,10 +90,6 @@ class Navigation extends React.Component {
                         <NavItem >
                             <NavLink onClick={() => this.props.setView("login")}>  Kirjaudu ulos</NavLink>
                         </NavItem>
-
-
-
-
                                 </Nav>
                     </Collapse>
 
@@ -103,6 +97,7 @@ class Navigation extends React.Component {
             </div>
 
         );
+        return (<div></div>);
     }
 }
 

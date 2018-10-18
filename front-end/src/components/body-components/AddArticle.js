@@ -8,9 +8,9 @@ class AddArticle extends React.Component {
         return (
             <Form>
                 <FormGroup>
-                    <Label for="productName">Tuotteen nimi</Label>
+                    <Label for="productName" sm={2}>Tuotenimi</Label>
                     <Input valid />
-                    <FormFeedback valid>Hienoa! Tuotenimi on saatavilla</FormFeedback>
+                    <FormFeedback valid>Tuotenimi on saatavilla</FormFeedback>
                     <FormText>Nimeä tuote tähän tapaan: "Paita, FCG, XL" tai "Kynä, FCGTalent, Punainen"</FormText>
                 </FormGroup>
 
@@ -40,7 +40,7 @@ class AddArticle extends React.Component {
                 </FormGroup>
 
                 <FormGroup check row>
-                    <Col sm={{ size: 10, offset: 2 }}>
+                    <Col sm={{ size: 10, offset: 1 }}>
                         <Button>Lähetä</Button>
                     </Col>
                 </FormGroup>

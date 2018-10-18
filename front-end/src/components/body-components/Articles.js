@@ -44,12 +44,12 @@ class Article extends React.Component {
             countH: countH + 1
         }));
     };
-    handleClickMiinusO = () => {
+    handleClickMinusO = () => {
         this.setState(({ countO }) => ({
             countO: countO - 1
         }));
     };
-    handleClickMiinusH = () => {
+    handleClickMinusH = () => {
         this.setState(({ countH }) => ({
             countH: countH - 1
         }));
@@ -77,7 +77,7 @@ class Article extends React.Component {
                                 <CardSubtitle>Määrä: {this.props.data.count1}</CardSubtitle>
                                 <CardText>Muuta</CardText>
                                 <ButtonGroup>
-                                    <Button onClick={this.handleClickMiinusO}>-</Button>
+                                    <Button onClick={this.handleClickMinusO}>-</Button>
                                     <Button onClick={this.handleClickDoO}>
                                         {this.state.countO}
                                     </Button>
@@ -97,7 +97,7 @@ class Article extends React.Component {
                             <CardSubtitle>Määrä: {this.props.data.count2}</CardSubtitle>
                             <CardText>Muuta</CardText>
                             <ButtonGroup>
-                                <Button onClick={this.handleClickMiinusH}>-</Button>
+                                <Button onClick={this.handleClickMinusH}>-</Button>
                                 <Button onClick={this.handleClickDoH}> {this.state.countH} </Button>
                                 <Button onClick={this.handleClickPlusH}>+</Button>
                             </ButtonGroup>

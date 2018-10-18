@@ -14,12 +14,13 @@ class App extends Component {
         super(props);
         this.setView = this.setView.bind(this);
         this.login = this.login.bind(this);
+        this.postJsonRequest = this.postJsonRequest.bind(this);
         this.state = {
             // Tähän kaikki mahdolliset muuttujat mitä sivulla voi olla. Päivitetään alielementeille tarvittaessa.
 
             current_view: "articles", // articles, add-article, audit-log, article-detailed, login, manage-users, forgot-pass, change-pass, profile-page
             user: null,
-            debug: '',
+            debugval: '',
             user_token: "123456789",
             user_rights: "admin", // admin/user
             articles: [
@@ -68,45 +69,84 @@ class App extends Component {
         };
     }
 
-
+    postJsonRequest(path, payload){
+        // TODO: Add .env(?) variable instead of hardcoded IP
+        return(
+            fetch('http://localhost:8080' + path, {
+                method: "POST",
+                mode: "no-cors", // TODO: try without this line
+                headers: {
+                    'Content-Type': 'application/json; charset=utf-8',
+                },
+                body: JSON.stringify(payload),
+            }))
+        .then(response => response.json());
+    }
 
     fetchArticles() {
-        // TODO: Edit as needed and catch the promise and change this.state.articles[] based on result
-        // TODO: Add .env(?) variable instead of hardcoded IP
-        // Confirmed to send properly, but receive (.then) is not done
-
-        var token = this.state.user_token;
-
-        //this.state.debug = this.state.debug + ' ' + token;
-
-        fetch('http://localhost:8080/getArticles/', {
-            method: "post",
-            headers: {
-                'Content-Type': "application/x-www-form-urlencoded"
-            },
-            body: "token="+{token}
+        this.postJsonRequest("/getArticles", {token: this.state.user_token})
+        .then((responseJson) => {
+            this.setState({
+                debugval: this.state.debugval + " ArticlesResponse",
+            })
         })
-        .then(function(myJson) {
-            this.state.debug = this.state.debug + JSON.stringify(myJson);
+        .catch(err => {
+            this.setState({
+                debugval: this.state.debugval + " Error-fetching-articles:" + err,
+            })
         })
     }
 
-    login(user, pass) {
-        // TODO: Edit as needed and catch the promise and change this.state.articles[] based on result
-        // Confirmed to send properly, but receive (.then) is not done
-
-
-        fetch('http://localhost:8080/login/', {
-            method: "post",
-            headers: {
-                'Content-Type': "application/x-www-form-urlencoded"
-            },
-            body: "username="+{user}+"&password="+{pass}
-        })
-            .then(function(myJson) {
-                this.state.debug = this.state.debug + JSON.stringify(myJson);
+    login(user, pass){
+        this.postJsonRequest("/login",
+            {
+            "username": user,
+            "password": pass
+            })
+            .then((responseJson) => {
+                this.setState({
+                    debugval: this.state.debugval + " TOKEN:" + responseJson.token,
+                    user_token: responseJson.token,
+                    current_view: "articles",
+                })
+            })
+            .catch(err => {
+                this.setState({
+                    debugval: this.state.debugval + " Error-fetching-token:" + err,
+                })
             })
     }
+
+    /*
+    login(user, pass) {
+        // TODO: Some loading indicator? Before "fetch" set status to "loading" and in "then()" set to "complete"
+
+        // fetch('http://localhost:8080/login?username='+user+"&password="+pass, {
+        fetch('http://localhost:8080/login', {
+            method: "POST",
+            mode: "cors", // TODO: try without this line
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                username: user,
+                password: pass,
+            })
+        })
+        .then((response) => response.json())
+        .then((responseJson) => {
+            this.setState({
+                debugval: this.state.debugval + " TOKEN:" + responseJson.token,
+                user_token: responseJson.token,
+                current_view: "articles",
+            })
+        })
+            .catch(err => {
+                this.setState({
+                    debugval: this.state.debugval + " ERROR:" + err,
+                })
+            });
+    }*/
 
     setView(new_view) {
         if(new_view === "articles")
@@ -124,19 +164,19 @@ class App extends Component {
                 <header className="App-header">
 
                     <div class="container-fluid" className = "navigation-bar" >
-                        <Navigation_bar setView = {this.setView} />
+                        <Navigation_bar setView = {this.setView} current_view = {this.state.current_view} />
                     </div>
 
                     <div class="container" className = "body">
                         <div className="container-fluid" className="event-bar">
-                            <Events/>
+                            <Events current_view = {this.state.current_view} />
 
                         </div>
                         <Body  current_view = {this.state.current_view} articles = {this.state.articles} login = {this.login}/>
                     </div>
 
                     <div className="container-fluid" className="footer">
-                        <Footer view = {this.state.current_view} debug = {this.state.debug}/>
+                        <Footer current_view = {this.state.current_view} debugval = {this.state.debugval}/>
                     </div>
 
                 </header>
