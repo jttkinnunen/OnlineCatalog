@@ -23,16 +23,6 @@ class Navigation extends React.Component {
     constructor(props) {
         super(props);
 
-        /*)   this.toggle = this.toggle.bind(this);
-        this.state = {
-            isOpen: false
-        };
-    }
-    toggle() {
-        this.setState({
-            isOpen: !this.state.isOpen
-        });
-    }*/
         this.toggleNavbar = this.toggleNavbar.bind(this);
         this.state = {
             collapsed: true
@@ -68,7 +58,7 @@ class Navigation extends React.Component {
 
                                       </DropdownToggle>
                             <DropdownMenu left>
-                                <DropdownItem onClick={() => this.props.setView("profile")}>
+                                <DropdownItem onClick={() => this.props.setView("profile-page")}>
                                     Profiili
                                 </DropdownItem>
                                 <DropdownItem onClick={() => this.props.setView("articles")}>

@@ -1,13 +1,11 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
 import Body from './components/Body.js';
 import Events from './components/Events.js';
 import Navigation_bar from './components/Navigation.js';
 import Footer from './components/Footer.js';
 
-
-// TODO: See if parts of fetchArticle() and login() can be combined into a postQuery(mapping, payload) function to reduce redundant code
+const HOST = "http://localhost:8080";
 
 class App extends Component {
     constructor(props) {
@@ -15,14 +13,18 @@ class App extends Component {
         this.setView = this.setView.bind(this);
         this.login = this.login.bind(this);
         this.postJsonRequest = this.postJsonRequest.bind(this);
+        this.setUser = this.setUser.bind(this);
         this.state = {
-            // Tähän kaikki mahdolliset muuttujat mitä sivulla voi olla. Päivitetään alielementeille tarvittaessa.
-
+            // TODO: Tähän kaikki mahdolliset muuttujat mitä sivulla voi olla. Päivitetään alielementeille tarvittaessa.
             current_view: "articles", // articles, add-article, audit-log, article-detailed, login, manage-users, forgot-pass, change-pass, profile-page
-            user: null,
             debugval: '',
-            user_token: "123456789",
-            user_rights: "admin", // admin/user
+            token: "123545678",
+            user: {
+                name: "Keijo Kepponen",
+                account: "keijo.kepponen@fcgtalent.fi",
+                rights: "admin", // admin/user
+            },
+            users: [],  // format: {name: "Keijo Kepponen", account: "mail@service.com", rights: "admin"/"user"}
             articles: [
                 {
                     "id": 1,
@@ -70,9 +72,8 @@ class App extends Component {
     }
 
     postJsonRequest(path, payload){
-        // TODO: Add .env(?) variable instead of hardcoded IP
         return(
-            fetch('http://localhost:8080' + path, {
+            fetch(HOST + path, {
                 method: "POST",
                 mode: "no-cors", // TODO: try without this line
                 headers: {
@@ -105,9 +106,7 @@ class App extends Component {
             })
             .then((responseJson) => {
                 this.setState({
-                    debugval: this.state.debugval + " TOKEN:" + responseJson.token,
-                    user_token: responseJson.token,
-                    current_view: "articles",
+                    token: responseJson.token,
                 })
             })
             .catch(err => {
@@ -157,6 +156,15 @@ class App extends Component {
         })
     }
 
+    setUser(token, name, account, rights) {
+        let newUser = Object.assign({}, this.state.user)
+        newUser.name = name;
+        newUser.account = account;
+        newUser.rights = rights;
+
+        this.setState({newUser});
+    }
+
     render() {
         return (
             <div className="App">
@@ -172,7 +180,7 @@ class App extends Component {
                             <Events current_view = {this.state.current_view} />
 
                         </div>
-                        <Body  current_view = {this.state.current_view} articles = {this.state.articles} login = {this.login}/>
+                        <Body user = {this.state.user} current_view = {this.state.current_view} articles = {this.state.articles} setView = {this.setView} login = {this.login}/>
                     </div>
 
                     <div className="container-fluid" className="footer">
