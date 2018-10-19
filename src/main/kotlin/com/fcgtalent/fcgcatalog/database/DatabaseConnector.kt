@@ -53,26 +53,49 @@ abstract class DatabaseConnector(protected val configuration: DatabaseConfigurat
         statement.executeUpdate()
     }
 
+    data class UserResult(val id: Int, val first_name: String, val last_name: String, val email: String, val admin: Boolean, val token: String? = null)
+    //data class UsersResult(val users: List<UserResult>)
     @Throws(SQLException::class)
-    fun getAllUsers(): JSONArray {
-        val users = JSONArray()
+    fun getAllUsers(): List<UserResult> {
+        val userList = ArrayList<UserResult>()
 
         val sql = "SELECT * FROM $TABLE_USERS"
 
         val statement = connection.prepareStatement(sql)
         val resultSet = statement.executeQuery()
         while (resultSet.next()) {
-            val user = JSONObject()
-            // TODO write parser helperf or this stuff
-            user.put(FIELD_ID, resultSet.getInt(FIELD_ID))
-            user.put(FIELD_FIRST_NAME, resultSet.getString(FIELD_FIRST_NAME))
-            user.put(FIELD_LAST_NAME, resultSet.getString(FIELD_LAST_NAME))
-            user.put(FIELD_EMAIL, resultSet.getString(FIELD_EMAIL))
-            user.put(FIELD_ADMIN, resultSet.getInt(FIELD_ADMIN) == 1)
-
-            users.put(user)
+            val user = UserResult(
+                resultSet.getInt(FIELD_ID),
+                resultSet.getString(FIELD_FIRST_NAME),
+                resultSet.getString(FIELD_LAST_NAME),
+                resultSet.getString(FIELD_EMAIL),
+                resultSet.getInt(FIELD_ADMIN) == 1
+            )
+            userList.add(user)
         }
-        return users
+        return userList
+    }
+
+    @Throws(SQLException::class)
+    fun getUser(token: String): UserResult {
+        val sql = "SELECT * FROM $TABLE_USERS WHERE $FIELD_TOKEN = ?"
+
+        val statement = connection.prepareStatement(sql)
+        statement.setString(1, token)
+
+        val resultSet = statement.executeQuery()
+        while (resultSet.next()) {
+            return UserResult(
+                    resultSet.getInt(FIELD_ID),
+                    resultSet.getString(FIELD_FIRST_NAME),
+                    resultSet.getString(FIELD_LAST_NAME),
+                    resultSet.getString(FIELD_EMAIL),
+                    resultSet.getInt(FIELD_ADMIN) == 1,
+                    resultSet.getString(FIELD_TOKEN)
+            )
+        }
+
+        throw SQLException("Failed to find user for token")
     }
 
     @Throws(SQLException::class)
@@ -93,39 +116,40 @@ abstract class DatabaseConnector(protected val configuration: DatabaseConfigurat
         return result.getInt(1)
     }
 
+    data class ArticleResult(val id: Int, val name: String, val brand: String?, val quantity: Int, val last_change: Date, val shelf: String)
+    data class ArticlesResult(val users: List<ArticleResult>)
     @Throws(SQLException::class)
-    fun getAllArticles(): JSONArray {
-        val articles = JSONArray()
+    fun getAllArticles(): ArticlesResult {
+        val articlesList = ArrayList<ArticleResult>()
 
         val sql = "SELECT * FROM $TABLE_ARTICLES"
 
         val statement = connection.prepareStatement(sql)
         val resultSet = statement.executeQuery()
         while (resultSet.next()) {
-            val article = JSONObject()
-            // TODO write parser helperf or this stuff
-
-            article.put(FIELD_ID, resultSet.getInt(FIELD_ID))
-            article.put(FIELD_NAME, resultSet.getString(FIELD_NAME))
-            article.put(FIELD_BRAND, resultSet.getString(FIELD_BRAND))
-            article.put(FIELD_QUANTITY, resultSet.getInt(FIELD_QUANTITY))
-            article.put(FIELD_LAST_CHANGE, resultSet.getDate(FIELD_LAST_CHANGE))
-            article.put(FIELD_SHELF, resultSet.getString(FIELD_SHELF))
-
-            articles.put(article)
+            val article = ArticleResult(
+                    id = resultSet.getInt(FIELD_ID),
+                    name = resultSet.getString(FIELD_NAME),
+                    brand = resultSet.getString(FIELD_BRAND),
+                    quantity = resultSet.getInt(FIELD_QUANTITY),
+                    last_change = resultSet.getDate(FIELD_LAST_CHANGE),
+                    shelf = resultSet.getString(FIELD_SHELF)
+            )
+            articlesList.add(article)
         }
-        return articles
+        return ArticlesResult(articlesList)
     }
 
     @Throws(Exception::class)
-    fun login(username: String, password: String): JSONObject {
+    fun login(username: String, password: String): UserResult {
         val sql = "SELECT $FIELD_ID, $FIELD_PASSWORD FROM $TABLE_USERS WHERE $FIELD_EMAIL = ?"
         val statement = connection.prepareStatement(sql)
         statement.setString(1, username)
         val resultSet = statement.executeQuery()
         while (resultSet.next()) {
             if (BCrypt.checkpw(password, resultSet.getString("password"))) {
-                return addNewTokenForUse(resultSet.getInt(FIELD_ID))
+                val token = addNewTokenForUse(resultSet.getInt(FIELD_ID))
+                return getUser(token)
             }
         }
         throw AuthenticationException()
@@ -157,7 +181,7 @@ abstract class DatabaseConnector(protected val configuration: DatabaseConfigurat
     }
 
     @Throws(SQLException::class)
-    private fun addNewTokenForUse(id: Int): JSONObject {
+    private fun addNewTokenForUse(id: Int): String {
         val token = UUID.randomUUID()
 
         val sql = "UPDATE $TABLE_USERS SET $FIELD_TOKEN = ? WHERE $FIELD_ID = ?"
@@ -170,10 +194,7 @@ abstract class DatabaseConnector(protected val configuration: DatabaseConfigurat
         if (statement.executeUpdate() == 0) {
             throw SQLException("Failed to update table, check log")
         }
-
-        val json = JSONObject()
-        json.put(FIELD_TOKEN, token.toString())
-        return json
+        return token.toString()
     }
 
     @Throws(SQLException::class)

@@ -1,5 +1,7 @@
 package com.fcgtalent.fcgcatalog
 
+import com.fasterxml.jackson.annotation.JsonCreator
+import com.fasterxml.jackson.annotation.JsonProperty
 import com.fcgtalent.fcgcatalog.configuration.UploadConfiguration
 import com.fcgtalent.fcgcatalog.database.DatabaseHandler
 import com.fcgtalent.fcgcatalog.util.AuthenticationException
@@ -7,9 +9,13 @@ import com.fcgtalent.fcgcatalog.util.FileTypeException
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.configurationprocessor.json.JSONArray
 import org.springframework.boot.configurationprocessor.json.JSONObject
+import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
+import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.CrossOrigin
 import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.multipart.MultipartFile
@@ -28,6 +34,7 @@ class CatalogController {
     @Autowired
     private lateinit var uploadConfiguration: UploadConfiguration
 
+    data class OurError(val error: String)
     /**
      * Helper function used to reduce the clutter, by moving any call inside the common try catch
      * Also includes checking for authentication, (admin)
@@ -41,7 +48,7 @@ class CatalogController {
         adminOnly: Boolean,
         publicCall: Boolean,
         call: (Unit) -> Any
-    ): ResponseEntity<String> {
+    ): ResponseEntity<Any> {
         return try {
             // Checks that user has token and if command is adminOnly, check that use is admin
             if (!publicCall) {
@@ -50,72 +57,71 @@ class CatalogController {
                     throw AuthenticationException("This requires admin permissions.")
                 }
             }
-
-            ResponseEntity(call(Unit).let { (it as? JSONObject)?.toString() ?: (it as? JSONArray)?.toString() ?: "" }, HttpStatus.OK)
+            ResponseEntity(call(Unit).let { (it as? Any) ?: "" }, HttpStatus.OK)
         } catch (e: SQLException) {
-            val error = JSONObject()
-            error.put("error", "Database Error")
-            ResponseEntity(error.toString(), HttpStatus.INTERNAL_SERVER_ERROR)
+            ResponseEntity(OurError("Database Error"), HttpStatus.INTERNAL_SERVER_ERROR)
         } catch (e: AuthenticationException) {
-            e.toResponseEntity()
+            e.toResponseEntity() as ResponseEntity<Any>
         }
     }
 
-    // TODO get these parameter names from the statics
-    @PostMapping("/addUser")
+    data class AddUserBody @JsonCreator constructor(@JsonProperty val first_name: String, val last_name: String, val password: String, val email: String, val admin: Boolean, val token: String?)
+    @CrossOrigin
+    @PostMapping("/addUser", MediaType.APPLICATION_JSON_VALUE)
     fun addUser(
-        @RequestParam("first_name") firstName: String,
-        @RequestParam("last_name") lastName: String,
-        @RequestParam("password") password: String,
-        @RequestParam("email") email: String,
-        @RequestParam("admin") admin: Boolean,
-        @RequestParam("token") token: String
-    ): ResponseEntity<String> {
-        return encapsulateCall(token, true, false) { databaseHandler.addUser(firstName, lastName, password, email, admin) }
+        @RequestBody addUserBody: AddUserBody
+    ): ResponseEntity<Any> {
+        return encapsulateCall(addUserBody.token, true, false) {
+            databaseHandler.addUser(addUserBody.first_name, addUserBody.last_name, addUserBody.password, addUserBody.email, addUserBody.admin)
+        }
     }
 
-    @PostMapping("/getUsers")
-    fun getUsers(@RequestParam("token") token: String): ResponseEntity<String> {
-        return encapsulateCall(token, true, false) { databaseHandler.getAllUsers() }
+    data class GetUsersBody @JsonCreator constructor(@JsonProperty val token: String)
+    @CrossOrigin
+    @PostMapping("/getUsers", MediaType.APPLICATION_JSON_VALUE)
+    fun getUsers(@RequestBody getUsersBody: GetUsersBody): ResponseEntity<Any> {
+        return encapsulateCall(getUsersBody.token, true, false) { databaseHandler.getAllUsers() }
     }
 
-    @PostMapping("/addArticle")
+    data class AddArticleBody(val name: String, val brand: String?, val quantity: Int? = 0, val shelf: String, val token: String)
+    @CrossOrigin
+    @PostMapping("/addArticle", MediaType.APPLICATION_JSON_VALUE)
     fun addArticle(
-        @RequestParam("name") name: String,
-        @RequestParam("brand") brand: String?,
-        @RequestParam("quantity") quantity: Int? = 0,
-        @RequestParam("shelf") shelf: String,
-        @RequestParam("image") image: MultipartFile?,
-        @RequestParam("token") token: String
-    ): ResponseEntity<String> {
-        return encapsulateCall(token, false, false) {
-            val id = databaseHandler.addArticle(name, brand, quantity ?: 0, shelf)
+        //@RequestParam("image") image: MultipartFile?,
+        @RequestBody addArticle: AddArticleBody
+    ): ResponseEntity<Any> {
+        return encapsulateCall(addArticle.token, false, false) {
+            val id = databaseHandler.addArticle(addArticle.name, addArticle.brand, addArticle.quantity ?: 0, addArticle.shelf)
 
-            image?.let { uploadImage(it, "article_$id") }
+            //image?.let { uploadImage(it, "article_$id") }
 
             Any()
         }
     }
 
-    @PostMapping("/getArticles")
-    fun getArticles(@RequestParam("token") token: String): ResponseEntity<String> {
+    data class GetArticlesBody(val token: String)
+    @CrossOrigin
+    @PostMapping("/getArticles", MediaType.APPLICATION_JSON_VALUE)
+    fun getArticles(@RequestBody getArticlesBody: GetArticlesBody): ResponseEntity<Any> {
         println("Articles")
-        return encapsulateCall(token, false, false) { databaseHandler.getAllArticles() }
+        return encapsulateCall(getArticlesBody.token, false, false) { databaseHandler.getAllArticles() }
     }
 
-    @PostMapping("/logout")
-    fun logout(@RequestParam("token") token: String): ResponseEntity<String> {
-        return encapsulateCall(token, false, false) { databaseHandler.logout(token) }
+    data class LogoutBody(val token: String)
+    @CrossOrigin
+    @PostMapping("/logout", MediaType.APPLICATION_JSON_VALUE)
+    fun logout(@RequestBody logoutBody: LogoutBody): ResponseEntity<Any> {
+        return encapsulateCall(logoutBody.token, false, false) { databaseHandler.logout(logoutBody.token) }
     }
 
-    // TODO Move normal exception to something else
-    // TODO ADD response entity stuff, Also accept email in the future, checck authetnicaiton also
-    @PostMapping("/login")
+    data class LoginBody @JsonCreator constructor(@JsonProperty val username: String, @JsonProperty val password: String)
+    @CrossOrigin
+    @PostMapping("/login", MediaType.APPLICATION_JSON_VALUE)
     fun login(
-        @RequestParam("username") username: String,
-        @RequestParam("password") password: String
-    ): ResponseEntity<String> {
-        return encapsulateCall(null, false, true) { databaseHandler.login(username, password) }
+        @RequestBody loginBody: LoginBody
+    ): ResponseEntity<Any> {
+        println("Got username ${loginBody.username} got password ${loginBody.password}")
+        return encapsulateCall(null, false, true) { databaseHandler.login(loginBody.username, loginBody.password) }
     }
 
     @Throws(Exception::class)

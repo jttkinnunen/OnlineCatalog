@@ -1,7 +1,6 @@
 package com.fcgtalent.fcgcatalog.database
 
 import com.fcgtalent.fcgcatalog.configuration.DatabaseConfiguration
-import org.springframework.boot.configurationprocessor.json.JSONArray
 import org.springframework.boot.configurationprocessor.json.JSONObject
 import org.springframework.stereotype.Repository
 import java.lang.Exception
@@ -18,7 +17,7 @@ class DatabaseHandler(private val configuration: DatabaseConfiguration) {
     } }
 
     @Throws(Exception::class)
-    fun getAllUsers(): JSONArray = databaseConnector.getAllUsers()
+    fun getAllUsers() = databaseConnector.getAllUsers()
     @Throws(Exception::class)
     fun addUser(firstName: String, lastName: String, pass: String, email: String, admin: Boolean) =
             databaseConnector.addUser(firstName, lastName, pass, email, admin)
@@ -26,11 +25,11 @@ class DatabaseHandler(private val configuration: DatabaseConfiguration) {
     fun addArticle(name: String, brand: String?, quantity: Int, shelf: String): Int =
             databaseConnector.addArticle(name, brand, quantity, shelf)
     @Throws(Exception::class)
-    fun getAllArticles(): JSONArray = databaseConnector.getAllArticles()
+    fun getAllArticles() = databaseConnector.getAllArticles()
     @Throws(Exception::class)
     fun logout(token: String) = databaseConnector.logout(token)
     @Throws(Exception::class)
-    fun login(username: String, password: String): JSONObject = databaseConnector.login(username, password)
+    fun login(username: String, password: String) = databaseConnector.login(username, password)
     @Throws(Exception::class)
     fun authenticateToken(token: String): Boolean = databaseConnector.authenticateToken(token)
 }
