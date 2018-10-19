@@ -13,18 +13,32 @@ class ProfilePage extends React.Component {
 
     // TODO: Linkkaa
     render() {
+        let userType;
+
+        if (this.props.user.admin === "1")
+            {userType = <h6>Ylläpitäjän oikeudet</h6>}
+        else
+            {userType = <h6>Peruskäyttäjän oikeudet</h6>}
+
         return(
             <Form>
                 <FormGroup row>
                     <Col sm={{ size: 10, offset: 1 }}>
-                        <h6>Keijo Kepponen</h6>
+                        <h6>{this.props.user.first_name} {this.props.user.last_name}</h6>
                     </Col>
                 </FormGroup>
                 <FormGroup row>
                     <Col sm={{ size: 10, offset: 1 }}>
-                        <h6>keijo.kepponen@fcgtalent.fi</h6>
+                        <h6>{this.props.user.email}</h6>
                     </Col>
                 </FormGroup>
+
+                <FormGroup row>
+                    <Col sm={{ size: 10, offset: 1 }}>
+                        {userType}
+                    </Col>
+                </FormGroup>
+
                 <FormGroup check row>
                     <Col sm={{ size: 10, offset: 1 }}>
                         <Button onClick={this.handleSubmit}>Vaihda salasana</Button>

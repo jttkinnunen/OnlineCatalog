@@ -16,15 +16,16 @@ class App extends Component {
         this.setUser = this.setUser.bind(this);
         this.state = {
             // TODO: Tähän kaikki mahdolliset muuttujat mitä sivulla voi olla. Päivitetään alielementeille tarvittaessa.
-            current_view: "articles", // articles, add-article, audit-log, article-detailed, login, manage-users, forgot-pass, change-pass, profile-page
+            current_view: "login", // articles, add-article, audit-log, article-detailed, login, manage-users, forgot-pass, change-pass, profile-page
             debugval: '',
-            token: "123545678",
             user: {
-                name: "Keijo Kepponen",
-                account: "keijo.kepponen@fcgtalent.fi",
-                rights: "admin", // admin/user
+                first_name: "",
+                last_name: "",
+                token: "",
+                email: "",
+                admin: "1", // admin/user
             },
-            users: [],  // format: {name: "Keijo Kepponen", account: "mail@service.com", rights: "admin"/"user"}
+            users: [],  // format: {first_name: "Keijo", last_name: "Kepponen", account: "mail@service.com", rights: "admin"/"user"}
             articles: [
                 {
                     "id": 1,
@@ -77,9 +78,9 @@ class App extends Component {
                 method: "POST",
                 //mode: "no-cors", // TODO: try without this line
                 headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded', // 'application/json; charset=utf-8',
+                    'Content-Type': 'application/json',
                 },
-                body: payload,
+                body: JSON.stringify(payload),
             }))
         .then(response => response.json());
     }
@@ -100,17 +101,43 @@ class App extends Component {
 
     login(user, pass){
         this.postJsonRequest("/login",
-            "username="+user+"&password="+pass)
+            {
+            "username": user,
+            "password": pass
+            })
             .then((responseJson) => {
-                this.setState({
-                    token: responseJson.token,
-                })
+
+                // If successful login
+                if (responseJson.hasOwnProperty('token')) {
+                    let newUser = Object.assign({}, this.state.user);
+                    newUser.first_name = responseJson.first_name;
+                    newUser.last_name = responseJson.last_name;
+                    newUser.token = responseJson.token;
+                    newUser.email = responseJson.email;
+                    newUser.admin = responseJson.admin;
+
+                    this.setState({
+                        current_view: "articles",
+                        debugval: "Logged in as " + responseJson.first_name + " " + responseJson.last_name,
+                        user: newUser
+                    });
+                    //this.setState({newUser});
+                }
+                else{
+                    // TODO: inform of unsuccessful login
+                }
             })
             .catch(err => {
                 this.setState({
                     debugval: this.state.debugval + " Error-fetching-token:" + err,
                 })
             })
+    }
+
+    logout(){
+        let newUser = Object.assign({}, this.state.user);
+        newUser.token = null;
+        this.setState({newUser});
     }
 
     /*

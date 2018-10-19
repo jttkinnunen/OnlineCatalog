@@ -41,7 +41,7 @@ class Body extends React.Component {
 
         if (this.props.current_view === "profile-page")
             return (
-                <ProfilePage setView = {this.props.setView} />
+                <ProfilePage user = {this.props.user} setView = {this.props.setView} />
             );
 
         if (this.props.current_view === "article-detailed")
