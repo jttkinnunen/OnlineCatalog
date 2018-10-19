@@ -75,11 +75,11 @@ class App extends Component {
         return(
             fetch(HOST + path, {
                 method: "POST",
-                mode: "no-cors", // TODO: try without this line
+                //mode: "no-cors", // TODO: try without this line
                 headers: {
-                    'Content-Type': 'application/json; charset=utf-8',
+                    'Content-Type': 'application/x-www-form-urlencoded', // 'application/json; charset=utf-8',
                 },
-                body: JSON.stringify(payload),
+                body: payload,
             }))
         .then(response => response.json());
     }
@@ -100,10 +100,7 @@ class App extends Component {
 
     login(user, pass){
         this.postJsonRequest("/login",
-            {
-            "username": user,
-            "password": pass
-            })
+            "username="+user+"&password="+pass)
             .then((responseJson) => {
                 this.setState({
                     token: responseJson.token,
