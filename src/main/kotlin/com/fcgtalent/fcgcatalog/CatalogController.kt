@@ -49,6 +49,8 @@ class CatalogController {
         publicCall: Boolean,
         call: (Unit) -> Any
     ): ResponseEntity<Any> {
+        val headers = HttpHeaders()
+        headers.set("Content-Type", MediaType.APPLICATION_JSON_VALUE)
         return try {
             // Checks that user has token and if command is adminOnly, check that use is admin
             if (!publicCall) {
@@ -57,11 +59,11 @@ class CatalogController {
                     throw AuthenticationException("This requires admin permissions.")
                 }
             }
-            ResponseEntity(call(Unit).let { (it as? Any) ?: "" }, HttpStatus.OK)
+            ResponseEntity(call(Unit).let { (it as? Any) ?: "" }, headers, HttpStatus.OK)
         } catch (e: SQLException) {
-            ResponseEntity(OurError("Database Error"), HttpStatus.INTERNAL_SERVER_ERROR)
+            ResponseEntity(OurError("Database Error"), headers, HttpStatus.INTERNAL_SERVER_ERROR)
         } catch (e: AuthenticationException) {
-            e.toResponseEntity() as ResponseEntity<Any>
+            e.toResponseEntity() as ResponseEntity<Any> //TODO add here headers
         }
     }
 

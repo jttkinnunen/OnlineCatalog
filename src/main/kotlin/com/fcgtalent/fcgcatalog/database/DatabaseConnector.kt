@@ -54,7 +54,6 @@ abstract class DatabaseConnector(protected val configuration: DatabaseConfigurat
     }
 
     data class UserResult(val id: Int, val first_name: String, val last_name: String, val email: String, val admin: Boolean, val token: String? = null)
-    //data class UsersResult(val users: List<UserResult>)
     @Throws(SQLException::class)
     fun getAllUsers(): List<UserResult> {
         val userList = ArrayList<UserResult>()
@@ -117,9 +116,8 @@ abstract class DatabaseConnector(protected val configuration: DatabaseConfigurat
     }
 
     data class ArticleResult(val id: Int, val name: String, val brand: String?, val quantity: Int, val last_change: Date, val shelf: String)
-    data class ArticlesResult(val users: List<ArticleResult>)
     @Throws(SQLException::class)
-    fun getAllArticles(): ArticlesResult {
+    fun getAllArticles(): List<ArticleResult> {
         val articlesList = ArrayList<ArticleResult>()
 
         val sql = "SELECT * FROM $TABLE_ARTICLES"
@@ -137,7 +135,7 @@ abstract class DatabaseConnector(protected val configuration: DatabaseConfigurat
             )
             articlesList.add(article)
         }
-        return ArticlesResult(articlesList)
+        return articlesList
     }
 
     @Throws(Exception::class)
