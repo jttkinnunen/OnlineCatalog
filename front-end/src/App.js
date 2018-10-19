@@ -118,7 +118,7 @@ class App extends Component {
 
                     this.setState({
                         current_view: "articles",
-                        debugval: "Logged in as " + responseJson.first_name + " " + responseJson.last_name,
+                        debugval: "Logged in as " + responseJson.first_name + " " + responseJson.last_name + " admin?: " + responseJson.admin,
                         user: newUser
                     });
                     //this.setState({newUser});
@@ -139,37 +139,6 @@ class App extends Component {
         newUser.token = null;
         this.setState({newUser});
     }
-
-    /*
-    login(user, pass) {
-        // TODO: Some loading indicator? Before "fetch" set status to "loading" and in "then()" set to "complete"
-
-        // fetch('http://localhost:8080/login?username='+user+"&password="+pass, {
-        fetch('http://localhost:8080/login', {
-            method: "POST",
-            mode: "cors", // TODO: try without this line
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                username: user,
-                password: pass,
-            })
-        })
-        .then((response) => response.json())
-        .then((responseJson) => {
-            this.setState({
-                debugval: this.state.debugval + " TOKEN:" + responseJson.token,
-                user_token: responseJson.token,
-                current_view: "articles",
-            })
-        })
-            .catch(err => {
-                this.setState({
-                    debugval: this.state.debugval + " ERROR:" + err,
-                })
-            });
-    }*/
 
     setView(new_view) {
         if(new_view === "articles")
@@ -196,7 +165,7 @@ class App extends Component {
                 <header className="App-header">
 
                     <div class="container-fluid" className = "navigation-bar" >
-                        <Navigation_bar setView = {this.setView} current_view = {this.state.current_view} />
+                        <Navigation_bar user = {this.state.user} setView = {this.setView} current_view = {this.state.current_view} />
                     </div>
 
                     <div class="container" className = "body">

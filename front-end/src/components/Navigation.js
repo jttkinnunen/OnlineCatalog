@@ -38,6 +38,26 @@ class Navigation extends React.Component {
     // Add functions for click event checks
 
     render() {
+        let adminTools;
+
+        if (this.props.user.admin === true){
+            adminTools = (
+                <div>
+                    <DropdownItem divider />
+                    <DropdownItem onClick={() => this.props.setView("manage-users")}>
+                        Käyttäjien hallinta (Admin)
+                    </DropdownItem>
+                    <DropdownItem onClick={() => this.props.setView("audit-log")}>
+                        Tapahtumat (Admin)
+                    </DropdownItem>
+                </div>
+            )
+        }
+        else {
+            adminTools = <div></div>
+        }
+
+
         if (this.props.current_view !== "login")
         return (
                 <div>
@@ -67,22 +87,16 @@ class Navigation extends React.Component {
                                 <DropdownItem onClick={() => this.props.setView("add-article")}>
                                     Lisää tuote
                                 </DropdownItem>
-                                <DropdownItem divider />
-                                <DropdownItem onClick={() => this.props.setView("manage-users")}>
-                                    Käyttäjien hallinta (Admin)
-                                </DropdownItem>
-                                <DropdownItem onClick={() => this.props.setView("audit-log")}>
-                                    Tapahtumat (Admin)
-                                </DropdownItem>
+
+                                {adminTools}
+
                             </DropdownMenu>
                         </UncontrolledDropdown>
-
                         <NavItem >
                             <NavLink onClick={() => this.props.setView("login")}>  Kirjaudu ulos</NavLink>
                         </NavItem>
                                 </Nav>
                     </Collapse>
-
                 </Navbar>
             </div>
 
@@ -90,5 +104,8 @@ class Navigation extends React.Component {
         return (<div></div>);
     }
 }
+
+
+
 
 export default Navigation;

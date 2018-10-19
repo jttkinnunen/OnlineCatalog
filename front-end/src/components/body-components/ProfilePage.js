@@ -15,7 +15,7 @@ class ProfilePage extends React.Component {
     render() {
         let userType;
 
-        if (this.props.user.admin === "1")
+        if (this.props.user.admin === true)
             {userType = <h6>Ylläpitäjän oikeudet</h6>}
         else
             {userType = <h6>Peruskäyttäjän oikeudet</h6>}
