@@ -1,7 +1,6 @@
 package com.fcgtalent.fcgcatalog.database
 
 import com.fcgtalent.fcgcatalog.configuration.DatabaseConfiguration
-import org.springframework.boot.configurationprocessor.json.JSONObject
 import org.springframework.stereotype.Repository
 import java.lang.Exception
 

@@ -128,7 +128,6 @@ class DatabaseConnectorTest(
 
         results = databaseHandler.getUsers(listOf(1, 2))
         Assert.assertThat(results.size, `is`(2))
-
     }
 
     @Test
