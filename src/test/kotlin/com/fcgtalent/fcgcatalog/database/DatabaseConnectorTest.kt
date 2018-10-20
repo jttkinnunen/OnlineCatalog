@@ -12,7 +12,10 @@ import com.fcgtalent.fcgcatalog.database.DatabaseConnector.Companion.FIELD_NAME
 import com.fcgtalent.fcgcatalog.database.DatabaseConnector.Companion.FIELD_QUANTITY
 import com.fcgtalent.fcgcatalog.database.DatabaseConnector.Companion.FIELD_SHELF
 import com.fcgtalent.fcgcatalog.database.DatabaseConnector.Companion.FIELD_TOKEN
+import com.fcgtalent.fcgcatalog.util.AddArticleBody
+import com.fcgtalent.fcgcatalog.util.AddUserBody
 import com.fcgtalent.fcgcatalog.util.AuthenticationException
+import com.fcgtalent.fcgcatalog.util.UserResult
 import io.mockk.every
 import io.mockk.mockk
 import org.hamcrest.CoreMatchers.`is`
@@ -63,17 +66,21 @@ class DatabaseConnectorTest(
         }
 
         // User info placed to database for testing
+      //  private val addUserBody1 = AddUserBody("Moo1", "Moo1", "hiano", "joo@koo.com", true, null)
         private const val firstName1 = "Moo1"
         private const val lastName1 = "MOoo2"
         private const val password1 = "hiano"
         private const val email1 = "joo@koo.com"
         private const val admin1 = true
+    //    private val addUserBody2 = AddUserBody("Mofweo1", "MOfweoo2", "hiawefno", "joowefwe@fwefwe.org", false, null)
 
         private const val firstName2 = "Mofweo1"
         private const val lastName2 = "MOfweoo2"
         private const val password2 = "hiawefno"
         private const val email2 = "joowefwe@fwefwe.org"
         private const val admin2 = false
+
+       // private val addArticlesBody = AddArticleBody("moo1", "moo2", 1, "korkein", null)
 
         // Article related info, used for testing
         private const val name1 = "moo1"
@@ -83,7 +90,7 @@ class DatabaseConnectorTest(
 
         private const val name2 = "moo1"
         private const val brand2 = "moo2"
-        private const val count2 = 1
+        private const val count2 = 3
         private const val shelf2 = "korkein"
     }
 
@@ -102,24 +109,28 @@ class DatabaseConnectorTest(
         val results = databaseHandler.getAllUsers()
 
         // This test could fail, because the results could come in a different order?
-        Assert.assertThat(results.length(), `is`(2))
-        val firstResult = results[0] as JSONObject
-        Assert.assertThat(firstResult.getString(FIELD_FIRST_NAME), `is`(firstName1))
-        Assert.assertThat(firstResult.getString(FIELD_LAST_NAME), `is`(lastName1))
-        Assert.assertThat(firstResult.getString(FIELD_EMAIL), `is`(email1))
-        Assert.assertThat(firstResult.getBoolean(FIELD_ADMIN), `is`(admin1))
+        Assert.assertThat(results.size, `is`(2))
+        val firstResult = results[0] as UserResult
+        Assert.assertThat(firstResult.firstName, `is`(firstName1))
+        Assert.assertThat(firstResult.lastName, `is`(lastName1))
+        Assert.assertThat(firstResult.email, `is`(email1))
+        Assert.assertThat(firstResult.admin, `is`(admin1))
 
-        val secondResult = results[1] as JSONObject
-        Assert.assertThat(secondResult.getString(FIELD_FIRST_NAME), `is`(firstName2))
-        Assert.assertThat(secondResult.getString(FIELD_LAST_NAME), `is`(lastName2))
-        Assert.assertThat(secondResult.getString(FIELD_EMAIL), `is`(email2))
-        Assert.assertThat(secondResult.getBoolean(FIELD_ADMIN), `is`(admin2))
+        val secondResult = results[1] as UserResult
+        Assert.assertThat(secondResult.firstName, `is`(firstName2))
+        Assert.assertThat(secondResult.lastName, `is`(lastName2))
+        Assert.assertThat(secondResult.email, `is`(email2))
+        Assert.assertThat(secondResult.admin, `is`(admin2))
     }
 
     @Test
     fun testLogin_success() {
-        val result: JSONObject = databaseHandler.login(email1, password1)
-        Assert.assertTrue(UUID.fromString(result.getString(FIELD_TOKEN)) != null)
+        val result: UserResult = databaseHandler.login(email1, password1)
+        Assert.assertTrue(UUID.fromString(result.token) != null)
+        Assert.assertThat(result.admin, `is`(admin1))
+        Assert.assertThat(result.email, `is`(email1))
+        Assert.assertThat(result.firstName, `is`(firstName1))
+        Assert.assertThat(result.lastName, `is`(lastName1))
     }
 
     @Test
@@ -133,15 +144,15 @@ class DatabaseConnectorTest(
     @Test
     fun testAuthenticateToken_success() {
         // Check one with admin privileges
-        val result1: JSONObject = databaseHandler.login(email1, password1)
-        val token1 = result1.getString(FIELD_TOKEN)
-        Assert.assertThat(databaseHandler.authenticateToken(token1), `is`(admin1))
+        val result1: UserResult = databaseHandler.login(email1, password1)
+        val token1 = result1.token
+        Assert.assertThat(databaseHandler.authenticateToken(token1!!), `is`(admin1))
 
         // Check one without admin privleges
-        val result2: JSONObject = databaseHandler.login(email2, password2)
-        val token2 = result2.getString(FIELD_TOKEN)
+        val result2: UserResult = databaseHandler.login(email2, password2)
+        val token2 = result2.token
 
-        Assert.assertThat(databaseHandler.authenticateToken(token2), `is`(admin2))
+        Assert.assertThat(databaseHandler.authenticateToken(token2!!), `is`(admin2))
     }
 
     @Test
@@ -155,9 +166,9 @@ class DatabaseConnectorTest(
     @Test
     fun testLogout_success() {
         // Check one with admin privileges
-        val result1: JSONObject = databaseHandler.login(email1, password1)
-        val token1 = result1.getString(FIELD_TOKEN)
-        databaseHandler.logout(token1)
+        val result1: UserResult = databaseHandler.login(email1, password1)
+        val token1 = result1.token
+        databaseHandler.logout(token1!!)
 
         // We have logged out so we should fail to authenticate
         try {
@@ -186,21 +197,21 @@ class DatabaseConnectorTest(
         addTestArticles()
 
         val results = databaseHandler.getAllArticles()
-        Assert.assertThat(results.length(), `is`(2))
-        val firstResult = results[0] as JSONObject
+        Assert.assertThat(results.size, `is`(2))
+        val firstResult = results[0]
         println(firstResult.toString())
-        Assert.assertThat(firstResult.getInt(FIELD_ID), `is`(1))
-        Assert.assertThat(firstResult.getString(FIELD_NAME), `is`(name1))
-        Assert.assertThat(firstResult.getString(FIELD_BRAND), `is`(brand1))
-        Assert.assertThat(firstResult.getInt(FIELD_QUANTITY), `is`(count1))
-        Assert.assertThat(firstResult.getString(FIELD_SHELF), `is`(shelf1))
+        Assert.assertThat(firstResult.id, `is`(1))
+        Assert.assertThat(firstResult.name, `is`(name1))
+        Assert.assertThat(firstResult.brand, `is`(brand1))
+        Assert.assertThat(firstResult.quantity, `is`(count1))
+        Assert.assertThat(firstResult.shelf, `is`(shelf1))
 
-        val secondResult = results[1] as JSONObject
-        Assert.assertThat(secondResult.getInt(FIELD_ID), `is`(2))
-        Assert.assertThat(secondResult.getString(FIELD_NAME), `is`(name2))
-        Assert.assertThat(secondResult.getString(FIELD_BRAND), `is`(brand2))
-        Assert.assertThat(secondResult.getInt(FIELD_QUANTITY), `is`(count2))
-        Assert.assertThat(secondResult.getString(FIELD_SHELF), `is`(shelf2))
+        val secondResult = results[1]
+        Assert.assertThat(secondResult.id, `is`(2))
+        Assert.assertThat(secondResult.name, `is`(name2))
+        Assert.assertThat(secondResult.brand, `is`(brand2))
+        Assert.assertThat(secondResult.quantity, `is`(count2))
+        Assert.assertThat(secondResult.shelf, `is`(shelf2))
 
     }
 

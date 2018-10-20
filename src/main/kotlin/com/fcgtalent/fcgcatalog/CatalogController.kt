@@ -1,14 +1,16 @@
 package com.fcgtalent.fcgcatalog
 
-import com.fasterxml.jackson.annotation.JsonCreator
-import com.fasterxml.jackson.annotation.JsonProperty
 import com.fcgtalent.fcgcatalog.configuration.UploadConfiguration
 import com.fcgtalent.fcgcatalog.database.DatabaseHandler
+import com.fcgtalent.fcgcatalog.util.AddArticleBody
+import com.fcgtalent.fcgcatalog.util.AddUserBody
 import com.fcgtalent.fcgcatalog.util.AuthenticationException
 import com.fcgtalent.fcgcatalog.util.FileTypeException
+import com.fcgtalent.fcgcatalog.util.GetArticlesBody
+import com.fcgtalent.fcgcatalog.util.GetUsersBody
+import com.fcgtalent.fcgcatalog.util.LoginBody
+import com.fcgtalent.fcgcatalog.util.LogoutBody
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.configurationprocessor.json.JSONArray
-import org.springframework.boot.configurationprocessor.json.JSONObject
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
@@ -65,25 +67,22 @@ class CatalogController {
         }
     }
 
-    data class AddUserBody @JsonCreator constructor(@JsonProperty val first_name: String, val last_name: String, val password: String, val email: String, val admin: Boolean, val token: String?)
     @CrossOrigin
     @PostMapping("/addUser", MediaType.APPLICATION_JSON_VALUE)
     fun addUser(
         @RequestBody addUserBody: AddUserBody
     ): ResponseEntity<Any> {
         return encapsulateCall(addUserBody.token, true, false) {
-            databaseHandler.addUser(addUserBody.first_name, addUserBody.last_name, addUserBody.password, addUserBody.email, addUserBody.admin)
+            databaseHandler.addUser(addUserBody.firstName, addUserBody.lastName, addUserBody.password, addUserBody.email, addUserBody.admin)
         }
     }
 
-    data class GetUsersBody @JsonCreator constructor(@JsonProperty val token: String)
     @CrossOrigin
     @PostMapping("/getUsers", MediaType.APPLICATION_JSON_VALUE)
     fun getUsers(@RequestBody getUsersBody: GetUsersBody): ResponseEntity<Any> {
         return encapsulateCall(getUsersBody.token, true, false) { databaseHandler.getAllUsers() }
     }
 
-    data class AddArticleBody(val name: String, val brand: String?, val quantity: Int? = 0, val shelf: String, val token: String)
     @CrossOrigin
     @PostMapping("/addArticle", MediaType.APPLICATION_JSON_VALUE)
     fun addArticle(
@@ -99,7 +98,6 @@ class CatalogController {
         }
     }
 
-    data class GetArticlesBody(val token: String)
     @CrossOrigin
     @PostMapping("/getArticles", MediaType.APPLICATION_JSON_VALUE)
     fun getArticles(@RequestBody getArticlesBody: GetArticlesBody): ResponseEntity<Any> {
@@ -107,14 +105,12 @@ class CatalogController {
         return encapsulateCall(getArticlesBody.token, false, false) { databaseHandler.getAllArticles() }
     }
 
-    data class LogoutBody(val token: String)
     @CrossOrigin
     @PostMapping("/logout", MediaType.APPLICATION_JSON_VALUE)
     fun logout(@RequestBody logoutBody: LogoutBody): ResponseEntity<Any> {
         return encapsulateCall(logoutBody.token, false, false) { databaseHandler.logout(logoutBody.token) }
     }
 
-    data class LoginBody @JsonCreator constructor(@JsonProperty val username: String, @JsonProperty val password: String)
     @CrossOrigin
     @PostMapping("/login", MediaType.APPLICATION_JSON_VALUE)
     fun login(

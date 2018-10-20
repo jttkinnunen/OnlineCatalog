@@ -1,7 +1,9 @@
 package com.fcgtalent.fcgcatalog.database
 
 import com.fcgtalent.fcgcatalog.configuration.DatabaseConfiguration
+import com.fcgtalent.fcgcatalog.util.ArticleResult
 import com.fcgtalent.fcgcatalog.util.AuthenticationException
+import com.fcgtalent.fcgcatalog.util.UserResult
 import org.springframework.boot.configurationprocessor.json.JSONArray
 import org.springframework.boot.configurationprocessor.json.JSONObject
 import org.springframework.security.crypto.bcrypt.BCrypt
@@ -53,7 +55,6 @@ abstract class DatabaseConnector(protected val configuration: DatabaseConfigurat
         statement.executeUpdate()
     }
 
-    data class UserResult(val id: Int, val first_name: String, val last_name: String, val email: String, val admin: Boolean, val token: String? = null)
     @Throws(SQLException::class)
     fun getAllUsers(): List<UserResult> {
         val userList = ArrayList<UserResult>()
@@ -115,7 +116,6 @@ abstract class DatabaseConnector(protected val configuration: DatabaseConfigurat
         return result.getInt(1)
     }
 
-    data class ArticleResult(val id: Int, val name: String, val brand: String?, val quantity: Int, val last_change: Date, val shelf: String)
     @Throws(SQLException::class)
     fun getAllArticles(): List<ArticleResult> {
         val articlesList = ArrayList<ArticleResult>()
