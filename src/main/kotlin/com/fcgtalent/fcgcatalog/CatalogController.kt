@@ -7,6 +7,7 @@ import com.fcgtalent.fcgcatalog.util.AddUserBody
 import com.fcgtalent.fcgcatalog.util.AuthenticationException
 import com.fcgtalent.fcgcatalog.util.FileTypeException
 import com.fcgtalent.fcgcatalog.util.GetArticlesBody
+import com.fcgtalent.fcgcatalog.util.GetSelfBody
 import com.fcgtalent.fcgcatalog.util.GetUsersBody
 import com.fcgtalent.fcgcatalog.util.LoginBody
 import com.fcgtalent.fcgcatalog.util.LogoutBody
@@ -58,7 +59,8 @@ class CatalogController {
                     throw AuthenticationException("This requires admin permissions.")
                 }
             }
-            ResponseEntity(call(Unit).let { (it as? Any) ?: "" }, HttpStatus.OK)
+            // TODO actually check if it was successfull
+            ResponseEntity(call(Unit).let { (it as? Any) ?: "{ success: true }" }, HttpStatus.OK)
         } catch (e: SQLException) {
             ResponseEntity(OurError("Database Error"), HttpStatus.INTERNAL_SERVER_ERROR)
         } catch (e: AuthenticationException) {
@@ -85,7 +87,17 @@ class CatalogController {
     @CrossOrigin
     @PostMapping("/getUsers", MediaType.APPLICATION_JSON_VALUE)
     fun getUsers(@RequestBody getUsersBody: GetUsersBody): ResponseEntity<Any> {
-        return encapsulateCall(getUsersBody.token, true, false) { databaseHandler.getAllUsers() }
+        return encapsulateCall(getUsersBody.token, true, false) {
+            databaseHandler.getUsers(getUsersBody.ids ?: listOf())
+        }
+    }
+
+    @CrossOrigin
+    @PostMapping("/getSelf", MediaType.APPLICATION_JSON_VALUE)
+    fun getSelf(@RequestBody getSelfBody: GetSelfBody): ResponseEntity<Any> {
+        return encapsulateCall(getSelfBody.token, false, false) {
+            databaseHandler.getUserWithToken(getSelfBody.token)
+        }
     }
 
     @CrossOrigin
