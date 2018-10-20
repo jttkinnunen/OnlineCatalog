@@ -3,10 +3,12 @@ package com.fcgtalent.fcgcatalog
 import com.fcgtalent.fcgcatalog.configuration.UploadConfiguration
 import com.fcgtalent.fcgcatalog.database.DatabaseHandler
 import com.fcgtalent.fcgcatalog.util.AddArticleBody
+import com.fcgtalent.fcgcatalog.util.AddLocationBody
 import com.fcgtalent.fcgcatalog.util.AddUserBody
 import com.fcgtalent.fcgcatalog.util.AuthenticationException
 import com.fcgtalent.fcgcatalog.util.FileTypeException
 import com.fcgtalent.fcgcatalog.util.GetArticlesBody
+import com.fcgtalent.fcgcatalog.util.GetLocationsBody
 import com.fcgtalent.fcgcatalog.util.GetSelfBody
 import com.fcgtalent.fcgcatalog.util.GetUsersBody
 import com.fcgtalent.fcgcatalog.util.LoginBody
@@ -107,10 +109,9 @@ class CatalogController {
         @RequestBody addArticle: AddArticleBody
     ): ResponseEntity<Any> {
         return encapsulateCall(addArticle.token, false, false) {
-            val id = databaseHandler.addArticle(
+            databaseHandler.addArticle(
                 addArticle.name,
                 addArticle.brand,
-                addArticle.quantity ?: 0,
                 addArticle.shelf
             )
 
@@ -124,7 +125,29 @@ class CatalogController {
     @PostMapping("/getArticles", MediaType.APPLICATION_JSON_VALUE)
     fun getArticles(@RequestBody getArticlesBody: GetArticlesBody): ResponseEntity<Any> {
         println("Articles")
-        return encapsulateCall(getArticlesBody.token, false, false) { databaseHandler.getAllArticles() }
+        return encapsulateCall(getArticlesBody.token, false, false) {
+            databaseHandler.getArticles(getArticlesBody.ids ?: listOf())
+        }
+    }//, getArticlesBody.locationIds ?: listOf(
+
+    @CrossOrigin
+    @PostMapping("/addLocation", MediaType.APPLICATION_JSON_VALUE)
+    fun addLocation(
+        @RequestBody addLocationBody: AddLocationBody
+    ): ResponseEntity<Any> {
+        return encapsulateCall(addLocationBody.token, true, false) {
+            databaseHandler.addLocation(
+                addLocationBody.name
+            )
+        }
+    }
+
+    @CrossOrigin
+    @PostMapping("/getLocations", MediaType.APPLICATION_JSON_VALUE)
+    fun getLocations(@RequestBody getLocationsBody: GetLocationsBody): ResponseEntity<Any> {
+        return encapsulateCall(getLocationsBody.token, true, false) {
+            databaseHandler.getLocations(getLocationsBody.ids ?: listOf())
+        }
     }
 
     @CrossOrigin

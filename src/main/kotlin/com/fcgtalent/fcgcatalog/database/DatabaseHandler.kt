@@ -16,17 +16,23 @@ class DatabaseHandler(private val configuration: DatabaseConfiguration) {
     } }
 
     @Throws(Exception::class)
-    fun getUserWithToken(token: String) = databaseConnector.getUser(token)
+    fun getUserWithToken(token: String) = databaseConnector.getUserWithToken(token)
     @Throws(Exception::class)
     fun getUsers(ids: List<Int>) = databaseConnector.getUsers(ids)
     @Throws(Exception::class)
     fun addUser(firstName: String, lastName: String, pass: String, email: String, admin: Boolean) =
             databaseConnector.addUser(firstName, lastName, pass, email, admin)
     @Throws(Exception::class)
-    fun addArticle(name: String, brand: String?, quantity: Int, shelf: String): Int =
-            databaseConnector.addArticle(name, brand, quantity, shelf)
+    fun addArticle(name: String, brand: String?, shelf: String) =
+            databaseConnector.addArticle(name, brand, shelf)
     @Throws(Exception::class)
-    fun getAllArticles() = databaseConnector.getAllArticles()
+    fun getArticles(ids: List<Int>) = databaseConnector.getAllArticles(ids)
+    @Throws(Exception::class)
+    fun getArticlesInLocations(ids: List<Int>, locationIds: List<Int>) = databaseConnector.getArticlesInLocations(ids, locationIds)
+    @Throws(Exception::class)
+    fun addLocation(name: String) = databaseConnector.addLocation(name)
+    @Throws(Exception::class)
+    fun getLocations(ids: List<Int>) = databaseConnector.getLocations(ids)
     @Throws(Exception::class)
     fun logout(token: String) = databaseConnector.logout(token)
     @Throws(Exception::class)
