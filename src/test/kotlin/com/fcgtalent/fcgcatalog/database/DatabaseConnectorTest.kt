@@ -95,7 +95,7 @@ class DatabaseConnectorTest(
 
     @Test
     fun testAddUser_GetUsers_success() {
-        val results = databaseHandler.getAllUsers()
+        val results = databaseHandler.getUsers(listOf())
 
         // This test could fail, because the results could come in a different order?
         Assert.assertThat(results.size, `is`(2))
@@ -110,6 +110,24 @@ class DatabaseConnectorTest(
         Assert.assertThat(secondResult.lastName, `is`(lastName2))
         Assert.assertThat(secondResult.email, `is`(email2))
         Assert.assertThat(secondResult.admin, `is`(admin2))
+    }
+
+    @Test
+    fun testGetUsers() {
+        var results = databaseHandler.getUsers(listOf(1, 2))
+        Assert.assertThat(results.size, `is`(2))
+
+        results = databaseHandler.getUsers(listOf(1, 3))
+        Assert.assertThat(results.size, `is`(1))
+
+        results = databaseHandler.getUsers(listOf(1, 2, 5, 7, 8))
+        Assert.assertThat(results.size, `is`(2))
+
+        results = databaseHandler.getUsers(listOf(20, 11))
+        Assert.assertThat(results.size, `is`(0))
+
+        results = databaseHandler.getUsers(listOf(1, 2))
+        Assert.assertThat(results.size, `is`(2))
     }
 
     @Test

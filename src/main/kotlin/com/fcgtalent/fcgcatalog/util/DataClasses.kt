@@ -32,10 +32,17 @@ data class AddUserBody @JsonCreator constructor(
     @JsonProperty val password: String,
     @JsonProperty val email: String,
     @JsonProperty val admin: Boolean,
-    @JsonProperty val token: String?
+    @JsonProperty val token: String
 )
 
-data class GetUsersBody @JsonCreator constructor(@JsonProperty val token: String)
+data class GetUsersBody @JsonCreator constructor(
+    @JsonProperty val ids: List<Int>?,
+    @JsonProperty val token: String
+)
+
+data class GetSelfBody @JsonCreator constructor(
+    @JsonProperty val token: String
+)
 
 data class AddArticleBody @JsonCreator constructor(
     @JsonProperty val name: String,

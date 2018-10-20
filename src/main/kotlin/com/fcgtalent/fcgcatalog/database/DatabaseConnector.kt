@@ -4,8 +4,6 @@ import com.fcgtalent.fcgcatalog.configuration.DatabaseConfiguration
 import com.fcgtalent.fcgcatalog.util.ArticleResult
 import com.fcgtalent.fcgcatalog.util.AuthenticationException
 import com.fcgtalent.fcgcatalog.util.UserResult
-import org.springframework.boot.configurationprocessor.json.JSONArray
-import org.springframework.boot.configurationprocessor.json.JSONObject
 import org.springframework.security.crypto.bcrypt.BCrypt
 import org.springframework.util.ResourceUtils
 import java.sql.Connection
@@ -57,24 +55,44 @@ abstract class DatabaseConnector(protected val configuration: DatabaseConfigurat
     }
 
     @Throws(SQLException::class)
-    fun getAllUsers(): List<UserResult> {
-        val userList = ArrayList<UserResult>()
+    fun getUsers(ids: List<Int>): List<UserResult> {
+        var sql: String
 
-        val sql = "SELECT * FROM $TABLE_USERS"
+        if (ids.isEmpty()) {
+            sql = "SELECT * FROM $TABLE_USERS"
+        } else {
+            // Need do build the statement manually, since sqlite doesn't support setArray
+            sql = "SELECT * FROM $TABLE_USERS WHERE $FIELD_ID IN ("
+            val iterator = ids.iterator()
+            while (iterator.hasNext()) {
+                iterator.next()
+                sql += "?"
+                if (iterator.hasNext()) {
+                    sql += ","
+                }
+            }
+            sql += ")"
+        }
+
+        val usersList = ArrayList<UserResult>()
 
         val statement = connection.prepareStatement(sql)
+        // Need do build the statement manually, since sqlite doesn't support setArray
+        ids.forEachIndexed { index, i -> statement.setInt(index + 1, i) }
+
         val resultSet = statement.executeQuery()
         while (resultSet.next()) {
-            val user = UserResult(
-                resultSet.getInt(FIELD_ID),
-                resultSet.getString(FIELD_FIRST_NAME),
-                resultSet.getString(FIELD_LAST_NAME),
-                resultSet.getString(FIELD_EMAIL),
-                resultSet.getInt(FIELD_ADMIN) == 1
+            usersList.add(
+                UserResult(
+                    resultSet.getInt(FIELD_ID),
+                    resultSet.getString(FIELD_FIRST_NAME),
+                    resultSet.getString(FIELD_LAST_NAME),
+                    resultSet.getString(FIELD_EMAIL),
+                    resultSet.getInt(FIELD_ADMIN) == 1
+                )
             )
-            userList.add(user)
         }
-        return userList
+        return usersList
     }
 
     @Throws(SQLException::class)

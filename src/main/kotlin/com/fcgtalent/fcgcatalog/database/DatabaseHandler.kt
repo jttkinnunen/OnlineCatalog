@@ -1,7 +1,6 @@
 package com.fcgtalent.fcgcatalog.database
 
 import com.fcgtalent.fcgcatalog.configuration.DatabaseConfiguration
-import org.springframework.boot.configurationprocessor.json.JSONObject
 import org.springframework.stereotype.Repository
 import java.lang.Exception
 
@@ -17,7 +16,9 @@ class DatabaseHandler(private val configuration: DatabaseConfiguration) {
     } }
 
     @Throws(Exception::class)
-    fun getAllUsers() = databaseConnector.getAllUsers()
+    fun getUserWithToken(token: String) = databaseConnector.getUser(token)
+    @Throws(Exception::class)
+    fun getUsers(ids: List<Int>) = databaseConnector.getUsers(ids)
     @Throws(Exception::class)
     fun addUser(firstName: String, lastName: String, pass: String, email: String, admin: Boolean) =
             databaseConnector.addUser(firstName, lastName, pass, email, admin)
