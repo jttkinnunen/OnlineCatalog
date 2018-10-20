@@ -26,7 +26,7 @@ class Body extends React.Component {
 
         if (this.props.current_view === "login")
             return (
-                <Login login = {this.props.login} />
+                <Login login = {this.props.login} login_state = {this.props.login_state} />
             );
 
         if (this.props.current_view === "manage-users")

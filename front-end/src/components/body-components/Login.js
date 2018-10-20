@@ -1,5 +1,5 @@
 import React from "react";
-import { Col, Button, Form, FormGroup, Label, Input, FormText } from 'reactstrap';
+import { Col, Button, Form, FormGroup, FormFeedback, Label, Input, FormText } from 'reactstrap';
 
 
 // TODO: Katso linkki alta, hyödyllinen
@@ -38,6 +38,13 @@ class Login extends React.Component {
     }
 
     render() {
+        let login_result = "";
+
+        if (this.props.login_state !== ""){
+            login_result =
+            this.props.login_state
+        }
+
         return(
             <Form>
                 <h5>Kirjaudu sisään</h5>
@@ -49,6 +56,7 @@ class Login extends React.Component {
                 <FormGroup row>
                     <Col sm={10}>
                         <Input type="password" name="password" id="examplePassword" placeholder="Salasana" value = {this.state.pass} onChange = {this.handlePassChange} />
+                        <h6>{login_result}</h6>
                     </Col>
                 </FormGroup>
                 <FormGroup check row>

@@ -9,9 +9,8 @@ class AddArticle extends React.Component {
             <Form>
                 <FormGroup>
                     <Label for="productName" sm={2}>Tuotenimi</Label>
-                    <Input valid />
-                    <FormFeedback valid>Tuotenimi on saatavilla</FormFeedback>
-                    <FormText>Nimeä tuote tähän tapaan: "Paita, FCG, XL" tai "Kynä, FCGTalent, Punainen"</FormText>
+                    <Input valid placeholder='Esim. "FCGTalent, Paita, Punainen, XL ..."' />
+                    <FormFeedback valid tooltip>Tuotenimi on saatavilla</FormFeedback>
                 </FormGroup>
 
                 <FormGroup row>

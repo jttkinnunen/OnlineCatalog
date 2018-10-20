@@ -18,6 +18,7 @@ class App extends Component {
             // TODO: Tähän kaikki mahdolliset muuttujat mitä sivulla voi olla. Päivitetään alielementeille tarvittaessa.
             current_view: "login", // articles, add-article, audit-log, article-detailed, login, manage-users, forgot-pass, change-pass, profile-page
             debugval: '',
+            login_state: '',
             user: {
                 first_name: "",
                 last_name: "",
@@ -86,7 +87,7 @@ class App extends Component {
     }
 
     fetchArticles() {
-        this.postJsonRequest("/getArticles", {token: this.state.user_token})
+        this.postJsonRequest("/getArticles", {token: this.state.user.token})
         .then((responseJson) => {
             this.setState({
                 debugval: this.state.debugval + " ArticlesResponse",
@@ -119,11 +120,13 @@ class App extends Component {
                     this.setState({
                         current_view: "articles",
                         debugval: "Logged in as " + responseJson.first_name + " " + responseJson.last_name + " admin?: " + responseJson.admin,
-                        user: newUser
+                        user: newUser,
+                        login_state: ""
                     });
                     //this.setState({newUser});
                 }
                 else{
+                    this.setState({login_state: "Käyttäjätunnus ja salasana eivät täsmää"});
                     // TODO: inform of unsuccessful login
                 }
             })
@@ -173,7 +176,7 @@ class App extends Component {
                             <Events current_view = {this.state.current_view} />
 
                         </div>
-                        <Body user = {this.state.user} current_view = {this.state.current_view} articles = {this.state.articles} setView = {this.setView} login = {this.login}/>
+                        <Body login_state = {this.state.login_state} user = {this.state.user} current_view = {this.state.current_view} articles = {this.state.articles} setView = {this.setView} login = {this.login}/>
                     </div>
 
                     <div className="container-fluid" className="footer">
