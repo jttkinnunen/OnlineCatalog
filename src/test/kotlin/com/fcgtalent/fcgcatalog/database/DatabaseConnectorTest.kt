@@ -2,18 +2,6 @@ package com.fcgtalent.fcgcatalog.database
 
 import com.fcgtalent.fcgcatalog.IntegrationTests
 import com.fcgtalent.fcgcatalog.configuration.DatabaseConfiguration
-import com.fcgtalent.fcgcatalog.database.DatabaseConnector.Companion.FIELD_ADMIN
-import com.fcgtalent.fcgcatalog.database.DatabaseConnector.Companion.FIELD_BRAND
-import com.fcgtalent.fcgcatalog.database.DatabaseConnector.Companion.FIELD_EMAIL
-import com.fcgtalent.fcgcatalog.database.DatabaseConnector.Companion.FIELD_FIRST_NAME
-import com.fcgtalent.fcgcatalog.database.DatabaseConnector.Companion.FIELD_ID
-import com.fcgtalent.fcgcatalog.database.DatabaseConnector.Companion.FIELD_LAST_NAME
-import com.fcgtalent.fcgcatalog.database.DatabaseConnector.Companion.FIELD_NAME
-import com.fcgtalent.fcgcatalog.database.DatabaseConnector.Companion.FIELD_QUANTITY
-import com.fcgtalent.fcgcatalog.database.DatabaseConnector.Companion.FIELD_SHELF
-import com.fcgtalent.fcgcatalog.database.DatabaseConnector.Companion.FIELD_TOKEN
-import com.fcgtalent.fcgcatalog.util.AddArticleBody
-import com.fcgtalent.fcgcatalog.util.AddUserBody
 import com.fcgtalent.fcgcatalog.util.AuthenticationException
 import com.fcgtalent.fcgcatalog.util.UserResult
 import io.mockk.every
@@ -26,7 +14,6 @@ import org.junit.Test
 import org.junit.experimental.categories.Category
 import org.junit.runner.RunWith
 import org.junit.runners.Parameterized
-import org.springframework.boot.configurationprocessor.json.JSONObject
 import java.util.UUID
 
 /**
@@ -61,18 +48,20 @@ class DatabaseConnectorTest(
             every { pgsqlConfiguration.username } returns "postgres"
             every { pgsqlConfiguration.password } returns "postgres"
 
-            return listOf(arrayOf("SQLite", sqliteConfiguration),
-                    arrayOf("PgSQL", pgsqlConfiguration))
+            return listOf(
+                arrayOf("SQLite", sqliteConfiguration),
+                arrayOf("PgSQL", pgsqlConfiguration)
+            )
         }
 
         // User info placed to database for testing
-      //  private val addUserBody1 = AddUserBody("Moo1", "Moo1", "hiano", "joo@koo.com", true, null)
+        //  private val addUserBody1 = AddUserBody("Moo1", "Moo1", "hiano", "joo@koo.com", true, null)
         private const val firstName1 = "Moo1"
         private const val lastName1 = "MOoo2"
         private const val password1 = "hiano"
         private const val email1 = "joo@koo.com"
         private const val admin1 = true
-    //    private val addUserBody2 = AddUserBody("Mofweo1", "MOfweoo2", "hiawefno", "joowefwe@fwefwe.org", false, null)
+        //    private val addUserBody2 = AddUserBody("Mofweo1", "MOfweoo2", "hiawefno", "joowefwe@fwefwe.org", false, null)
 
         private const val firstName2 = "Mofweo1"
         private const val lastName2 = "MOfweoo2"
@@ -80,7 +69,7 @@ class DatabaseConnectorTest(
         private const val email2 = "joowefwe@fwefwe.org"
         private const val admin2 = false
 
-       // private val addArticlesBody = AddArticleBody("moo1", "moo2", 1, "korkein", null)
+        // private val addArticlesBody = AddArticleBody("moo1", "moo2", 1, "korkein", null)
 
         // Article related info, used for testing
         private const val name1 = "moo1"
@@ -138,7 +127,8 @@ class DatabaseConnectorTest(
         try {
             databaseHandler.login(email1, password2)
             Assert.fail()
-        } catch (e: AuthenticationException) { }
+        } catch (e: AuthenticationException) {
+        }
     }
 
     @Test
@@ -160,7 +150,8 @@ class DatabaseConnectorTest(
         try {
             databaseHandler.authenticateToken("39e1c6a4-a206-48cd-8b17-6c94104dc421")
             Assert.fail()
-        } catch (e: AuthenticationException) { }
+        } catch (e: AuthenticationException) {
+        }
     }
 
     @Test
@@ -174,7 +165,8 @@ class DatabaseConnectorTest(
         try {
             databaseHandler.authenticateToken(token1)
             Assert.fail()
-        } catch (e: AuthenticationException) { }
+        } catch (e: AuthenticationException) {
+        }
     }
 
     @Test
@@ -183,7 +175,8 @@ class DatabaseConnectorTest(
         try {
             databaseHandler.logout("39e1c6a4-a206-48cd-8b17-6c94104dc421")
             Assert.fail()
-        } catch (e: AuthenticationException) { }
+        } catch (e: AuthenticationException) {
+        }
     }
 
     @Test
@@ -212,7 +205,6 @@ class DatabaseConnectorTest(
         Assert.assertThat(secondResult.brand, `is`(brand2))
         Assert.assertThat(secondResult.quantity, `is`(count2))
         Assert.assertThat(secondResult.shelf, `is`(shelf2))
-
     }
 
     private fun addTestUsers() {

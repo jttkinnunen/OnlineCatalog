@@ -3,10 +3,12 @@ package com.fcgtalent.fcgcatalog.util
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
 import java.sql.Date
+
 // TODO Comment and clean
 
 // Answers we send back
-data class UserResult @JsonCreator constructor(@JsonProperty val id: Int,
+data class UserResult @JsonCreator constructor(
+    @JsonProperty val id: Int,
     @JsonProperty("first_name") val firstName: String,
     @JsonProperty("last_name") val lastName: String,
     @JsonProperty val email: String,
@@ -14,9 +16,9 @@ data class UserResult @JsonCreator constructor(@JsonProperty val id: Int,
     @JsonProperty val token: String? = null
 )
 
-
 data class ArticleResult @JsonCreator constructor(
-    @JsonProperty val id: Int, val name: String,
+    @JsonProperty val id: Int,
+    @JsonProperty val name: String,
     @JsonProperty val brand: String?,
     @JsonProperty val quantity: Int,
     @JsonProperty val last_change: Date,
@@ -44,7 +46,7 @@ data class AddArticleBody @JsonCreator constructor(
 )
 
 data class GetArticlesBody @JsonCreator constructor(@JsonProperty val token: String)
-data class LogoutBody  @JsonCreator constructor(@JsonProperty val token: String)
+data class LogoutBody @JsonCreator constructor(@JsonProperty val token: String)
 
 data class LoginBody @JsonCreator constructor(
     @JsonProperty val username: String,

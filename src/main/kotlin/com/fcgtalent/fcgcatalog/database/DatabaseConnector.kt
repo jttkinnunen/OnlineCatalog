@@ -42,7 +42,8 @@ abstract class DatabaseConnector(protected val configuration: DatabaseConfigurat
 
     @Throws(SQLException::class)
     fun addUser(firstName: String, lastName: String, password: String, email: String, admin: Boolean) {
-        val sql = "INSERT INTO $TABLE_USERS($FIELD_FIRST_NAME, $FIELD_LAST_NAME, $FIELD_PASSWORD, $FIELD_EMAIL, $FIELD_ADMIN) VALUES (?, ?, ?, ?, ?)"
+        val sql =
+            "INSERT INTO $TABLE_USERS($FIELD_FIRST_NAME, $FIELD_LAST_NAME, $FIELD_PASSWORD, $FIELD_EMAIL, $FIELD_ADMIN) VALUES (?, ?, ?, ?, ?)"
 
         val statement = connection.prepareStatement(sql)
 
@@ -86,12 +87,12 @@ abstract class DatabaseConnector(protected val configuration: DatabaseConfigurat
         val resultSet = statement.executeQuery()
         while (resultSet.next()) {
             return UserResult(
-                    resultSet.getInt(FIELD_ID),
-                    resultSet.getString(FIELD_FIRST_NAME),
-                    resultSet.getString(FIELD_LAST_NAME),
-                    resultSet.getString(FIELD_EMAIL),
-                    resultSet.getInt(FIELD_ADMIN) == 1,
-                    resultSet.getString(FIELD_TOKEN)
+                resultSet.getInt(FIELD_ID),
+                resultSet.getString(FIELD_FIRST_NAME),
+                resultSet.getString(FIELD_LAST_NAME),
+                resultSet.getString(FIELD_EMAIL),
+                resultSet.getInt(FIELD_ADMIN) == 1,
+                resultSet.getString(FIELD_TOKEN)
             )
         }
 
@@ -100,7 +101,8 @@ abstract class DatabaseConnector(protected val configuration: DatabaseConfigurat
 
     @Throws(SQLException::class)
     fun addArticle(name: String, brand: String?, quantity: Int, shelf: String): Int {
-        val sql = "INSERT INTO $TABLE_ARTICLES($FIELD_NAME, $FIELD_BRAND, $FIELD_QUANTITY, $FIELD_LAST_CHANGE, $FIELD_SHELF) VALUES (?, ?, ?, ?, ?)"
+        val sql =
+            "INSERT INTO $TABLE_ARTICLES($FIELD_NAME, $FIELD_BRAND, $FIELD_QUANTITY, $FIELD_LAST_CHANGE, $FIELD_SHELF) VALUES (?, ?, ?, ?, ?)"
         val statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)
 
         statement.setString(1, name)
@@ -126,12 +128,12 @@ abstract class DatabaseConnector(protected val configuration: DatabaseConfigurat
         val resultSet = statement.executeQuery()
         while (resultSet.next()) {
             val article = ArticleResult(
-                    id = resultSet.getInt(FIELD_ID),
-                    name = resultSet.getString(FIELD_NAME),
-                    brand = resultSet.getString(FIELD_BRAND),
-                    quantity = resultSet.getInt(FIELD_QUANTITY),
-                    last_change = resultSet.getDate(FIELD_LAST_CHANGE),
-                    shelf = resultSet.getString(FIELD_SHELF)
+                id = resultSet.getInt(FIELD_ID),
+                name = resultSet.getString(FIELD_NAME),
+                brand = resultSet.getString(FIELD_BRAND),
+                quantity = resultSet.getInt(FIELD_QUANTITY),
+                last_change = resultSet.getDate(FIELD_LAST_CHANGE),
+                shelf = resultSet.getString(FIELD_SHELF)
             )
             articlesList.add(article)
         }

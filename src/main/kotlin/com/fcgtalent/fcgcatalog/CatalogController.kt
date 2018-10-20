@@ -11,14 +11,12 @@ import com.fcgtalent.fcgcatalog.util.GetUsersBody
 import com.fcgtalent.fcgcatalog.util.LoginBody
 import com.fcgtalent.fcgcatalog.util.LogoutBody
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.CrossOrigin
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.multipart.MultipartFile
 import java.lang.Exception
@@ -37,6 +35,7 @@ class CatalogController {
     private lateinit var uploadConfiguration: UploadConfiguration
 
     data class OurError(val error: String)
+
     /**
      * Helper function used to reduce the clutter, by moving any call inside the common try catch
      * Also includes checking for authentication, (admin)
@@ -73,7 +72,13 @@ class CatalogController {
         @RequestBody addUserBody: AddUserBody
     ): ResponseEntity<Any> {
         return encapsulateCall(addUserBody.token, true, false) {
-            databaseHandler.addUser(addUserBody.firstName, addUserBody.lastName, addUserBody.password, addUserBody.email, addUserBody.admin)
+            databaseHandler.addUser(
+                addUserBody.firstName,
+                addUserBody.lastName,
+                addUserBody.password,
+                addUserBody.email,
+                addUserBody.admin
+            )
         }
     }
 
@@ -86,13 +91,18 @@ class CatalogController {
     @CrossOrigin
     @PostMapping("/addArticle", MediaType.APPLICATION_JSON_VALUE)
     fun addArticle(
-        //@RequestParam("image") image: MultipartFile?,
+        // @RequestParam("image") image: MultipartFile?,
         @RequestBody addArticle: AddArticleBody
     ): ResponseEntity<Any> {
         return encapsulateCall(addArticle.token, false, false) {
-            val id = databaseHandler.addArticle(addArticle.name, addArticle.brand, addArticle.quantity ?: 0, addArticle.shelf)
+            val id = databaseHandler.addArticle(
+                addArticle.name,
+                addArticle.brand,
+                addArticle.quantity ?: 0,
+                addArticle.shelf
+            )
 
-            //image?.let { uploadImage(it, "article_$id") }
+            // image?.let { uploadImage(it, "article_$id") }
 
             Any()
         }
