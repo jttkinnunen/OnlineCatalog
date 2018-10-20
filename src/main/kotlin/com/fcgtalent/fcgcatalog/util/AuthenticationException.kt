@@ -1,13 +1,11 @@
 package com.fcgtalent.fcgcatalog.util
 
-import org.springframework.boot.configurationprocessor.json.JSONObject
+import com.fcgtalent.fcgcatalog.CatalogController
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 
 class AuthenticationException constructor(message: String = "Authentication Error") : Exception(message) {
-    fun toResponseEntity(): ResponseEntity<String> {
-        val errorJSON = JSONObject()
-        errorJSON.put("error", message)
-        return ResponseEntity(errorJSON.toString(), HttpStatus.FORBIDDEN)
+    fun toResponseEntity(): ResponseEntity<CatalogController.OurError> {
+        return ResponseEntity(CatalogController.OurError(message!!), HttpStatus.FORBIDDEN)
     }
 }
