@@ -10,15 +10,15 @@ CREATE TABLE IF NOT EXISTS users (
 
 CREATE TABLE IF NOT EXISTS articles (
   id INTEGER PRIMARY KEY,
-  name TEXT NOT NULL,
+  article_name TEXT NOT NULL,
   brand TEXT,
-  last_change DATE,
+  last_change TIMESTAMP,
   shelf TEXT
 );
 
 CREATE TABLE IF NOT EXISTS location (
   id INTEGER PRIMARY KEY,
-  name TEXT NOT NULL
+  location_name TEXT NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS article_locations (

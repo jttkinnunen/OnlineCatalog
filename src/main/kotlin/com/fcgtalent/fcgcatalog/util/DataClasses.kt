@@ -6,6 +6,7 @@ import java.sql.Date
 import org.springframework.boot.jdbc.DataSourceBuilder
 import org.springframework.context.annotation.Bean
 import org.springframework.jdbc.core.JdbcTemplate
+import java.sql.Timestamp
 import javax.sql.DataSource
 
 // TODO Comment and clean
@@ -24,7 +25,7 @@ data class ArticleResult @JsonCreator constructor(
     @JsonProperty val id: Int,
     @JsonProperty val name: String,
     @JsonProperty val brand: String?,
-    @JsonProperty val last_change: Date,
+    @JsonProperty val last_change: Timestamp,
     @JsonProperty val shelf: String
 )
 
@@ -32,7 +33,7 @@ data class ArticlesInLocationsResult @JsonCreator constructor(
     @JsonProperty val id: Int,
     @JsonProperty val name: String,
     @JsonProperty val brand: String?,
-    @JsonProperty val last_change: Date,
+    @JsonProperty val last_change: Timestamp,
     @JsonProperty val shelf: String,
     @JsonProperty("location_id") val locationId: Int,
     @JsonProperty val quantity: Int
@@ -81,7 +82,19 @@ data class GetLocationsBody @JsonCreator constructor(
 
 data class GetArticlesBody @JsonCreator constructor(
     @JsonProperty val ids: List<Int>?,
+    @JsonProperty val token: String
+)
+
+data class GetArticlesInLocationsBody @JsonCreator constructor(
+    @JsonProperty val articleIds: List<Int>?,
     @JsonProperty val locationIds: List<Int>?,
+    @JsonProperty val token: String
+)
+
+data class SetArticlesAtLocationBody @JsonCreator constructor(
+    @JsonProperty("article_id") val articleId: Int,
+    @JsonProperty("location_id") val locationId: Int,
+    @JsonProperty val quantity: Int,
     @JsonProperty val token: String
 )
 data class LogoutBody @JsonCreator constructor(@JsonProperty val token: String)

@@ -14,7 +14,17 @@ import org.junit.Test
 import org.junit.experimental.categories.Category
 import org.junit.runner.RunWith
 import org.junit.runners.Parameterized
+import org.springframework.boot.jdbc.DataSourceBuilder
+import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.boot.test.context.TestConfiguration
+import org.springframework.context.annotation.Bean
+import org.springframework.context.annotation.Configuration
+import org.springframework.context.annotation.Import
+import org.springframework.jdbc.core.JdbcTemplate
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
+import org.springframework.test.context.junit4.SpringRunner
 import java.util.UUID
+import javax.sql.DataSource
 
 /**
  * Parametirized test class. Runs tests for both PgSQL and SQLite.
@@ -25,10 +35,9 @@ import java.util.UUID
 @RunWith(Parameterized::class)
 class DatabaseConnectorTest(
     private val name: String,
-    private val configuration: DatabaseConfiguration
+    private val configuration: DatabaseConfiguration,
+    private val dataSourceParam: DataSource
 ) {
-
-    private lateinit var databaseHandler: DatabaseHandler
 
     companion object {
         @JvmStatic
@@ -48,9 +57,23 @@ class DatabaseConnectorTest(
             every { pgsqlConfiguration.username } returns "postgres"
             every { pgsqlConfiguration.password } returns "postgres"
 
+            val sqliteDataSourceBuilder = DataSourceBuilder.create()
+            sqliteDataSourceBuilder.driverClassName("org.sqlite.JDBC")
+            sqliteDataSourceBuilder.url("jdbc:sqlite::memory:")
+            val sqliteDataSource = sqliteDataSourceBuilder.build()
+
+
+            val pgsqlDataSourceBuilder = DataSourceBuilder.create()
+            pgsqlDataSourceBuilder.driverClassName("org.postgresql.Driver")
+            pgsqlDataSourceBuilder.url("jdbc:postgresql://${pgsqlConfiguration.address}:${pgsqlConfiguration.port}/${pgsqlConfiguration.name}")
+            pgsqlDataSourceBuilder.username(pgsqlConfiguration.username)
+            pgsqlDataSourceBuilder.password(pgsqlConfiguration.password)
+            val pgsqlDataSource = pgsqlDataSourceBuilder.build()
+
+
             return listOf(
-                arrayOf("SQLite", sqliteConfiguration),
-                arrayOf("PgSQL", pgsqlConfiguration)
+                arrayOf("SQLite", sqliteConfiguration, sqliteDataSource),
+                arrayOf("PgSQL", pgsqlConfiguration, pgsqlDataSource)
             )
         }
 
@@ -87,9 +110,36 @@ class DatabaseConnectorTest(
 
     }
 
+//    @Bean
+//    fun dataSource(): DataSource {
+//        return dataSourceParam
+//    }
+
+//    @TestConfiguration
+//    class TestConfig() {
+//        @Bean
+//        fun dataSource(): DataSource {
+////            val dataSourceBuilder = DataSourceBuilder.create()
+////            dataSourceBuilder.driverClassName("org.sqlite.JDBC")
+////            dataSourceBuilder.url("jdbc:sqlite::memory:")
+////            return dataSourceBuilder.build()
+//            @DatabaseConnectorTest.dataSource
+//        }
+//
+//        @Bean
+//        fun jdbcTemplate(dataSource: DataSource): NamedParameterJdbcTemplate {
+//            return NamedParameterJdbcTemplate(dataSource)
+//        }
+//    }
+
+    lateinit var databaseHandler: DatabaseConnector
+
     @Before
     fun setUp() {
-        databaseHandler = DatabaseHandler(configuration)
+
+        databaseHandler = DatabaseConnector(configuration, JdbcTemplate(dataSourceParam), NamedParameterJdbcTemplate(dataSourceParam))
+        databaseHandler.dropAllTables()
+        databaseHandler.createInitialTables()
         addTestUsers()
         addTestArticles()
         addTestLocations()
@@ -138,7 +188,7 @@ class DatabaseConnectorTest(
 
     @Test
     fun testLogin_success() {
-        val result: UserResult = databaseHandler.login(email1, password1)
+        val result: UserResult = databaseHandler.login(email1, password1)[0]
         Assert.assertTrue(UUID.fromString(result.token) != null)
         Assert.assertThat(result.admin, `is`(admin1))
         Assert.assertThat(result.email, `is`(email1))
@@ -158,12 +208,12 @@ class DatabaseConnectorTest(
     @Test
     fun testAuthenticateToken_success() {
         // Check one with admin privileges
-        val result1: UserResult = databaseHandler.login(email1, password1)
+        val result1: UserResult = databaseHandler.login(email1, password1)[0]
         val token1 = result1.token
         Assert.assertThat(databaseHandler.authenticateToken(token1!!), `is`(admin1))
 
         // Check one without admin privleges
-        val result2: UserResult = databaseHandler.login(email2, password2)
+        val result2: UserResult = databaseHandler.login(email2, password2)[0]
         val token2 = result2.token
 
         Assert.assertThat(databaseHandler.authenticateToken(token2!!), `is`(admin2))
@@ -181,7 +231,7 @@ class DatabaseConnectorTest(
     @Test
     fun testLogout_success() {
         // Check one with admin privileges
-        val result1: UserResult = databaseHandler.login(email1, password1)
+        val result1: UserResult = databaseHandler.login(email1, password1)[0]
         val token1 = result1.token
         databaseHandler.logout(token1!!)
 
