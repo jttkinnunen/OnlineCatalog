@@ -114,7 +114,7 @@ class CatalogController {
             databaseConnector.addArticle(
                 addArticle.name,
                 addArticle.brand,
-                addArticle.shelf
+                addArticle.description
             )
 
             // image?.let { uploadImage(it, "article_$id") }
@@ -124,16 +124,16 @@ class CatalogController {
     }
 
     @CrossOrigin
-    @PostMapping("/getArticles", MediaType.APPLICATION_JSON_VALUE)
-    fun getArticles(@RequestBody getArticlesBody: GetArticlesBody): ResponseEntity<Any> {
+    @PostMapping("/getArticlesDetailed", MediaType.APPLICATION_JSON_VALUE)
+    fun getArticlesDetailed(@RequestBody getArticlesBody: GetArticlesBody): ResponseEntity<Any> {
         return encapsulateCall(getArticlesBody.token, false, false) {
             databaseConnector.getArticles(getArticlesBody.ids ?: listOf())
         }
     }
 
     @CrossOrigin
-    @PostMapping("/getArticlesInLocations", MediaType.APPLICATION_JSON_VALUE)
-    fun getArticlesInLocations(@RequestBody getArticlesInLocationsBody: GetArticlesInLocationsBody): ResponseEntity<Any> {
+    @PostMapping("/getArticles", MediaType.APPLICATION_JSON_VALUE)
+    fun getArticles(@RequestBody getArticlesInLocationsBody: GetArticlesInLocationsBody): ResponseEntity<Any> {
         return encapsulateCall(getArticlesInLocationsBody.token, false, false) {
             databaseConnector.getArticlesInLocations(
                 getArticlesInLocationsBody.articleIds ?: listOf(),

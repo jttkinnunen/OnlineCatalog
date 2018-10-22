@@ -10,6 +10,7 @@ import com.fcgtalent.fcgcatalog.database.mappers.UserResultMapper
 import com.fcgtalent.fcgcatalog.util.ArticleResult
 import com.fcgtalent.fcgcatalog.util.ArticlesInLocationsResult
 import com.fcgtalent.fcgcatalog.util.AuthenticationException
+import com.fcgtalent.fcgcatalog.util.LocationQuantityResult
 import com.fcgtalent.fcgcatalog.util.LocationResult
 import com.fcgtalent.fcgcatalog.util.UserResult
 import org.springframework.security.crypto.bcrypt.BCrypt
@@ -49,7 +50,7 @@ class DatabaseConnector(
         const val FIELD_ARTICLE_NAME = "article_name"
         const val FIELD_BRAND = "brand"
         const val FIELD_LAST_CHANGE = "last_change"
-        const val FIELD_SHELF = "shelf"
+        const val FIELD_DESCRIPTION = "description"
 
         // Location fiels
         const val FIELD_LOCATION_NAME = "location_name"
@@ -61,7 +62,7 @@ class DatabaseConnector(
     init {
         // TODO rethink this, this is just initial testing. But rethink the intiial table geneartion
         createInitialTables()
-        addUser("antti", "pantti", "hiano", "elefantti@hiano.fi", true)
+        //addUser("antti", "pantti", "hiano", "elefantti@hiano.fi", true)
     }
 
     @Throws(SQLException::class)
@@ -103,11 +104,11 @@ class DatabaseConnector(
 
     // TODO move date to timestamp
     @Throws(SQLException::class)
-    fun addArticle(name: String, brand: String?, shelf: String) {
+    fun addArticle(name: String, brand: String?, description: String) {
         val sql =
-            "INSERT INTO $TABLE_ARTICLES($FIELD_ARTICLE_NAME, $FIELD_BRAND, $FIELD_LAST_CHANGE, $FIELD_SHELF) VALUES (?, ?, ?, ?)"
+            "INSERT INTO $TABLE_ARTICLES($FIELD_ARTICLE_NAME, $FIELD_BRAND, $FIELD_LAST_CHANGE, $FIELD_DESCRIPTION) VALUES (?, ?, ?, ?)"
 
-        jdbcTemplate.update(sql, name, brand, Timestamp(System.currentTimeMillis()), shelf)
+        jdbcTemplate.update(sql, name, brand, Timestamp(System.currentTimeMillis()), description)
     }
 
     @Throws(SQLException::class)
@@ -129,39 +130,69 @@ class DatabaseConnector(
      * Damn this is ugly, but what can you do.. with having to use inner join and manually adding WHERE IN
      */
     @Throws(SQLException::class)
-    fun getArticlesInLocations(articleIds: List<Int>, locationIds: List<Int>): List<ArticlesInLocationsResult> {
+    fun getArticlesInLocations(articleIds: List<Int>, locationIds: List<Int>): List<ArticleResult> {
         var sql =
-            "SELECT * FROM $TABLE_ARTICLE_LOCATIONS INNER JOIN $TABLE_ARTICLES ON $TABLE_ARTICLES.$FIELD_ID = $TABLE_ARTICLE_LOCATIONS.$FIELD_ARTICLE_ID INNER JOIN $TABLE_LOCATION ON $TABLE_LOCATION.$FIELD_ID = $TABLE_ARTICLE_LOCATIONS.$FIELD_LOCATION_ID"
+            "SELECT * FROM $TABLE_ARTICLE_LOCATIONS INNER JOIN $TABLE_ARTICLES ON $TABLE_ARTICLES.$FIELD_ID = " +
+                "$TABLE_ARTICLE_LOCATIONS.$FIELD_ARTICLE_ID INNER JOIN $TABLE_LOCATION ON $TABLE_LOCATION.$FIELD_ID = " +
+                "$TABLE_ARTICLE_LOCATIONS.$FIELD_LOCATION_ID"
 
+        val result: List<ArticlesInLocationsResult>
         // TODO clean this if mess up a little
         if (locationIds.isNotEmpty() && articleIds.isNotEmpty()) {
             sql += " WHERE $TABLE_ARTICLES.$FIELD_ID IN (:articleIds) AND $TABLE_LOCATION.$FIELD_ID IN (:locationIds)"
             val parameters = MapSqlParameterSource()
             parameters.addValue("articleIds", articleIds)
             parameters.addValue("locationIds", locationIds)
-            return namedParameterJdbcTemplate.query(sql, parameters, ArticlesInLocationsMapper())
-        }
-
-        if (locationIds.isNotEmpty()) {
+            result = namedParameterJdbcTemplate.query(sql, parameters, ArticlesInLocationsMapper())
+        } else if (locationIds.isNotEmpty()) {
             sql += " WHERE $TABLE_LOCATION.$FIELD_ID IN (:locationIds)"
             val parameters = MapSqlParameterSource()
             parameters.addValue("locationIds", locationIds)
-            return namedParameterJdbcTemplate.query(sql, parameters, ArticlesInLocationsMapper())
-        }
-
-        if (articleIds.isNotEmpty()) {
+            result = namedParameterJdbcTemplate.query(sql, parameters, ArticlesInLocationsMapper())
+        } else if (articleIds.isNotEmpty()) {
             sql += " WHERE $TABLE_ARTICLES.$FIELD_ID IN (:articleIds)"
             val parameters = MapSqlParameterSource()
             parameters.addValue("articleIds", articleIds)
-            return namedParameterJdbcTemplate.query(sql, parameters, ArticlesInLocationsMapper())
+            result = namedParameterJdbcTemplate.query(sql, parameters, ArticlesInLocationsMapper())
+        } else {
+            result = jdbcTemplate.query(sql, ArticlesInLocationsMapper())
         }
-        return jdbcTemplate.query(sql, ArticlesInLocationsMapper())
+
+        // TODO improve this and the entire thing. Just an ugly fast way of getting it to spec. Do better later
+        val finalResult = HashMap<Int, ArticleResult>()
+
+        for (a in result) {
+            if (!finalResult.containsKey(a.id)) {
+                finalResult.put(
+                    a.id,
+                    ArticleResult(
+                        a.id,
+                        a.name,
+                        a.brand,
+                        a.last_change,
+                        null,
+                        mutableListOf(LocationQuantityResult(a.locationId, a.locationName, a.quantity))
+                    )
+                )
+            } else {
+                finalResult.get(a.id)?.locations!!.add(LocationQuantityResult(a.locationId, a.locationName, a.quantity))
+            }
+        }
+
+        return finalResult.values.toMutableList()
     }
 
     @Throws(SQLException::class)
     fun setArticlesAtLocation(locationId: Int, articleId: Int, quantity: Int) {
-        val sql =
-            "INSERT OR REPLACE INTO $TABLE_ARTICLE_LOCATIONS($FIELD_LOCATION_ID, $FIELD_ARTICLE_ID, $FIELD_QUANTITY) VALUES (?, ?, ?)"
+
+        // TODO rethink how to handle this typ eof issues
+        val sql = when (configuration.type) {
+            "sqlite" -> "INSERT OR REPLACE INTO $TABLE_ARTICLE_LOCATIONS($FIELD_LOCATION_ID, $FIELD_ARTICLE_ID, $FIELD_QUANTITY) VALUES (?, ?, ?)"
+            "pgsql" -> "INSERT INTO $TABLE_ARTICLE_LOCATIONS($FIELD_LOCATION_ID, $FIELD_ARTICLE_ID, $FIELD_QUANTITY) VALUES (?, ?, ?) " +
+                "ON CONFLICT ($FIELD_LOCATION_ID, $FIELD_ARTICLE_ID) DO UPDATE SET $FIELD_QUANTITY = excluded.$FIELD_QUANTITY"
+            else -> throw Exception("Unsupported DB type")
+        }
+
         jdbcTemplate.update(sql, locationId, articleId, quantity)
     }
 

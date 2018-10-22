@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS articles (
   article_name TEXT NOT NULL,
   brand TEXT,
   last_change TIMESTAMP,
-  shelf TEXT
+  description TEXT
 );
 
 CREATE TABLE IF NOT EXISTS location (

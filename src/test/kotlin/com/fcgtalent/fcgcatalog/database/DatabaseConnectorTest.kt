@@ -85,11 +85,11 @@ class DatabaseConnectorTest(
         // Article related info, used for testing
         private const val name1 = "moo1"
         private const val brand1 = "moo2"
-        private const val shelf1 = "korkein"
+        private const val description1 = "korkein"
 
         private const val name2 = "moo1"
         private const val brand2 = "moo2"
-        private const val shelf2 = "korkein"
+        private const val description2 = "korkein"
 
         // Location test variables
         private const val locationName1 = "Hiano"
@@ -104,8 +104,8 @@ class DatabaseConnectorTest(
 
         databaseHandler =
             DatabaseConnector(configuration, JdbcTemplate(dataSourceParam), NamedParameterJdbcTemplate(dataSourceParam))
-        // databaseHandler.dropAllTables()
-        // databaseHandler.createInitialTables()
+        databaseHandler.dropAllTables()
+        databaseHandler.createInitialTables()
         addTestUsers()
         addTestArticles()
         addTestLocations()
@@ -222,8 +222,8 @@ class DatabaseConnectorTest(
     @Test
     fun testAddArticle_success() {
         // TODO improve this test
-        databaseHandler.addArticle(name1, brand1, shelf1)
-        databaseHandler.addArticle(name2, brand2, shelf2)
+        databaseHandler.addArticle(name1, brand1, description1)
+        databaseHandler.addArticle(name2, brand2, description2)
 
 //        Assert.assertThat(databaseHandler.addArticle(name1, brand1, shelf1), `is`(1))
 //        Assert.assertThat(databaseHandler.addArticle(name2, brand2, shelf2), `is`(2))
@@ -238,13 +238,13 @@ class DatabaseConnectorTest(
         Assert.assertThat(firstResult.id, `is`(1))
         Assert.assertThat(firstResult.name, `is`(name1))
         Assert.assertThat(firstResult.brand, `is`(brand1))
-        Assert.assertThat(firstResult.shelf, `is`(shelf1))
+        Assert.assertThat(firstResult.description, `is`(description1))
 
         val secondResult = results[1]
         Assert.assertThat(secondResult.id, `is`(2))
         Assert.assertThat(secondResult.name, `is`(name2))
         Assert.assertThat(secondResult.brand, `is`(brand2))
-        Assert.assertThat(secondResult.shelf, `is`(shelf2))
+        Assert.assertThat(secondResult.description, `is`(description2))
     }
 
     @Test
@@ -265,14 +265,37 @@ class DatabaseConnectorTest(
         Assert.assertThat(result.size, `is`(2))
     }
 
+    @Test
+    fun testSetArticlesAtLocation() {
+
+        databaseHandler.setArticlesAtLocation(1, 1, 5)
+        databaseHandler.setArticlesAtLocation(2, 2, 4)
+        databaseHandler.setArticlesAtLocation(1, 2, 1)
+
+        var result = databaseHandler.getArticlesInLocations(listOf(), listOf())
+        Assert.assertThat(result.size, `is`(2))
+        Assert.assertThat(result[0].locations!!.size, `is`(1))
+        Assert.assertThat(result[1].locations!!.size, `is`(2))
+
+        result = databaseHandler.getArticlesInLocations(listOf(1), listOf())
+        Assert.assertThat(result.size, `is`(1))
+        Assert.assertThat(result[0].locations!!.size, `is`(1))
+
+        result = databaseHandler.getArticlesInLocations(listOf(), listOf(1))
+        Assert.assertThat(result.size, `is`(2))
+        Assert.assertThat(result[0].locations!!.size, `is`(1))
+        Assert.assertThat(result[1].locations!!.size, `is`(1))
+
+    }
+
     private fun addTestUsers() {
         databaseHandler.addUser(firstName1, lastName1, password1, email1, admin1)
         databaseHandler.addUser(firstName2, lastName2, password2, email2, admin2)
     }
 
     private fun addTestArticles() {
-        databaseHandler.addArticle(name1, brand1, shelf1)
-        databaseHandler.addArticle(name2, brand2, shelf2)
+        databaseHandler.addArticle(name1, brand1, description1)
+        databaseHandler.addArticle(name2, brand2, description2)
     }
 
     private fun addTestLocations() {

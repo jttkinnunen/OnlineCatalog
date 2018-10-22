@@ -6,7 +6,8 @@ import com.fcgtalent.fcgcatalog.database.DatabaseConnector.Companion.FIELD_BRAND
 import com.fcgtalent.fcgcatalog.database.DatabaseConnector.Companion.FIELD_LAST_CHANGE
 import com.fcgtalent.fcgcatalog.database.DatabaseConnector.Companion.FIELD_LOCATION_ID
 import com.fcgtalent.fcgcatalog.database.DatabaseConnector.Companion.FIELD_QUANTITY
-import com.fcgtalent.fcgcatalog.database.DatabaseConnector.Companion.FIELD_SHELF
+import com.fcgtalent.fcgcatalog.database.DatabaseConnector.Companion.FIELD_DESCRIPTION
+import com.fcgtalent.fcgcatalog.database.DatabaseConnector.Companion.FIELD_LOCATION_NAME
 import com.fcgtalent.fcgcatalog.util.ArticlesInLocationsResult
 import org.springframework.jdbc.core.RowMapper
 import java.sql.ResultSet
@@ -18,8 +19,9 @@ class ArticlesInLocationsMapper : RowMapper<ArticlesInLocationsResult> {
             name = resultSet.getString(FIELD_ARTICLE_NAME),
             brand = resultSet.getString(FIELD_BRAND),
             last_change = resultSet.getTimestamp(FIELD_LAST_CHANGE),
-            shelf = resultSet.getString(FIELD_SHELF),
+            description = resultSet.getString(FIELD_DESCRIPTION),
             locationId = resultSet.getInt(FIELD_LOCATION_ID),
+            locationName = resultSet.getString(FIELD_LOCATION_NAME),
             quantity = resultSet.getInt(FIELD_QUANTITY)
         )
     }

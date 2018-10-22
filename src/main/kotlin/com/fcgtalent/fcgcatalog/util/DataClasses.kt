@@ -21,22 +21,31 @@ data class ArticleResult @JsonCreator constructor(
     @JsonProperty val name: String,
     @JsonProperty val brand: String?,
     @JsonProperty val last_change: Timestamp,
-    @JsonProperty val shelf: String
+    @JsonProperty val description: String?,
+    @JsonProperty val locations: MutableList<LocationQuantityResult>? = null
 )
 
+// TODO fix up, remove and all other stuff......
 data class ArticlesInLocationsResult @JsonCreator constructor(
     @JsonProperty val id: Int,
     @JsonProperty val name: String,
     @JsonProperty val brand: String?,
     @JsonProperty val last_change: Timestamp,
-    @JsonProperty val shelf: String,
+    @JsonProperty val description: String?,
     @JsonProperty("location_id") val locationId: Int,
+    @JsonProperty("location_name") val locationName: String,
     @JsonProperty val quantity: Int
 )
 
 data class LocationResult @JsonCreator constructor(
     @JsonProperty val id: Int,
     @JsonProperty val name: String
+)
+
+data class LocationQuantityResult @JsonCreator constructor(
+    @JsonProperty val id: Int,
+    @JsonProperty val name: String,
+    @JsonProperty val quantity: Int
 )
 
 // Received message bodies
@@ -61,7 +70,7 @@ data class GetSelfBody @JsonCreator constructor(
 data class AddArticleBody @JsonCreator constructor(
     @JsonProperty val name: String,
     @JsonProperty val brand: String?,
-    @JsonProperty val shelf: String,
+    @JsonProperty val description: String,
     @JsonProperty val token: String
 )
 
