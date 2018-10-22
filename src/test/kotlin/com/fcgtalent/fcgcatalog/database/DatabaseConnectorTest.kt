@@ -15,14 +15,8 @@ import org.junit.experimental.categories.Category
 import org.junit.runner.RunWith
 import org.junit.runners.Parameterized
 import org.springframework.boot.jdbc.DataSourceBuilder
-import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.boot.test.context.TestConfiguration
-import org.springframework.context.annotation.Bean
-import org.springframework.context.annotation.Configuration
-import org.springframework.context.annotation.Import
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
-import org.springframework.test.context.junit4.SpringRunner
 import java.util.UUID
 import javax.sql.DataSource
 
@@ -62,14 +56,12 @@ class DatabaseConnectorTest(
             sqliteDataSourceBuilder.url("jdbc:sqlite::memory:")
             val sqliteDataSource = sqliteDataSourceBuilder.build()
 
-
             val pgsqlDataSourceBuilder = DataSourceBuilder.create()
             pgsqlDataSourceBuilder.driverClassName("org.postgresql.Driver")
             pgsqlDataSourceBuilder.url("jdbc:postgresql://${pgsqlConfiguration.address}:${pgsqlConfiguration.port}/${pgsqlConfiguration.name}")
             pgsqlDataSourceBuilder.username(pgsqlConfiguration.username)
             pgsqlDataSourceBuilder.password(pgsqlConfiguration.password)
             val pgsqlDataSource = pgsqlDataSourceBuilder.build()
-
 
             return listOf(
                 arrayOf("SQLite", sqliteConfiguration, sqliteDataSource),
@@ -78,21 +70,17 @@ class DatabaseConnectorTest(
         }
 
         // User info placed to database for testing
-        //  private val addUserBody1 = AddUserBody("Moo1", "Moo1", "hiano", "joo@koo.com", true, null)
         private const val firstName1 = "Moo1"
         private const val lastName1 = "MOoo2"
         private const val password1 = "hiano"
         private const val email1 = "joo@koo.com"
         private const val admin1 = true
-        //    private val addUserBody2 = AddUserBody("Mofweo1", "MOfweoo2", "hiawefno", "joowefwe@fwefwe.org", false, null)
 
         private const val firstName2 = "Mofweo1"
         private const val lastName2 = "MOfweoo2"
         private const val password2 = "hiawefno"
         private const val email2 = "joowefwe@fwefwe.org"
         private const val admin2 = false
-
-        // private val addArticlesBody = AddArticleBody("moo1", "moo2", 1, "korkein", null)
 
         // Article related info, used for testing
         private const val name1 = "moo1"
@@ -107,39 +95,17 @@ class DatabaseConnectorTest(
         private const val locationName1 = "Hiano"
         private const val locationName2 = "feopikjfespokf"
         private const val locationName3 = "fexcvxcpokf"
-
     }
-
-//    @Bean
-//    fun dataSource(): DataSource {
-//        return dataSourceParam
-//    }
-
-//    @TestConfiguration
-//    class TestConfig() {
-//        @Bean
-//        fun dataSource(): DataSource {
-////            val dataSourceBuilder = DataSourceBuilder.create()
-////            dataSourceBuilder.driverClassName("org.sqlite.JDBC")
-////            dataSourceBuilder.url("jdbc:sqlite::memory:")
-////            return dataSourceBuilder.build()
-//            @DatabaseConnectorTest.dataSource
-//        }
-//
-//        @Bean
-//        fun jdbcTemplate(dataSource: DataSource): NamedParameterJdbcTemplate {
-//            return NamedParameterJdbcTemplate(dataSource)
-//        }
-//    }
 
     lateinit var databaseHandler: DatabaseConnector
 
     @Before
     fun setUp() {
 
-        databaseHandler = DatabaseConnector(configuration, JdbcTemplate(dataSourceParam), NamedParameterJdbcTemplate(dataSourceParam))
-        databaseHandler.dropAllTables()
-        databaseHandler.createInitialTables()
+        databaseHandler =
+            DatabaseConnector(configuration, JdbcTemplate(dataSourceParam), NamedParameterJdbcTemplate(dataSourceParam))
+        // databaseHandler.dropAllTables()
+        // databaseHandler.createInitialTables()
         addTestUsers()
         addTestArticles()
         addTestLocations()
@@ -283,8 +249,6 @@ class DatabaseConnectorTest(
 
     @Test
     fun testAddLocation_GetLocation() {
-
-
         var result = databaseHandler.getLocations(listOf())
         Assert.assertThat(result.size, `is`(3))
 

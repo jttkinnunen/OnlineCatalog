@@ -10,11 +10,9 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.runApplication
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.context.ApplicationContext
 import org.springframework.jdbc.core.JdbcTemplate
-import org.springframework.security.crypto.bcrypt.BCrypt
 import org.springframework.test.context.junit4.SpringRunner
 
 @RunWith(SpringRunner::class)
@@ -38,7 +36,6 @@ class FCGCatalogApplicationTests {
         val sqliteConfiguration: DatabaseConfiguration = mockk()
         every { sqliteConfiguration.sqlitememory } returns true
         every { sqliteConfiguration.type } returns "sqlite"
-
 
         val databaseConnector = context.getBean(DatabaseConnector::class.java, sqliteConfiguration)
         databaseConnector.createInitialTables()
@@ -73,7 +70,6 @@ class FCGCatalogApplicationTests {
         Assert.assertThat(databaseConnector.getArticlesInLocations(listOf(), listOf(1)).size, `is`(0))
         Assert.assertThat(databaseConnector.getArticlesInLocations(listOf(1), listOf(1)).size, `is`(0))
 
-
         databaseConnector.setArticlesAtLocation(1, 1, 5)
 
         Assert.assertThat(databaseConnector.getArticlesInLocations(listOf(), listOf()).size, `is`(1))
@@ -81,11 +77,5 @@ class FCGCatalogApplicationTests {
         Assert.assertThat(databaseConnector.getArticlesInLocations(listOf(), listOf(1)).size, `is`(1))
         Assert.assertThat(databaseConnector.getArticlesInLocations(listOf(1), listOf(1)).size, `is`(1))
         Assert.assertThat(databaseConnector.getArticlesInLocations(listOf(1), listOf(2)).size, `is`(0))
-
-//        val sql =
-//            "INSERT INTO ${DatabaseConnector.TABLE_USERS}(${DatabaseConnector.FIELD_FIRST_NAME}, ${DatabaseConnector.FIELD_LAST_NAME}, ${DatabaseConnector.FIELD_PASSWORD}, ${DatabaseConnector.FIELD_EMAIL}, ${DatabaseConnector.FIELD_ADMIN}) VALUES (?, ?, ?, ?, ?)"
-//
-////        val statement = connection.prepareStatement(sql)
-//        jdbcTemplate.update(sql, arrayOf<Any>("moo1", "moo2", BCrypt.hashpw("mnoo3", BCrypt.gensalt(4)), "moo4", 1))
     }
 }

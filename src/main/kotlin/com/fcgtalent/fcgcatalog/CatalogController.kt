@@ -144,7 +144,7 @@ class CatalogController {
 
     @CrossOrigin
     @PostMapping("/setArticlesAtLocation", MediaType.APPLICATION_JSON_VALUE)
-    fun setArticlesAtLocation(@RequestBody setArticlesAtLocationBody: SetArticlesAtLocationBody): ResponseEntity<Any>  {
+    fun setArticlesAtLocation(@RequestBody setArticlesAtLocationBody: SetArticlesAtLocationBody): ResponseEntity<Any> {
         return encapsulateCall(setArticlesAtLocationBody.token, false, false) {
             databaseConnector.setArticlesAtLocation(
                 setArticlesAtLocationBody.locationId,

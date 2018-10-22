@@ -17,7 +17,6 @@ import org.springframework.util.ResourceUtils
 import java.sql.SQLException
 import java.util.UUID
 import org.springframework.jdbc.core.JdbcTemplate
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Repository
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
@@ -25,9 +24,11 @@ import java.sql.Timestamp
 
 // TODO explain why twice, or dont
 @Repository
-class DatabaseConnector(protected val configuration: DatabaseConfiguration, private val jdbcTemplate: JdbcTemplate, private val namedParameterJdbcTemplate: NamedParameterJdbcTemplate) {
-
-    //protected abstract val connection: Connection
+class DatabaseConnector(
+    protected val configuration: DatabaseConfiguration,
+    private val jdbcTemplate: JdbcTemplate,
+    private val namedParameterJdbcTemplate: NamedParameterJdbcTemplate
+) {
 
     companion object {
         const val TABLE_USERS = "users"
@@ -55,11 +56,12 @@ class DatabaseConnector(protected val configuration: DatabaseConfiguration, priv
         const val FIELD_QUANTITY = "quantity"
         const val FIELD_LOCATION_ID = "location_id"
         const val FIELD_ARTICLE_ID = "article_id"
-
     }
 
     init {
-
+        // TODO rethink this, this is just initial testing. But rethink the intiial table geneartion
+        createInitialTables()
+        addUser("antti", "pantti", "hiano", "elefantti@hiano.fi", true)
     }
 
     @Throws(SQLException::class)
@@ -67,7 +69,14 @@ class DatabaseConnector(protected val configuration: DatabaseConfiguration, priv
         val sql =
             "INSERT INTO $TABLE_USERS($FIELD_FIRST_NAME, $FIELD_LAST_NAME, $FIELD_PASSWORD, $FIELD_EMAIL, $FIELD_ADMIN) VALUES (?, ?, ?, ?, ?)"
 
-        jdbcTemplate.update(sql, firstName, lastName, BCrypt.hashpw(password, BCrypt.gensalt(4)), email, if (admin) 1 else 0)
+        jdbcTemplate.update(
+            sql,
+            firstName,
+            lastName,
+            BCrypt.hashpw(password, BCrypt.gensalt(4)),
+            email,
+            if (admin) 1 else 0
+        )
     }
 
     @Throws(SQLException::class)
@@ -121,10 +130,11 @@ class DatabaseConnector(protected val configuration: DatabaseConfiguration, priv
      */
     @Throws(SQLException::class)
     fun getArticlesInLocations(articleIds: List<Int>, locationIds: List<Int>): List<ArticlesInLocationsResult> {
-        var sql = "SELECT * FROM $TABLE_ARTICLE_LOCATIONS INNER JOIN $TABLE_ARTICLES ON $TABLE_ARTICLES.$FIELD_ID = $TABLE_ARTICLE_LOCATIONS.$FIELD_ARTICLE_ID INNER JOIN $TABLE_LOCATION ON $TABLE_LOCATION.$FIELD_ID = $TABLE_ARTICLE_LOCATIONS.$FIELD_LOCATION_ID"
+        var sql =
+            "SELECT * FROM $TABLE_ARTICLE_LOCATIONS INNER JOIN $TABLE_ARTICLES ON $TABLE_ARTICLES.$FIELD_ID = $TABLE_ARTICLE_LOCATIONS.$FIELD_ARTICLE_ID INNER JOIN $TABLE_LOCATION ON $TABLE_LOCATION.$FIELD_ID = $TABLE_ARTICLE_LOCATIONS.$FIELD_LOCATION_ID"
 
         // TODO clean this if mess up a little
-        if(locationIds.isNotEmpty() && articleIds.isNotEmpty()) {
+        if (locationIds.isNotEmpty() && articleIds.isNotEmpty()) {
             sql += " WHERE $TABLE_ARTICLES.$FIELD_ID IN (:articleIds) AND $TABLE_LOCATION.$FIELD_ID IN (:locationIds)"
             val parameters = MapSqlParameterSource()
             parameters.addValue("articleIds", articleIds)
@@ -132,14 +142,14 @@ class DatabaseConnector(protected val configuration: DatabaseConfiguration, priv
             return namedParameterJdbcTemplate.query(sql, parameters, ArticlesInLocationsMapper())
         }
 
-        if(locationIds.isNotEmpty()) {
+        if (locationIds.isNotEmpty()) {
             sql += " WHERE $TABLE_LOCATION.$FIELD_ID IN (:locationIds)"
             val parameters = MapSqlParameterSource()
             parameters.addValue("locationIds", locationIds)
             return namedParameterJdbcTemplate.query(sql, parameters, ArticlesInLocationsMapper())
         }
 
-        if(articleIds.isNotEmpty()) {
+        if (articleIds.isNotEmpty()) {
             sql += " WHERE $TABLE_ARTICLES.$FIELD_ID IN (:articleIds)"
             val parameters = MapSqlParameterSource()
             parameters.addValue("articleIds", articleIds)
@@ -150,9 +160,9 @@ class DatabaseConnector(protected val configuration: DatabaseConfiguration, priv
 
     @Throws(SQLException::class)
     fun setArticlesAtLocation(locationId: Int, articleId: Int, quantity: Int) {
-        val sql = "INSERT OR REPLACE INTO $TABLE_ARTICLE_LOCATIONS($FIELD_LOCATION_ID, $FIELD_ARTICLE_ID, $FIELD_QUANTITY) VALUES (?, ?, ?)"
+        val sql =
+            "INSERT OR REPLACE INTO $TABLE_ARTICLE_LOCATIONS($FIELD_LOCATION_ID, $FIELD_ARTICLE_ID, $FIELD_QUANTITY) VALUES (?, ?, ?)"
         jdbcTemplate.update(sql, locationId, articleId, quantity)
-
     }
 
     @Throws(SQLException::class)
@@ -180,10 +190,10 @@ class DatabaseConnector(protected val configuration: DatabaseConfiguration, priv
     fun login(username: String, password: String): List<UserResult> {
         val sql = "SELECT $FIELD_ID, $FIELD_PASSWORD FROM $TABLE_USERS WHERE $FIELD_EMAIL = ?"
         val user = jdbcTemplate.query(sql, arrayOf<Any>(username), LoginMapper())
-        if(user.isNotEmpty()) {
-            if(BCrypt.checkpw(password, user[0].password)) {
+        if (user.isNotEmpty()) {
+            if (BCrypt.checkpw(password, user[0].password)) {
 
-                val token = addNewTokenForUse( user[0].id)
+                val token = addNewTokenForUse(user[0].id)
 
                 return getUserWithToken(token)
             }
@@ -194,7 +204,7 @@ class DatabaseConnector(protected val configuration: DatabaseConfiguration, priv
     @Throws(Exception::class)
     fun logout(token: String) {
         val sql = "UPDATE $TABLE_USERS SET $FIELD_TOKEN = ? WHERE $FIELD_TOKEN = ?"
-        if(jdbcTemplate.update(sql, null, token) == 0) {
+        if (jdbcTemplate.update(sql, null, token) == 0) {
             throw AuthenticationException()
         }
     }
@@ -204,7 +214,7 @@ class DatabaseConnector(protected val configuration: DatabaseConfiguration, priv
         val sql = "SELECT $FIELD_ADMIN FROM $TABLE_USERS WHERE $FIELD_TOKEN = ?"
 
         val admin = jdbcTemplate.query(sql, arrayOf<Any>(token), AuthenticateTokenMapper())
-        if(admin.isNotEmpty()) {
+        if (admin.isNotEmpty()) {
             return admin[0]
         }
         // No results found, so token is wrong
@@ -227,7 +237,6 @@ class DatabaseConnector(protected val configuration: DatabaseConfiguration, priv
         jdbcTemplate.execute("DROP TABLE IF EXISTS $TABLE_USERS")
         jdbcTemplate.execute("DROP TABLE IF EXISTS $TABLE_ARTICLES")
         jdbcTemplate.execute("DROP TABLE IF EXISTS $TABLE_LOCATION")
-
     }
 
     @Throws(SQLException::class)

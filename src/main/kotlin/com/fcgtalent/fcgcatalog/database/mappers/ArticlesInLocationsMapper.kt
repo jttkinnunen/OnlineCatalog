@@ -3,14 +3,10 @@ package com.fcgtalent.fcgcatalog.database.mappers
 import com.fcgtalent.fcgcatalog.database.DatabaseConnector.Companion.FIELD_ARTICLE_ID
 import com.fcgtalent.fcgcatalog.database.DatabaseConnector.Companion.FIELD_ARTICLE_NAME
 import com.fcgtalent.fcgcatalog.database.DatabaseConnector.Companion.FIELD_BRAND
-import com.fcgtalent.fcgcatalog.database.DatabaseConnector.Companion.FIELD_ID
 import com.fcgtalent.fcgcatalog.database.DatabaseConnector.Companion.FIELD_LAST_CHANGE
 import com.fcgtalent.fcgcatalog.database.DatabaseConnector.Companion.FIELD_LOCATION_ID
-import com.fcgtalent.fcgcatalog.database.DatabaseConnector.Companion.FIELD_LOCATION_NAME
 import com.fcgtalent.fcgcatalog.database.DatabaseConnector.Companion.FIELD_QUANTITY
 import com.fcgtalent.fcgcatalog.database.DatabaseConnector.Companion.FIELD_SHELF
-import com.fcgtalent.fcgcatalog.database.DatabaseConnector.Companion.TABLE_ARTICLES
-import com.fcgtalent.fcgcatalog.database.DatabaseConnector.Companion.TABLE_LOCATION
 import com.fcgtalent.fcgcatalog.util.ArticlesInLocationsResult
 import org.springframework.jdbc.core.RowMapper
 import java.sql.ResultSet

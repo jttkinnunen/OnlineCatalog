@@ -2,12 +2,7 @@ package com.fcgtalent.fcgcatalog.util
 
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
-import java.sql.Date
-import org.springframework.boot.jdbc.DataSourceBuilder
-import org.springframework.context.annotation.Bean
-import org.springframework.jdbc.core.JdbcTemplate
 import java.sql.Timestamp
-import javax.sql.DataSource
 
 // TODO Comment and clean
 
@@ -97,6 +92,7 @@ data class SetArticlesAtLocationBody @JsonCreator constructor(
     @JsonProperty val quantity: Int,
     @JsonProperty val token: String
 )
+
 data class LogoutBody @JsonCreator constructor(@JsonProperty val token: String)
 
 data class LoginBody @JsonCreator constructor(
