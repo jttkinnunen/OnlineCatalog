@@ -2,7 +2,7 @@ package com.fcgtalent.fcgcatalog.util
 
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
-import java.sql.Date
+import java.sql.Timestamp
 
 // TODO Comment and clean
 
@@ -20,9 +20,32 @@ data class ArticleResult @JsonCreator constructor(
     @JsonProperty val id: Int,
     @JsonProperty val name: String,
     @JsonProperty val brand: String?,
-    @JsonProperty val quantity: Int,
-    @JsonProperty val last_change: Date,
-    @JsonProperty val shelf: String
+    @JsonProperty val last_change: Timestamp,
+    @JsonProperty val description: String?,
+    @JsonProperty val locations: MutableList<LocationQuantityResult>? = null
+)
+
+// TODO fix up, remove and all other stuff......
+data class ArticlesInLocationsResult @JsonCreator constructor(
+    @JsonProperty val id: Int,
+    @JsonProperty val name: String,
+    @JsonProperty val brand: String?,
+    @JsonProperty val last_change: Timestamp,
+    @JsonProperty val description: String?,
+    @JsonProperty("location_id") val locationId: Int,
+    @JsonProperty("location_name") val locationName: String,
+    @JsonProperty val quantity: Int
+)
+
+data class LocationResult @JsonCreator constructor(
+    @JsonProperty val id: Int,
+    @JsonProperty val name: String
+)
+
+data class LocationQuantityResult @JsonCreator constructor(
+    @JsonProperty val id: Int,
+    @JsonProperty val name: String,
+    @JsonProperty val quantity: Int
 )
 
 // Received message bodies
@@ -47,12 +70,38 @@ data class GetSelfBody @JsonCreator constructor(
 data class AddArticleBody @JsonCreator constructor(
     @JsonProperty val name: String,
     @JsonProperty val brand: String?,
-    @JsonProperty val quantity: Int? = 0,
-    @JsonProperty val shelf: String,
+    @JsonProperty val description: String,
     @JsonProperty val token: String
 )
 
-data class GetArticlesBody @JsonCreator constructor(@JsonProperty val token: String)
+data class AddLocationBody @JsonCreator constructor(
+    @JsonProperty val name: String,
+    @JsonProperty val token: String
+)
+
+data class GetLocationsBody @JsonCreator constructor(
+    @JsonProperty val ids: List<Int>?,
+    @JsonProperty val token: String
+)
+
+data class GetArticlesBody @JsonCreator constructor(
+    @JsonProperty val ids: List<Int>?,
+    @JsonProperty val token: String
+)
+
+data class GetArticlesInLocationsBody @JsonCreator constructor(
+    @JsonProperty val articleIds: List<Int>?,
+    @JsonProperty val locationIds: List<Int>?,
+    @JsonProperty val token: String
+)
+
+data class SetArticlesAtLocationBody @JsonCreator constructor(
+    @JsonProperty("article_id") val articleId: Int,
+    @JsonProperty("location_id") val locationId: Int,
+    @JsonProperty val quantity: Int,
+    @JsonProperty val token: String
+)
+
 data class LogoutBody @JsonCreator constructor(@JsonProperty val token: String)
 
 data class LoginBody @JsonCreator constructor(

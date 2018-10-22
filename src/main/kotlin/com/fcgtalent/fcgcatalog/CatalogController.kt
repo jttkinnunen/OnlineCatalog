@@ -1,16 +1,20 @@
 package com.fcgtalent.fcgcatalog
 
 import com.fcgtalent.fcgcatalog.configuration.UploadConfiguration
-import com.fcgtalent.fcgcatalog.database.DatabaseHandler
+import com.fcgtalent.fcgcatalog.database.DatabaseConnector
 import com.fcgtalent.fcgcatalog.util.AddArticleBody
+import com.fcgtalent.fcgcatalog.util.AddLocationBody
 import com.fcgtalent.fcgcatalog.util.AddUserBody
 import com.fcgtalent.fcgcatalog.util.AuthenticationException
 import com.fcgtalent.fcgcatalog.util.FileTypeException
 import com.fcgtalent.fcgcatalog.util.GetArticlesBody
+import com.fcgtalent.fcgcatalog.util.GetArticlesInLocationsBody
+import com.fcgtalent.fcgcatalog.util.GetLocationsBody
 import com.fcgtalent.fcgcatalog.util.GetSelfBody
 import com.fcgtalent.fcgcatalog.util.GetUsersBody
 import com.fcgtalent.fcgcatalog.util.LoginBody
 import com.fcgtalent.fcgcatalog.util.LogoutBody
+import com.fcgtalent.fcgcatalog.util.SetArticlesAtLocationBody
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
@@ -30,7 +34,7 @@ import java.sql.SQLException
 class CatalogController {
 
     @Autowired
-    private lateinit var databaseHandler: DatabaseHandler
+    private lateinit var databaseConnector: DatabaseConnector
 
     @Autowired
     private lateinit var uploadConfiguration: UploadConfiguration
@@ -54,7 +58,7 @@ class CatalogController {
         return try {
             // Checks that user has token and if command is adminOnly, check that use is admin
             if (!publicCall) {
-                val admin = databaseHandler.authenticateToken(token ?: "")
+                val admin = databaseConnector.authenticateToken(token ?: "")
                 if (adminOnly && !admin) {
                     throw AuthenticationException("This requires admin permissions.")
                 }
@@ -74,7 +78,7 @@ class CatalogController {
         @RequestBody addUserBody: AddUserBody
     ): ResponseEntity<Any> {
         return encapsulateCall(addUserBody.token, true, false) {
-            databaseHandler.addUser(
+            databaseConnector.addUser(
                 addUserBody.firstName,
                 addUserBody.lastName,
                 addUserBody.password,
@@ -88,7 +92,7 @@ class CatalogController {
     @PostMapping("/getUsers", MediaType.APPLICATION_JSON_VALUE)
     fun getUsers(@RequestBody getUsersBody: GetUsersBody): ResponseEntity<Any> {
         return encapsulateCall(getUsersBody.token, true, false) {
-            databaseHandler.getUsers(getUsersBody.ids ?: listOf())
+            databaseConnector.getUsers(getUsersBody.ids ?: listOf())
         }
     }
 
@@ -96,7 +100,7 @@ class CatalogController {
     @PostMapping("/getSelf", MediaType.APPLICATION_JSON_VALUE)
     fun getSelf(@RequestBody getSelfBody: GetSelfBody): ResponseEntity<Any> {
         return encapsulateCall(getSelfBody.token, false, false) {
-            databaseHandler.getUserWithToken(getSelfBody.token)
+            databaseConnector.getUserWithToken(getSelfBody.token)
         }
     }
 
@@ -107,11 +111,10 @@ class CatalogController {
         @RequestBody addArticle: AddArticleBody
     ): ResponseEntity<Any> {
         return encapsulateCall(addArticle.token, false, false) {
-            val id = databaseHandler.addArticle(
+            databaseConnector.addArticle(
                 addArticle.name,
                 addArticle.brand,
-                addArticle.quantity ?: 0,
-                addArticle.shelf
+                addArticle.description
             )
 
             // image?.let { uploadImage(it, "article_$id") }
@@ -121,16 +124,61 @@ class CatalogController {
     }
 
     @CrossOrigin
+    @PostMapping("/getArticlesDetailed", MediaType.APPLICATION_JSON_VALUE)
+    fun getArticlesDetailed(@RequestBody getArticlesBody: GetArticlesBody): ResponseEntity<Any> {
+        return encapsulateCall(getArticlesBody.token, false, false) {
+            databaseConnector.getArticles(getArticlesBody.ids ?: listOf())
+        }
+    }
+
+    @CrossOrigin
     @PostMapping("/getArticles", MediaType.APPLICATION_JSON_VALUE)
-    fun getArticles(@RequestBody getArticlesBody: GetArticlesBody): ResponseEntity<Any> {
-        println("Articles")
-        return encapsulateCall(getArticlesBody.token, false, false) { databaseHandler.getAllArticles() }
+    fun getArticles(@RequestBody getArticlesInLocationsBody: GetArticlesInLocationsBody): ResponseEntity<Any> {
+        return encapsulateCall(getArticlesInLocationsBody.token, false, false) {
+            databaseConnector.getArticlesInLocations(
+                getArticlesInLocationsBody.articleIds ?: listOf(),
+                getArticlesInLocationsBody.locationIds ?: listOf()
+            )
+        }
+    }
+
+    @CrossOrigin
+    @PostMapping("/setArticlesAtLocation", MediaType.APPLICATION_JSON_VALUE)
+    fun setArticlesAtLocation(@RequestBody setArticlesAtLocationBody: SetArticlesAtLocationBody): ResponseEntity<Any> {
+        return encapsulateCall(setArticlesAtLocationBody.token, false, false) {
+            databaseConnector.setArticlesAtLocation(
+                setArticlesAtLocationBody.locationId,
+                setArticlesAtLocationBody.articleId,
+                setArticlesAtLocationBody.quantity
+            )
+            Any()
+        }
+    }
+
+    @CrossOrigin
+    @PostMapping("/addLocation", MediaType.APPLICATION_JSON_VALUE)
+    fun addLocation(
+        @RequestBody addLocationBody: AddLocationBody
+    ): ResponseEntity<Any> {
+        return encapsulateCall(addLocationBody.token, true, false) {
+            databaseConnector.addLocation(
+                addLocationBody.name
+            )
+        }
+    }
+
+    @CrossOrigin
+    @PostMapping("/getLocations", MediaType.APPLICATION_JSON_VALUE)
+    fun getLocations(@RequestBody getLocationsBody: GetLocationsBody): ResponseEntity<Any> {
+        return encapsulateCall(getLocationsBody.token, true, false) {
+            databaseConnector.getLocations(getLocationsBody.ids ?: listOf())
+        }
     }
 
     @CrossOrigin
     @PostMapping("/logout", MediaType.APPLICATION_JSON_VALUE)
     fun logout(@RequestBody logoutBody: LogoutBody): ResponseEntity<Any> {
-        return encapsulateCall(logoutBody.token, false, false) { databaseHandler.logout(logoutBody.token) }
+        return encapsulateCall(logoutBody.token, false, false) { databaseConnector.logout(logoutBody.token) }
     }
 
     @CrossOrigin
@@ -139,7 +187,7 @@ class CatalogController {
         @RequestBody loginBody: LoginBody
     ): ResponseEntity<Any> {
         println("Got username ${loginBody.username} got password ${loginBody.password}")
-        return encapsulateCall(null, false, true) { databaseHandler.login(loginBody.username, loginBody.password) }
+        return encapsulateCall(null, false, true) { databaseConnector.login(loginBody.username, loginBody.password) }
     }
 
     @Throws(Exception::class)

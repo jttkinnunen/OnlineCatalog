@@ -1,25 +1,41 @@
 package com.fcgtalent.fcgcatalog.database
 
 import com.fcgtalent.fcgcatalog.configuration.DatabaseConfiguration
+import com.fcgtalent.fcgcatalog.database.mappers.ArticleResultMapper
+import com.fcgtalent.fcgcatalog.database.mappers.ArticlesInLocationsMapper
+import com.fcgtalent.fcgcatalog.database.mappers.AuthenticateTokenMapper
+import com.fcgtalent.fcgcatalog.database.mappers.LocationResultMapper
+import com.fcgtalent.fcgcatalog.database.mappers.LoginMapper
+import com.fcgtalent.fcgcatalog.database.mappers.UserResultMapper
 import com.fcgtalent.fcgcatalog.util.ArticleResult
+import com.fcgtalent.fcgcatalog.util.ArticlesInLocationsResult
 import com.fcgtalent.fcgcatalog.util.AuthenticationException
+import com.fcgtalent.fcgcatalog.util.LocationQuantityResult
+import com.fcgtalent.fcgcatalog.util.LocationResult
 import com.fcgtalent.fcgcatalog.util.UserResult
 import org.springframework.security.crypto.bcrypt.BCrypt
 import org.springframework.util.ResourceUtils
-import java.sql.Connection
-import java.sql.Date
 import java.sql.SQLException
-import java.sql.Statement
 import java.util.UUID
+import org.springframework.jdbc.core.JdbcTemplate
+import org.springframework.stereotype.Repository
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
+import java.sql.Timestamp
 
-// TODO maybe clean this kinda like how the REST interface was cleaned up a bit
-abstract class DatabaseConnector(protected val configuration: DatabaseConfiguration) {
-
-    protected abstract val connection: Connection
+// TODO explain why twice, or dont
+@Repository
+class DatabaseConnector(
+    protected val configuration: DatabaseConfiguration,
+    private val jdbcTemplate: JdbcTemplate,
+    private val namedParameterJdbcTemplate: NamedParameterJdbcTemplate
+) {
 
     companion object {
         const val TABLE_USERS = "users"
         const val TABLE_ARTICLES = "articles"
+        const val TABLE_LOCATION = "location"
+        const val TABLE_ARTICLE_LOCATIONS = "article_locations"
 
         // User fields
         const val FIELD_ID = "id"
@@ -31,11 +47,22 @@ abstract class DatabaseConnector(protected val configuration: DatabaseConfigurat
         const val FIELD_TOKEN = "token"
 
         // Article fields
-        const val FIELD_NAME = "name"
+        const val FIELD_ARTICLE_NAME = "article_name"
         const val FIELD_BRAND = "brand"
-        const val FIELD_QUANTITY = "quantity"
         const val FIELD_LAST_CHANGE = "last_change"
-        const val FIELD_SHELF = "shelf"
+        const val FIELD_DESCRIPTION = "description"
+
+        // Location fiels
+        const val FIELD_LOCATION_NAME = "location_name"
+        const val FIELD_QUANTITY = "quantity"
+        const val FIELD_LOCATION_ID = "location_id"
+        const val FIELD_ARTICLE_ID = "article_id"
+    }
+
+    init {
+        // TODO rethink this, this is just initial testing. But rethink the intiial table geneartion
+        createInitialTables()
+        //addUser("antti", "pantti", "hiano", "elefantti@hiano.fi", true)
     }
 
     @Throws(SQLException::class)
@@ -43,131 +70,163 @@ abstract class DatabaseConnector(protected val configuration: DatabaseConfigurat
         val sql =
             "INSERT INTO $TABLE_USERS($FIELD_FIRST_NAME, $FIELD_LAST_NAME, $FIELD_PASSWORD, $FIELD_EMAIL, $FIELD_ADMIN) VALUES (?, ?, ?, ?, ?)"
 
-        val statement = connection.prepareStatement(sql)
-
-        statement.setString(1, firstName)
-        statement.setString(2, lastName)
-        statement.setString(3, BCrypt.hashpw(password, BCrypt.gensalt(4)))
-        statement.setString(4, email)
-        statement.setInt(5, if (admin) 1 else 0)
-
-        statement.executeUpdate()
+        jdbcTemplate.update(
+            sql,
+            firstName,
+            lastName,
+            BCrypt.hashpw(password, BCrypt.gensalt(4)),
+            email,
+            if (admin) 1 else 0
+        )
     }
 
     @Throws(SQLException::class)
     fun getUsers(ids: List<Int>): List<UserResult> {
-        var sql: String
+        var sql = "SELECT * FROM $TABLE_USERS"
 
         if (ids.isEmpty()) {
-            sql = "SELECT * FROM $TABLE_USERS"
+            return jdbcTemplate.query(sql, UserResultMapper())
         } else {
             // Need do build the statement manually, since sqlite doesn't support setArray
-            sql = "SELECT * FROM $TABLE_USERS WHERE $FIELD_ID IN ("
-            val iterator = ids.iterator()
-            while (iterator.hasNext()) {
-                iterator.next()
-                sql += "?"
-                if (iterator.hasNext()) {
-                    sql += ","
-                }
-            }
-            sql += ")"
+            val parameters = MapSqlParameterSource()
+            parameters.addValue("ids", ids)
+            sql += " WHERE id IN (:ids)"
+            return namedParameterJdbcTemplate.query(sql, parameters, UserResultMapper())
         }
-
-        val usersList = ArrayList<UserResult>()
-
-        val statement = connection.prepareStatement(sql)
-        // Need do build the statement manually, since sqlite doesn't support setArray
-        ids.forEachIndexed { index, i -> statement.setInt(index + 1, i) }
-
-        val resultSet = statement.executeQuery()
-        while (resultSet.next()) {
-            usersList.add(
-                UserResult(
-                    resultSet.getInt(FIELD_ID),
-                    resultSet.getString(FIELD_FIRST_NAME),
-                    resultSet.getString(FIELD_LAST_NAME),
-                    resultSet.getString(FIELD_EMAIL),
-                    resultSet.getInt(FIELD_ADMIN) == 1
-                )
-            )
-        }
-        return usersList
     }
 
     @Throws(SQLException::class)
-    fun getUser(token: String): UserResult {
+    fun getUserWithToken(token: String): List<UserResult> {
         val sql = "SELECT * FROM $TABLE_USERS WHERE $FIELD_TOKEN = ?"
 
-        val statement = connection.prepareStatement(sql)
-        statement.setString(1, token)
-
-        val resultSet = statement.executeQuery()
-        while (resultSet.next()) {
-            return UserResult(
-                resultSet.getInt(FIELD_ID),
-                resultSet.getString(FIELD_FIRST_NAME),
-                resultSet.getString(FIELD_LAST_NAME),
-                resultSet.getString(FIELD_EMAIL),
-                resultSet.getInt(FIELD_ADMIN) == 1,
-                resultSet.getString(FIELD_TOKEN)
-            )
-        }
-
-        throw SQLException("Failed to find user for token")
+        return jdbcTemplate.query(sql, arrayOf<Any>(token), UserResultMapper())
     }
 
+    // TODO move date to timestamp
     @Throws(SQLException::class)
-    fun addArticle(name: String, brand: String?, quantity: Int, shelf: String): Int {
+    fun addArticle(name: String, brand: String?, description: String) {
         val sql =
-            "INSERT INTO $TABLE_ARTICLES($FIELD_NAME, $FIELD_BRAND, $FIELD_QUANTITY, $FIELD_LAST_CHANGE, $FIELD_SHELF) VALUES (?, ?, ?, ?, ?)"
-        val statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)
+            "INSERT INTO $TABLE_ARTICLES($FIELD_ARTICLE_NAME, $FIELD_BRAND, $FIELD_LAST_CHANGE, $FIELD_DESCRIPTION) VALUES (?, ?, ?, ?)"
 
-        statement.setString(1, name)
-        statement.setString(2, brand)
-        statement.setInt(3, quantity)
-        // TODO maybe add this date thigny as part of the query directly, though that might be different between pgsql sqlite
-        statement.setDate(4, Date(java.util.Date().time))
-        statement.setString(5, shelf)
-
-        statement.executeUpdate()
-        val result = statement.generatedKeys
-        result.next()
-        return result.getInt(1)
+        jdbcTemplate.update(sql, name, brand, Timestamp(System.currentTimeMillis()), description)
     }
 
     @Throws(SQLException::class)
-    fun getAllArticles(): List<ArticleResult> {
-        val articlesList = ArrayList<ArticleResult>()
+    fun getArticles(articleIds: List<Int>): List<ArticleResult> {
+        var sql = "SELECT * FROM $TABLE_ARTICLES"
 
-        val sql = "SELECT * FROM $TABLE_ARTICLES"
-
-        val statement = connection.prepareStatement(sql)
-        val resultSet = statement.executeQuery()
-        while (resultSet.next()) {
-            val article = ArticleResult(
-                id = resultSet.getInt(FIELD_ID),
-                name = resultSet.getString(FIELD_NAME),
-                brand = resultSet.getString(FIELD_BRAND),
-                quantity = resultSet.getInt(FIELD_QUANTITY),
-                last_change = resultSet.getDate(FIELD_LAST_CHANGE),
-                shelf = resultSet.getString(FIELD_SHELF)
-            )
-            articlesList.add(article)
+        if (articleIds.isEmpty()) {
+            return jdbcTemplate.query(sql, ArticleResultMapper())
+        } else {
+            // Need do build the statement manually, since sqlite doesn't support setArray
+            val parameters = MapSqlParameterSource()
+            parameters.addValue("ids", articleIds)
+            sql += " WHERE id IN (:ids)"
+            return namedParameterJdbcTemplate.query(sql, parameters, ArticleResultMapper())
         }
-        return articlesList
+    }
+
+    /**
+     * Damn this is ugly, but what can you do.. with having to use inner join and manually adding WHERE IN
+     */
+    @Throws(SQLException::class)
+    fun getArticlesInLocations(articleIds: List<Int>, locationIds: List<Int>): List<ArticleResult> {
+        var sql =
+            "SELECT * FROM $TABLE_ARTICLE_LOCATIONS INNER JOIN $TABLE_ARTICLES ON $TABLE_ARTICLES.$FIELD_ID = " +
+                "$TABLE_ARTICLE_LOCATIONS.$FIELD_ARTICLE_ID INNER JOIN $TABLE_LOCATION ON $TABLE_LOCATION.$FIELD_ID = " +
+                "$TABLE_ARTICLE_LOCATIONS.$FIELD_LOCATION_ID"
+
+        val result: List<ArticlesInLocationsResult>
+        // TODO clean this if mess up a little
+        if (locationIds.isNotEmpty() && articleIds.isNotEmpty()) {
+            sql += " WHERE $TABLE_ARTICLES.$FIELD_ID IN (:articleIds) AND $TABLE_LOCATION.$FIELD_ID IN (:locationIds)"
+            val parameters = MapSqlParameterSource()
+            parameters.addValue("articleIds", articleIds)
+            parameters.addValue("locationIds", locationIds)
+            result = namedParameterJdbcTemplate.query(sql, parameters, ArticlesInLocationsMapper())
+        } else if (locationIds.isNotEmpty()) {
+            sql += " WHERE $TABLE_LOCATION.$FIELD_ID IN (:locationIds)"
+            val parameters = MapSqlParameterSource()
+            parameters.addValue("locationIds", locationIds)
+            result = namedParameterJdbcTemplate.query(sql, parameters, ArticlesInLocationsMapper())
+        } else if (articleIds.isNotEmpty()) {
+            sql += " WHERE $TABLE_ARTICLES.$FIELD_ID IN (:articleIds)"
+            val parameters = MapSqlParameterSource()
+            parameters.addValue("articleIds", articleIds)
+            result = namedParameterJdbcTemplate.query(sql, parameters, ArticlesInLocationsMapper())
+        } else {
+            result = jdbcTemplate.query(sql, ArticlesInLocationsMapper())
+        }
+
+        // TODO improve this and the entire thing. Just an ugly fast way of getting it to spec. Do better later
+        val finalResult = HashMap<Int, ArticleResult>()
+
+        for (a in result) {
+            if (!finalResult.containsKey(a.id)) {
+                finalResult.put(
+                    a.id,
+                    ArticleResult(
+                        a.id,
+                        a.name,
+                        a.brand,
+                        a.last_change,
+                        null,
+                        mutableListOf(LocationQuantityResult(a.locationId, a.locationName, a.quantity))
+                    )
+                )
+            } else {
+                finalResult.get(a.id)?.locations!!.add(LocationQuantityResult(a.locationId, a.locationName, a.quantity))
+            }
+        }
+
+        return finalResult.values.toMutableList()
+    }
+
+    @Throws(SQLException::class)
+    fun setArticlesAtLocation(locationId: Int, articleId: Int, quantity: Int) {
+
+        // TODO rethink how to handle this typ eof issues
+        val sql = when (configuration.type) {
+            "sqlite" -> "INSERT OR REPLACE INTO $TABLE_ARTICLE_LOCATIONS($FIELD_LOCATION_ID, $FIELD_ARTICLE_ID, $FIELD_QUANTITY) VALUES (?, ?, ?)"
+            "pgsql" -> "INSERT INTO $TABLE_ARTICLE_LOCATIONS($FIELD_LOCATION_ID, $FIELD_ARTICLE_ID, $FIELD_QUANTITY) VALUES (?, ?, ?) " +
+                "ON CONFLICT ($FIELD_LOCATION_ID, $FIELD_ARTICLE_ID) DO UPDATE SET $FIELD_QUANTITY = excluded.$FIELD_QUANTITY"
+            else -> throw Exception("Unsupported DB type")
+        }
+
+        jdbcTemplate.update(sql, locationId, articleId, quantity)
+    }
+
+    @Throws(SQLException::class)
+    fun addLocation(name: String) {
+        val sql = "INSERT INTO $TABLE_LOCATION($FIELD_LOCATION_NAME) VALUES (?)"
+        jdbcTemplate.update(sql, name)
+    }
+
+    @Throws(SQLException::class)
+    fun getLocations(ids: List<Int>): List<LocationResult> {
+        var sql = "SELECT * FROM $TABLE_LOCATION"
+
+        if (ids.isEmpty()) {
+            return jdbcTemplate.query(sql, LocationResultMapper())
+        } else {
+            // Need do build the statement manually, since sqlite doesn't support setArray
+            val parameters = MapSqlParameterSource()
+            parameters.addValue("ids", ids)
+            sql += " WHERE id IN (:ids)"
+            return namedParameterJdbcTemplate.query(sql, parameters, LocationResultMapper())
+        }
     }
 
     @Throws(Exception::class)
-    fun login(username: String, password: String): UserResult {
+    fun login(username: String, password: String): List<UserResult> {
         val sql = "SELECT $FIELD_ID, $FIELD_PASSWORD FROM $TABLE_USERS WHERE $FIELD_EMAIL = ?"
-        val statement = connection.prepareStatement(sql)
-        statement.setString(1, username)
-        val resultSet = statement.executeQuery()
-        while (resultSet.next()) {
-            if (BCrypt.checkpw(password, resultSet.getString("password"))) {
-                val token = addNewTokenForUse(resultSet.getInt(FIELD_ID))
-                return getUser(token)
+        val user = jdbcTemplate.query(sql, arrayOf<Any>(username), LoginMapper())
+        if (user.isNotEmpty()) {
+            if (BCrypt.checkpw(password, user[0].password)) {
+
+                val token = addNewTokenForUse(user[0].id)
+
+                return getUserWithToken(token)
             }
         }
         throw AuthenticationException()
@@ -176,11 +235,7 @@ abstract class DatabaseConnector(protected val configuration: DatabaseConfigurat
     @Throws(Exception::class)
     fun logout(token: String) {
         val sql = "UPDATE $TABLE_USERS SET $FIELD_TOKEN = ? WHERE $FIELD_TOKEN = ?"
-        val statement = connection.prepareStatement(sql)
-        statement.setString(1, null)
-        statement.setString(2, token)
-        if (statement.executeUpdate() == 0) {
-            // Nothing was updated, so token must not have been valid
+        if (jdbcTemplate.update(sql, null, token) == 0) {
             throw AuthenticationException()
         }
     }
@@ -188,11 +243,10 @@ abstract class DatabaseConnector(protected val configuration: DatabaseConfigurat
     @Throws(Exception::class)
     fun authenticateToken(token: String): Boolean {
         val sql = "SELECT $FIELD_ADMIN FROM $TABLE_USERS WHERE $FIELD_TOKEN = ?"
-        val statement = connection.prepareStatement(sql)
-        statement.setString(1, token)
-        val resultSet = statement.executeQuery()
-        while (resultSet.next()) {
-            return resultSet.getInt(FIELD_ADMIN) == 1
+
+        val admin = jdbcTemplate.query(sql, arrayOf<Any>(token), AuthenticateTokenMapper())
+        if (admin.isNotEmpty()) {
+            return admin[0]
         }
         // No results found, so token is wrong
         throw AuthenticationException()
@@ -203,28 +257,21 @@ abstract class DatabaseConnector(protected val configuration: DatabaseConfigurat
         val token = UUID.randomUUID()
 
         val sql = "UPDATE $TABLE_USERS SET $FIELD_TOKEN = ? WHERE $FIELD_ID = ?"
-
-        val statement = connection.prepareStatement(sql)
-        statement.setString(1, token.toString())
-        statement.setInt(2, id)
-
-        // Update failed on 0
-        if (statement.executeUpdate() == 0) {
-            throw SQLException("Failed to update table, check log")
-        }
+        jdbcTemplate.update(sql, token, id)
         return token.toString()
     }
 
     @Throws(SQLException::class)
-    protected fun createInitialTables() {
-        val dropStatement = connection.createStatement()
-        // TODO clean this up, should drop all tables, now just what we specify
-        try {
-            dropStatement.execute("DROP TABLE $TABLE_USERS, $TABLE_ARTICLES")
-            // Catching Excerption, since multi exception not supported on Kotlin yet, also should clean this code
-        } catch (e: Exception) {
-            // TODO just ignoring does not exist error, entire thingy should be cleaned anyway, fix then
-        }
+    fun dropAllTables() {
+        jdbcTemplate.execute("DROP TABLE IF EXISTS $TABLE_ARTICLE_LOCATIONS")
+
+        jdbcTemplate.execute("DROP TABLE IF EXISTS $TABLE_USERS")
+        jdbcTemplate.execute("DROP TABLE IF EXISTS $TABLE_ARTICLES")
+        jdbcTemplate.execute("DROP TABLE IF EXISTS $TABLE_LOCATION")
+    }
+
+    @Throws(SQLException::class)
+    fun createInitialTables() {
         val file = when (configuration.type) {
             "sqlite" -> ResourceUtils.getFile("classpath:database-layout-sqlite.sql")
             "pgsql" -> ResourceUtils.getFile("classpath:database-layout-pgsql.sql")
@@ -237,7 +284,7 @@ abstract class DatabaseConnector(protected val configuration: DatabaseConfigurat
             if (!s.contains("CREATE TABLE")) {
                 continue
             }
-            connection.createStatement().execute(s)
+            jdbcTemplate.execute(s)
         }
     }
 }

@@ -14,7 +14,11 @@ import org.junit.Test
 import org.junit.experimental.categories.Category
 import org.junit.runner.RunWith
 import org.junit.runners.Parameterized
+import org.springframework.boot.jdbc.DataSourceBuilder
+import org.springframework.jdbc.core.JdbcTemplate
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import java.util.UUID
+import javax.sql.DataSource
 
 /**
  * Parametirized test class. Runs tests for both PgSQL and SQLite.
@@ -25,10 +29,9 @@ import java.util.UUID
 @RunWith(Parameterized::class)
 class DatabaseConnectorTest(
     private val name: String,
-    private val configuration: DatabaseConfiguration
+    private val configuration: DatabaseConfiguration,
+    private val dataSourceParam: DataSource
 ) {
-
-    private lateinit var databaseHandler: DatabaseHandler
 
     companion object {
         @JvmStatic
@@ -48,20 +51,30 @@ class DatabaseConnectorTest(
             every { pgsqlConfiguration.username } returns "postgres"
             every { pgsqlConfiguration.password } returns "postgres"
 
+            val sqliteDataSourceBuilder = DataSourceBuilder.create()
+            sqliteDataSourceBuilder.driverClassName("org.sqlite.JDBC")
+            sqliteDataSourceBuilder.url("jdbc:sqlite::memory:")
+            val sqliteDataSource = sqliteDataSourceBuilder.build()
+
+            val pgsqlDataSourceBuilder = DataSourceBuilder.create()
+            pgsqlDataSourceBuilder.driverClassName("org.postgresql.Driver")
+            pgsqlDataSourceBuilder.url("jdbc:postgresql://${pgsqlConfiguration.address}:${pgsqlConfiguration.port}/${pgsqlConfiguration.name}")
+            pgsqlDataSourceBuilder.username(pgsqlConfiguration.username)
+            pgsqlDataSourceBuilder.password(pgsqlConfiguration.password)
+            val pgsqlDataSource = pgsqlDataSourceBuilder.build()
+
             return listOf(
-                arrayOf("SQLite", sqliteConfiguration),
-                arrayOf("PgSQL", pgsqlConfiguration)
+                arrayOf("SQLite", sqliteConfiguration, sqliteDataSource),
+                arrayOf("PgSQL", pgsqlConfiguration, pgsqlDataSource)
             )
         }
 
         // User info placed to database for testing
-        //  private val addUserBody1 = AddUserBody("Moo1", "Moo1", "hiano", "joo@koo.com", true, null)
         private const val firstName1 = "Moo1"
         private const val lastName1 = "MOoo2"
         private const val password1 = "hiano"
         private const val email1 = "joo@koo.com"
         private const val admin1 = true
-        //    private val addUserBody2 = AddUserBody("Mofweo1", "MOfweoo2", "hiawefno", "joowefwe@fwefwe.org", false, null)
 
         private const val firstName2 = "Mofweo1"
         private const val lastName2 = "MOfweoo2"
@@ -69,24 +82,33 @@ class DatabaseConnectorTest(
         private const val email2 = "joowefwe@fwefwe.org"
         private const val admin2 = false
 
-        // private val addArticlesBody = AddArticleBody("moo1", "moo2", 1, "korkein", null)
-
         // Article related info, used for testing
         private const val name1 = "moo1"
         private const val brand1 = "moo2"
-        private const val count1 = 1
-        private const val shelf1 = "korkein"
+        private const val description1 = "korkein"
 
         private const val name2 = "moo1"
         private const val brand2 = "moo2"
-        private const val count2 = 3
-        private const val shelf2 = "korkein"
+        private const val description2 = "korkein"
+
+        // Location test variables
+        private const val locationName1 = "Hiano"
+        private const val locationName2 = "feopikjfespokf"
+        private const val locationName3 = "fexcvxcpokf"
     }
+
+    lateinit var databaseHandler: DatabaseConnector
 
     @Before
     fun setUp() {
-        databaseHandler = DatabaseHandler(configuration)
+
+        databaseHandler =
+            DatabaseConnector(configuration, JdbcTemplate(dataSourceParam), NamedParameterJdbcTemplate(dataSourceParam))
+        databaseHandler.dropAllTables()
+        databaseHandler.createInitialTables()
         addTestUsers()
+        addTestArticles()
+        addTestLocations()
     }
 
     @After
@@ -132,7 +154,7 @@ class DatabaseConnectorTest(
 
     @Test
     fun testLogin_success() {
-        val result: UserResult = databaseHandler.login(email1, password1)
+        val result: UserResult = databaseHandler.login(email1, password1)[0]
         Assert.assertTrue(UUID.fromString(result.token) != null)
         Assert.assertThat(result.admin, `is`(admin1))
         Assert.assertThat(result.email, `is`(email1))
@@ -152,12 +174,12 @@ class DatabaseConnectorTest(
     @Test
     fun testAuthenticateToken_success() {
         // Check one with admin privileges
-        val result1: UserResult = databaseHandler.login(email1, password1)
+        val result1: UserResult = databaseHandler.login(email1, password1)[0]
         val token1 = result1.token
         Assert.assertThat(databaseHandler.authenticateToken(token1!!), `is`(admin1))
 
         // Check one without admin privleges
-        val result2: UserResult = databaseHandler.login(email2, password2)
+        val result2: UserResult = databaseHandler.login(email2, password2)[0]
         val token2 = result2.token
 
         Assert.assertThat(databaseHandler.authenticateToken(token2!!), `is`(admin2))
@@ -175,7 +197,7 @@ class DatabaseConnectorTest(
     @Test
     fun testLogout_success() {
         // Check one with admin privileges
-        val result1: UserResult = databaseHandler.login(email1, password1)
+        val result1: UserResult = databaseHandler.login(email1, password1)[0]
         val token1 = result1.token
         databaseHandler.logout(token1!!)
 
@@ -199,30 +221,71 @@ class DatabaseConnectorTest(
 
     @Test
     fun testAddArticle_success() {
-        Assert.assertThat(databaseHandler.addArticle(name1, brand1, count1, shelf1), `is`(1))
-        Assert.assertThat(databaseHandler.addArticle(name2, brand2, count2, shelf2), `is`(2))
+        // TODO improve this test
+        databaseHandler.addArticle(name1, brand1, description1)
+        databaseHandler.addArticle(name2, brand2, description2)
+
+//        Assert.assertThat(databaseHandler.addArticle(name1, brand1, shelf1), `is`(1))
+//        Assert.assertThat(databaseHandler.addArticle(name2, brand2, shelf2), `is`(2))
     }
 
     @Test
     fun testGetArticles() {
-        addTestArticles()
-
-        val results = databaseHandler.getAllArticles()
+        val results = databaseHandler.getArticles(listOf())
         Assert.assertThat(results.size, `is`(2))
         val firstResult = results[0]
         println(firstResult.toString())
         Assert.assertThat(firstResult.id, `is`(1))
         Assert.assertThat(firstResult.name, `is`(name1))
         Assert.assertThat(firstResult.brand, `is`(brand1))
-        Assert.assertThat(firstResult.quantity, `is`(count1))
-        Assert.assertThat(firstResult.shelf, `is`(shelf1))
+        Assert.assertThat(firstResult.description, `is`(description1))
 
         val secondResult = results[1]
         Assert.assertThat(secondResult.id, `is`(2))
         Assert.assertThat(secondResult.name, `is`(name2))
         Assert.assertThat(secondResult.brand, `is`(brand2))
-        Assert.assertThat(secondResult.quantity, `is`(count2))
-        Assert.assertThat(secondResult.shelf, `is`(shelf2))
+        Assert.assertThat(secondResult.description, `is`(description2))
+    }
+
+    @Test
+    fun testAddLocation_GetLocation() {
+        var result = databaseHandler.getLocations(listOf())
+        Assert.assertThat(result.size, `is`(3))
+
+        result = databaseHandler.getLocations(listOf(1, 2, 3))
+        Assert.assertThat(result.size, `is`(3))
+
+        result = databaseHandler.getLocations(listOf(3, 4, 5))
+        Assert.assertThat(result.size, `is`(1))
+
+        result = databaseHandler.getLocations(listOf(345, 4356))
+        Assert.assertThat(result.size, `is`(0))
+
+        result = databaseHandler.getLocations(listOf(1, 3))
+        Assert.assertThat(result.size, `is`(2))
+    }
+
+    @Test
+    fun testSetArticlesAtLocation() {
+
+        databaseHandler.setArticlesAtLocation(1, 1, 5)
+        databaseHandler.setArticlesAtLocation(2, 2, 4)
+        databaseHandler.setArticlesAtLocation(1, 2, 1)
+
+        var result = databaseHandler.getArticlesInLocations(listOf(), listOf())
+        Assert.assertThat(result.size, `is`(2))
+        Assert.assertThat(result[0].locations!!.size, `is`(1))
+        Assert.assertThat(result[1].locations!!.size, `is`(2))
+
+        result = databaseHandler.getArticlesInLocations(listOf(1), listOf())
+        Assert.assertThat(result.size, `is`(1))
+        Assert.assertThat(result[0].locations!!.size, `is`(1))
+
+        result = databaseHandler.getArticlesInLocations(listOf(), listOf(1))
+        Assert.assertThat(result.size, `is`(2))
+        Assert.assertThat(result[0].locations!!.size, `is`(1))
+        Assert.assertThat(result[1].locations!!.size, `is`(1))
+
     }
 
     private fun addTestUsers() {
@@ -231,7 +294,13 @@ class DatabaseConnectorTest(
     }
 
     private fun addTestArticles() {
-        databaseHandler.addArticle(name1, brand1, count1, shelf1)
-        databaseHandler.addArticle(name2, brand2, count2, shelf2)
+        databaseHandler.addArticle(name1, brand1, description1)
+        databaseHandler.addArticle(name2, brand2, description2)
+    }
+
+    private fun addTestLocations() {
+        databaseHandler.addLocation(locationName1)
+        databaseHandler.addLocation(locationName2)
+        databaseHandler.addLocation(locationName3)
     }
 }

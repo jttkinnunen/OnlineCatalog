@@ -10,9 +10,22 @@ CREATE TABLE IF NOT EXISTS users (
 
 CREATE TABLE IF NOT EXISTS articles (
   id SERIAL PRIMARY KEY,
-  name TEXT NOT NULL,
+  article_name TEXT NOT NULL,
   brand TEXT,
+  last_change TIMESTAMP,
+  description TEXT
+);
+
+CREATE TABLE IF NOT EXISTS location (
+  id SERIAL PRIMARY KEY,
+  location_name TEXT NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS article_locations (
+  location_id INTEGER NOT NULL,
+  article_id INTEGER NOT NULL,
   quantity INTEGER DEFAULT 0 NOT NULL,
-  last_change DATE,
-  shelf TEXT
+  FOREIGN KEY(article_id) REFERENCES articles(id),
+  FOREIGN KEY(location_id) REFERENCES location(id),
+  PRIMARY KEY (location_id, article_id)
 );
