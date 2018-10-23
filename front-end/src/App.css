@@ -17,9 +17,10 @@
 }
 
 
-.container {
-  display: flex;
-  justify-content: flex-start;
+.flex-container {
+  display: block;
+  justify-content: center;
+
 }
 
 .button {
@@ -72,8 +73,9 @@
   align-content: flex-start;
   justify-content: flex-start;
   align-self: center;
-  min-width: 768px;
-  width: 50%;
+
+  min-width: 320px;
+  width: 100%;
   font-size: calc(15px + 0vmin);
   background-color: #464c52; /*background-color: #242a30;*/
   color: black;

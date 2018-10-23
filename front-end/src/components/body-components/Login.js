@@ -1,5 +1,6 @@
 import React from "react";
-import { Col, Button, Form, FormGroup, FormFeedback, Label, Input, FormText } from 'reactstrap';
+import { Col, Button, Jumbotron, Form, FormGroup, FormFeedback, Label, Input, FormText } from 'reactstrap';
+import'./Login.css';
 
 
 // TODO: Katso linkki alta, hyödyllinen
@@ -46,25 +47,41 @@ class Login extends React.Component {
         }
 
         return(
-            <Form>
-                <h5>Kirjaudu sisään</h5>
-                <FormGroup row>
-                    <Col sm={10}>
-                        <Input type="email" name="email" id="exampleEmail" placeholder="Sähköposti" value = {this.state.user} onChange = {this.handleUserChange}/>
-                    </Col>
+            <div>
+
+             <Jumbotron>
+                <Form>
+                    <h5>Kirjaudu sisään</h5>
+
+                    <FormGroup>
+                        <span>
+                            <i className=" fa fa-envelope-square"></i>
+                            <Input type="email" name="email" id="exampleEmail" placeholder="Sahköposti" value = {this.state.user} onChange = {this.handleUserChange}/>
+                        </span>
+                     </FormGroup>
+                        <br/>
+                    <FormGroup>
+                        <span>
+                            <i className=" fa fa-key"></i>
+                                <Input type="password" name="password" id="examplePassword" placeholder="Salasana" value = {this.state.pass} onChange = {this.handlePassChange} />
+                                <h6>{login_result}</h6>
+                        </span>
+                    </FormGroup>
+                    <br/>
+                <FormGroup>
+
+                        <Button className="btn btn-success" onClick={this.handleSubmit}>Kirjaudu</Button>
+
                 </FormGroup>
-                <FormGroup row>
-                    <Col sm={10}>
-                        <Input type="password" name="password" id="examplePassword" placeholder="Salasana" value = {this.state.pass} onChange = {this.handlePassChange} />
-                        <h6>{login_result}</h6>
-                    </Col>
-                </FormGroup>
-                <FormGroup check row>
-                    <Col sm={{ size: 10, offset: 1 }}>
-                        <Button onClick={this.handleSubmit}>Kirjaudu</Button>
-                    </Col>
-                </FormGroup>
+                    <br/>
+                    <FormGroup>
+
+                        <a href="#">Unohtuiko salasana?</a>
+
+                    </FormGroup>
             </Form>
+            </Jumbotron>
+            </div>
         );
     }
 }

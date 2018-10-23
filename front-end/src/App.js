@@ -164,26 +164,27 @@ class App extends Component {
     render() {
         return (
             <div className="App">
+                <div className="flex-container">
+                    <header className="App-header">
 
-                <header className="App-header">
-
-                    <div class="container-fluid" className = "navigation-bar" >
-                        <Navigation_bar user = {this.state.user} setView = {this.setView} current_view = {this.state.current_view} />
-                    </div>
-
-                    <div class="container" className = "body">
-                        <div className="container-fluid" className="event-bar">
-                            <Events current_view = {this.state.current_view} />
-
+                        <div className = "navigation-bar" >
+                            <Navigation_bar user = {this.state.user} setView = {this.setView} current_view = {this.state.current_view} />
                         </div>
-                        <Body login_state = {this.state.login_state} user = {this.state.user} current_view = {this.state.current_view} articles = {this.state.articles} setView = {this.setView} login = {this.login}/>
-                    </div>
 
-                    <div className="container-fluid" className="footer">
-                        <Footer current_view = {this.state.current_view} debugval = {this.state.debugval}/>
-                    </div>
+                        <div className = "body">
+                            <div className="event-bar">
+                                <Events current_view = {this.state.current_view} />
 
-                </header>
+                            </div>
+                            <Body login_state = {this.state.login_state} user = {this.state.user} current_view = {this.state.current_view} articles = {this.state.articles} setView = {this.setView} login = {this.login}/>
+                        </div>
+
+                        <div className="footer">
+                            <Footer current_view = {this.state.current_view} debugval = {this.state.debugval}/>
+                        </div>
+
+                    </header>
+                </div>
             </div>
         );
     }
