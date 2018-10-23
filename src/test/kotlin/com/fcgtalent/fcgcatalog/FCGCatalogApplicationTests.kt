@@ -61,9 +61,9 @@ class FCGCatalogApplicationTests {
         databaseConnector.addUser("moo1", "moo2", "passu1", "user1", true)
 
         val result = databaseConnector.login("user1", "passu1")
-        Assert.assertNotNull(result[0].token, result[0].token)
+        Assert.assertNotNull(result.token, result.token)
 
-        databaseConnector.logout(result[0].token!!)
+        databaseConnector.logout(result.token!!)
 
         Assert.assertThat(databaseConnector.getArticlesInLocations(listOf(), listOf()).size, `is`(0))
         Assert.assertThat(databaseConnector.getArticlesInLocations(listOf(1), listOf()).size, `is`(0))

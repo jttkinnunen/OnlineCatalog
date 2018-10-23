@@ -62,7 +62,7 @@ class DatabaseConnector(
     init {
         // TODO rethink this, this is just initial testing. But rethink the intiial table geneartion
         createInitialTables()
-        //addUser("antti", "pantti", "hiano", "elefantti@hiano.fi", true)
+        addUser("antti", "pantti", "hiano", "elefantti@hiano.fi", true)
     }
 
     @Throws(SQLException::class)
@@ -96,10 +96,10 @@ class DatabaseConnector(
     }
 
     @Throws(SQLException::class)
-    fun getUserWithToken(token: String): List<UserResult> {
+    fun getUserWithToken(token: String): UserResult {
         val sql = "SELECT * FROM $TABLE_USERS WHERE $FIELD_TOKEN = ?"
-
-        return jdbcTemplate.query(sql, arrayOf<Any>(token), UserResultMapper())
+        val result = jdbcTemplate.query(sql, arrayOf<Any>(token), UserResultMapper())
+        return result[0]
     }
 
     // TODO move date to timestamp
@@ -218,7 +218,7 @@ class DatabaseConnector(
     }
 
     @Throws(Exception::class)
-    fun login(username: String, password: String): List<UserResult> {
+    fun login(username: String, password: String): UserResult {
         val sql = "SELECT $FIELD_ID, $FIELD_PASSWORD FROM $TABLE_USERS WHERE $FIELD_EMAIL = ?"
         val user = jdbcTemplate.query(sql, arrayOf<Any>(username), LoginMapper())
         if (user.isNotEmpty()) {
