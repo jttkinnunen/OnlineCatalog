@@ -61,6 +61,7 @@ class DatabaseConnector(
 
     init {
         // TODO rethink this, this is just initial testing. But rethink the intiial table geneartion
+        dropAllTables()
         createInitialTables()
         addUser("antti", "pantti", "hiano", "elefantti@hiano.fi", true)
         addUser("Joni","Laitala","2479","joni.laitala@gmail.com", true)
