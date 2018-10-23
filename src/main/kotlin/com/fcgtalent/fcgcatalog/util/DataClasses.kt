@@ -27,14 +27,14 @@ data class ArticleResult @JsonCreator constructor(
 
 // TODO fix up, remove and all other stuff......
 data class ArticlesInLocationsResult @JsonCreator constructor(
-    @JsonProperty val id: Int,
-    @JsonProperty val name: String,
-    @JsonProperty val brand: String?,
-    @JsonProperty val last_change: Timestamp,
-    @JsonProperty val description: String?,
-    @JsonProperty("location_id") val locationId: Int,
-    @JsonProperty("location_name") val locationName: String,
-    @JsonProperty val quantity: Int
+        @JsonProperty val id: Int,
+        @JsonProperty val name: String,
+        @JsonProperty val image: String?,
+        @JsonProperty val last_change: Timestamp,
+        @JsonProperty val description: String?,
+        @JsonProperty("location_id") val locationId: Int,
+        @JsonProperty("location_name") val locationName: String,
+        @JsonProperty val quantity: Int
 )
 
 data class LocationResult @JsonCreator constructor(

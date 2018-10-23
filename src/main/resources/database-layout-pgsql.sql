@@ -11,7 +11,7 @@ CREATE TABLE IF NOT EXISTS users (
 CREATE TABLE IF NOT EXISTS articles (
   id SERIAL PRIMARY KEY,
   article_name TEXT NOT NULL,
-  brand TEXT,
+  image TEXT,
   last_change TIMESTAMP,
   description TEXT
 );
