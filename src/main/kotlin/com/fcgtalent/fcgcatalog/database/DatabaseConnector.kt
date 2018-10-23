@@ -48,7 +48,7 @@ class DatabaseConnector(
 
         // Article fields
         const val FIELD_ARTICLE_NAME = "article_name"
-        const val FIELD_BRAND = "brand"
+        const val FIELD_IMAGE = "image"
         const val FIELD_LAST_CHANGE = "last_change"
         const val FIELD_DESCRIPTION = "description"
 
@@ -63,6 +63,20 @@ class DatabaseConnector(
         // TODO rethink this, this is just initial testing. But rethink the intiial table geneartion
         createInitialTables()
         addUser("antti", "pantti", "hiano", "elefantti@hiano.fi", true)
+        addUser("Joni","Laitala","2479","joni.laitala@gmail.com", true)
+        addLocation("Oulu")
+        addLocation("Helsinki")
+        addLocation("Kiutaköngäs")
+        addArticle("Paita, Musta, FCGTalent, L","/tshirt.png", "Unisex paita. Kestaa tuulta, sadetta ja luoteja")
+        addArticle("Paita, Musta, FCGTalent, XL","/tshirt.png", "Unisex paita. Kestaa tuulta, sadetta ja luoteja")
+        addArticle("Kynä, punainen, FCGTalent","/ballpenred.png", "Kuulakärkikynä jonka muste ei kuivu tai lopu koskaan")
+        addArticle("Vihko, kovakantinen, FCGTalent","/notepad.png", "Kovakantinen ruutusivullinen vihko, jonka kannesa FCG Talent logo. Lorem ipsum dolor sit amet.")
+
+        setArticlesAtLocation(1,1, 25)
+        setArticlesAtLocation(2,2, 12)
+        setArticlesAtLocation(1,3, 2)
+        setArticlesAtLocation(2,4, 20)
+        setArticlesAtLocation(3,4, 150)
     }
 
     @Throws(SQLException::class)
@@ -106,7 +120,7 @@ class DatabaseConnector(
     @Throws(SQLException::class)
     fun addArticle(name: String, brand: String?, description: String) {
         val sql =
-            "INSERT INTO $TABLE_ARTICLES($FIELD_ARTICLE_NAME, $FIELD_BRAND, $FIELD_LAST_CHANGE, $FIELD_DESCRIPTION) VALUES (?, ?, ?, ?)"
+            "INSERT INTO $TABLE_ARTICLES($FIELD_ARTICLE_NAME, $FIELD_IMAGE, $FIELD_LAST_CHANGE, $FIELD_DESCRIPTION) VALUES (?, ?, ?, ?)"
 
         jdbcTemplate.update(sql, name, brand, Timestamp(System.currentTimeMillis()), description)
     }
@@ -168,7 +182,7 @@ class DatabaseConnector(
                     ArticleResult(
                         a.id,
                         a.name,
-                        a.brand,
+                        a.image,
                         a.last_change,
                         null,
                         mutableListOf(LocationQuantityResult(a.locationId, a.locationName, a.quantity))
