@@ -40,11 +40,15 @@ class Navigation extends React.Component {
     render() {
         let adminTools;
 
+        // Admin only Nav component visibility
         if (this.props.user.admin === true){
             adminTools = (
                 <div>
                     <DropdownItem divider />
-                    <DropdownItem onClick={() => this.props.setView("manage-users")}>
+                    <DropdownItem onClick={() => {
+                        this.props.getUsers();
+                        this.props.setView("manage-users");
+                    }}>
                         Käyttäjien hallinta (Admin)
                     </DropdownItem>
                     <DropdownItem onClick={() => this.props.setView("audit-log")}>
@@ -62,7 +66,7 @@ class Navigation extends React.Component {
         return (
                 <div>
                     <Navbar color="light" light  expand="sm">
-                        <NavbarBrand href="/" className="mr-auto">Matsku &nbsp;</NavbarBrand>
+                        <NavbarBrand href="#" className="mr-auto" onClick={() => this.props.setView("articles")}>Matsku &nbsp;</NavbarBrand>
                         <Form className = "nav-form">
                             <Input type="text" id="textSearch" placeholder="Hae tuotetta..." />
                             <Button type="submit" onClick={() => this.props.setView("articles")}>Hae</Button>
@@ -78,7 +82,7 @@ class Navigation extends React.Component {
 
                                       </DropdownToggle>
                             <DropdownMenu left>
-                                <DropdownItem onClick={() => this.props.setView("profile-page")}>
+                                <DropdownItem onClick={() => {this.props.setView("profile-page")}}>
                                     Profiili
                                 </DropdownItem>
                                 <DropdownItem onClick={() => this.props.setView("articles")}>

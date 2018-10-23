@@ -78,8 +78,9 @@
   width: 100%;
   font-size: calc(15px + 0vmin);
   background-color: #464c52; /*background-color: #242a30;*/
-  color: black;
+  color: navajowhite;
 }
+
 .h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
   color: black;
 }
