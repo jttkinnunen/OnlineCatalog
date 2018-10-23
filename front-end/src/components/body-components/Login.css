@@ -1,0 +1,53 @@
+
+
+
+div {
+
+    /*background: url("https://pixabay.com/get/eb36b90b35f50821d047007bb912138be272e6d51bb4164694f6/abstract-2384_1920.jpg") no-repeat center;*/
+    /*background-size: cover;*/
+
+}
+.jumbotron{
+
+    margin: 20px;
+    max-width: 760px;
+    text-align: center;
+    border: 2px solid blue;
+    padding: 10px;
+    border-radius: 25px;
+    background: blueviolet linear-gradient(darkblue, royalblue);
+
+}
+
+
+
+
+h5 {
+    color: white;
+    margin-bottom: 50px;
+}
+span, Button {
+    display:inline-flex;
+    justify-content: center;
+    max-width: 500px;
+    width:100%;
+}
+.fa-envelope-square {
+
+    color: white;
+    background-color: black;
+    font-size: 40px;
+}
+
+    .fa-key {
+        color: yellow;
+    font-size: 35px;
+}
+    Button {
+
+        background-color: blue;
+    }
+    a {
+        color: pink;
+        font-size: 15px;
+    }
