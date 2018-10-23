@@ -154,7 +154,7 @@ class DatabaseConnectorTest(
 
     @Test
     fun testLogin_success() {
-        val result: UserResult = databaseHandler.login(email1, password1)[0]
+        val result: UserResult = databaseHandler.login(email1, password1)
         Assert.assertTrue(UUID.fromString(result.token) != null)
         Assert.assertThat(result.admin, `is`(admin1))
         Assert.assertThat(result.email, `is`(email1))
@@ -174,12 +174,12 @@ class DatabaseConnectorTest(
     @Test
     fun testAuthenticateToken_success() {
         // Check one with admin privileges
-        val result1: UserResult = databaseHandler.login(email1, password1)[0]
+        val result1: UserResult = databaseHandler.login(email1, password1)
         val token1 = result1.token
         Assert.assertThat(databaseHandler.authenticateToken(token1!!), `is`(admin1))
 
         // Check one without admin privleges
-        val result2: UserResult = databaseHandler.login(email2, password2)[0]
+        val result2: UserResult = databaseHandler.login(email2, password2)
         val token2 = result2.token
 
         Assert.assertThat(databaseHandler.authenticateToken(token2!!), `is`(admin2))
@@ -197,7 +197,7 @@ class DatabaseConnectorTest(
     @Test
     fun testLogout_success() {
         // Check one with admin privileges
-        val result1: UserResult = databaseHandler.login(email1, password1)[0]
+        val result1: UserResult = databaseHandler.login(email1, password1)
         val token1 = result1.token
         databaseHandler.logout(token1!!)
 
