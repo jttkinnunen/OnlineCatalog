@@ -1,6 +1,6 @@
 import React from "react";
 
-class UserManagement extends React.Component {
+class AddUser extends React.Component {
     render() {
         return(
             <div></div>
@@ -8,4 +8,4 @@ class UserManagement extends React.Component {
     }
 }
 
-export default UserManagement;
+export default AddUser;

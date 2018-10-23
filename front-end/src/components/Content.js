@@ -1,22 +1,23 @@
 import React from "react";
-import Articles from './body-components/Articles.js';
-import Login from './body-components/Login.js';
-import UserManagement from './body-components/UserManagement.js';
-import ChangePassword from './body-components/ChangePassword.js';
-import ProfilePage from './body-components/ProfilePage.js';
-import ArticleDetailed from './body-components/ArticleDetailed.js';
-import ForgotPassword from './body-components/ForgotPassword.js';
-import AddArticle from './body-components/AddArticle.js';
+import Articles from './content-components/Articles.js';
+import Login from './content-components/Login.js';
+import UserManagement from './content-components/UserManagement.js';
+import ChangePassword from './content-components/ChangePassword.js';
+import ProfilePage from './content-components/ProfilePage.js';
+import ArticleDetailed from './content-components/ArticleDetailed.js';
+import ForgotPassword from './content-components/ForgotPassword.js';
+import AddArticle from './content-components/AddArticle.js';
+import AddUser from './content-components/AddUser.js';
 
 // Täältä löytyy kaikenlaista:
 // https://reactstrap.github.io/components/form/
 
-class Body extends React.Component {
+class Content extends React.Component {
 
     render() {
         if (this.props.current_view === "articles")
             return (
-                <Articles articles = {this.props.articles}/>
+                <Articles className = "Articles" articles = {this.props.articles}/>
             );
 
         if (this.props.current_view === "add-article")
@@ -31,7 +32,7 @@ class Body extends React.Component {
 
         if (this.props.current_view === "manage-users")
             return (
-                <UserManagement/>
+                <UserManagement users = {this.props.users} setView = {this.props.setView}/>
             );
 
         if (this.props.current_view === "change-pass")
@@ -54,10 +55,15 @@ class Body extends React.Component {
                 <ForgotPassword/>
             );
 
+        if (this.props.current_view === "add-user")
+            return (
+                <AddUser/>
+            );
+
         return(
             <div></div>
         );
     }
 }
 
-export default Body;
+export default Content;

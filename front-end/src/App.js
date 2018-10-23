@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import './App.css';
-import Body from './components/Body.js';
+import Content from './components/Content.js';
 import Events from './components/Events.js';
 import Navigation_bar from './components/Navigation.js';
 import Footer from './components/Footer.js';
@@ -14,9 +14,10 @@ class App extends Component {
         this.login = this.login.bind(this);
         this.postJsonRequest = this.postJsonRequest.bind(this);
         this.setUser = this.setUser.bind(this);
+        this.getUsers = this.getUsers.bind(this);
         this.state = {
             // TODO: Tähän kaikki mahdolliset muuttujat mitä sivulla voi olla. Päivitetään alielementeille tarvittaessa.
-            current_view: "login", // articles, add-article, audit-log, article-detailed, login, manage-users, forgot-pass, change-pass, profile-page
+            current_view: "login", // articles, add-article, audit-log, article-detailed, login, manage-users, forgot-pass, change-pass, profile-page, add-user
             debugval: '',
             login_state: '',
             user: {
@@ -143,6 +144,23 @@ class App extends Component {
         this.setState({newUser});
     }
 
+    getUsers(){
+        this.postJsonRequest("/getUsers",
+            {
+                "token": this.state.user.token
+            })
+            .then((responseJson) => {
+                this.setState({
+                    users: responseJson,
+                });
+            })
+            .catch(err => {
+                this.setState({
+                    debugval: this.state.debugval + " Error-getting-users:" + err,
+                })
+            })
+    }
+
     setView(new_view) {
         if(new_view === "articles")
             this.fetchArticles();
@@ -168,7 +186,7 @@ class App extends Component {
                     <header className="App-header">
 
                         <div className = "navigation-bar" >
-                            <Navigation_bar user = {this.state.user} setView = {this.setView} current_view = {this.state.current_view} />
+                            <Navigation_bar user = {this.state.user} setView = {this.setView} getUsers = {this.getUsers} current_view = {this.state.current_view} />
                         </div>
 
                         <div className = "body">
@@ -176,7 +194,7 @@ class App extends Component {
                                 <Events current_view = {this.state.current_view} />
 
                             </div>
-                            <Body login_state = {this.state.login_state} user = {this.state.user} current_view = {this.state.current_view} articles = {this.state.articles} setView = {this.setView} login = {this.login}/>
+                            <Content login_state = {this.state.login_state} users = {this.state.users} user = {this.state.user} current_view = {this.state.current_view} articles = {this.state.articles} setView = {this.setView} login = {this.login}/>
                         </div>
 
                         <div className="footer">
