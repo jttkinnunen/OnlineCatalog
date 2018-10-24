@@ -18,7 +18,7 @@
 
 
 .flex-container {
-  display: block;
+  display: flex;
   justify-content: center;
 
 }
@@ -75,7 +75,7 @@
   align-self: center;
 
   min-width: 320px;
-  width: 100%;
+  max-width: 768px;
   font-size: calc(15px + 0vmin);
   background-color: #464c52; /*background-color: #242a30;*/
   color: navajowhite;

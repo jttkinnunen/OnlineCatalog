@@ -67,6 +67,7 @@ class Article extends React.Component {
     render() {
 
         return(
+            <div className="maincontent">
             <Row >
 
                 <Col sm="6">
@@ -120,6 +121,7 @@ class Article extends React.Component {
                     </Card>
                 </Col>
             </Row>
+            </div>
         );
     }
 }

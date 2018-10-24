@@ -14,8 +14,8 @@ div {
     text-align: center;
     border: 2px solid blue;
     padding: 10px;
-    border-radius: 25px;
-    background: blueviolet linear-gradient(darkblue, royalblue);
+    border-radius: 5px;
+    background: blueviolet linear-gradient(#000000, #000333);
 
 }
 
@@ -37,6 +37,11 @@ span, Button {
     color: white;
     background-color: black;
     font-size: 40px;
+}
+.feather-mail {
+
+    width: 20px;
+    height: 20px;
 }
 
     .fa-key {

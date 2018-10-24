@@ -182,27 +182,30 @@ class App extends Component {
     render() {
         return (
             <div className="App">
-                <div className="flex-container">
+
                     <header className="App-header">
 
                         <div className = "navigation-bar" >
                             <Navigation_bar user = {this.state.user} setView = {this.setView} getUsers = {this.getUsers} current_view = {this.state.current_view} />
                         </div>
+                        <div className="flex-container">
 
-                        <div className = "body">
+                            <div className = "body">
                             <div className="event-bar">
                                 <Events current_view = {this.state.current_view} />
 
                             </div>
                             <Content login_state = {this.state.login_state} users = {this.state.users} user = {this.state.user} current_view = {this.state.current_view} articles = {this.state.articles} setView = {this.setView} login = {this.login}/>
-                        </div>
 
-                        <div className="footer">
-                            <Footer current_view = {this.state.current_view} debugval = {this.state.debugval}/>
+                             </div>
                         </div>
+                            <div className="footer">
+                            <Footer current_view = {this.state.current_view} debugval = {this.state.debugval}/>
+                            </div>
+
 
                     </header>
-                </div>
+
             </div>
         );
     }
