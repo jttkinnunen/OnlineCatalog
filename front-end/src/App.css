@@ -20,13 +20,16 @@
 .flex-container {
   display: flex;
   justify-content: center;
-
 }
 
 .button {
   display: flex;
   margin: 5px;
   align-self: flex-start;
+}
+
+.usermanagement-body {
+    color: whitesmoke;
 }
 
 .nav-form {
@@ -55,9 +58,6 @@
 }
 
 .event-text {
-  display: flex;
-  flex-direction: row;
-  align-self: flex-start;
   font-size: calc(15px + 0vmin);
   color: #000000;
 }
@@ -66,19 +66,25 @@
   border-bottom: #cccccc 2px solid;
 }
 
+.card-deck {
+    display:flex;
+    align-self: center;
+    padding-top: 15px;
+}
+
 .body {
   display: flex;
   flex: 1 1 auto;
   flex-direction: column;
   align-content: flex-start;
-  justify-content: flex-start;
   align-self: center;
+
 
   min-width: 320px;
   max-width: 768px;
   font-size: calc(15px + 0vmin);
   background-color: #464c52; /*background-color: #242a30;*/
-  color: navajowhite;
+  color: black;
 }
 
 .h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {

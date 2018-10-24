@@ -18,7 +18,7 @@ class UserManagement extends React.Component {
 
         return(
             <div>
-                <Table striped bordered hover responsive size="sm">
+                <Table striped bordered hover responsive size="sm" className = "usermanagement-body">
                     <thead>
                         <tr>
                             <th></th>

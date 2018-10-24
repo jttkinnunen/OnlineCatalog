@@ -12,20 +12,23 @@ div {
     margin: 20px;
     max-width: 760px;
     text-align: center;
-    border: 2px solid blue;
+    /*border: 2px solid blue;*/
     padding: 10px;
     border-radius: 5px;
-    background: blueviolet linear-gradient(#000000, #000333);
+    background: blueviolet linear-gradient(#363644, #363655);/*(#000000, #000333);*/
 
 }
 
 
+.login-h6{
+    color: floralwhite;
+}
 
-
-h5 {
-    color: white;
+.login-h5  {
+    color: floralwhite;
     margin-bottom: 50px;
 }
+
 span, Button {
     display:inline-flex;
     justify-content: center;
@@ -44,15 +47,14 @@ span, Button {
     height: 20px;
 }
 
-    .fa-key {
-        color: yellow;
+.fa-key {
+    color: yellow;
     font-size: 35px;
 }
-    Button {
-
-        background-color: blue;
-    }
-    a {
-        color: pink;
-        font-size: 15px;
-    }
+Button {
+    background-color: blue;
+}
+a {
+    color: pink;
+    font-size: 15px;
+}
