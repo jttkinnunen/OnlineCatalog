@@ -51,3 +51,4 @@ front-end/build
 front-end/npm-debug.log*
 front-end/yarn-debug.log*
 front-end/yarn-error.log*
+front-end/package-lock.json
