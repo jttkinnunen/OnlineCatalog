@@ -146,9 +146,5 @@ class Navigation extends React.Component {
 
 
 
-<<<<<<< HEAD
 export default Navigation;
 
-=======
-export default Navigation;
->>>>>>> 8aa34a565ea7ebee3195e649c0128e3b2d7a781e

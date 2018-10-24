@@ -19,7 +19,7 @@ class App extends Component {
 
         this.state = {
             // TODO: Tähän kaikki mahdolliset muuttujat mitä sivulla voi olla. Päivitetään alielementeille tarvittaessa.
-            current_view: "login", // articles, add-article, audit-log, article-detailed, login, manage-users, forgot-pass, change-pass, profile-page, add-user
+            current_view: "articles", // articles, add-article, audit-log, article-detailed, login, manage-users, forgot-pass, change-pass, profile-page, add-user
             debugval: '',
             login_state: '',
             user: {
