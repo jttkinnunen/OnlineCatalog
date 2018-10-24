@@ -3,7 +3,7 @@ import './Navigation.css';
 // Importing from reactstrap like this:
 import { Collapse,
     Navbar,
-    NavbarToggler,
+    UncontrolledTooltip,
     NavbarBrand,
     Nav,
     NavItem,
@@ -11,6 +11,8 @@ import { Collapse,
     UncontrolledDropdown,
     DropdownToggle,
     DropdownMenu,
+    InputGroup,
+    InputGroupAddon,
     Button,
     FormGroup,
     Label,
@@ -24,6 +26,7 @@ class Navigation extends React.Component {
         super(props);
 
         this.toggleNavbar = this.toggleNavbar.bind(this);
+        this.submitSearch = this.submitSearch.bind(this);
         this.state = {
             collapsed: true
         };
@@ -33,6 +36,11 @@ class Navigation extends React.Component {
         this.setState({
             collapsed: !this.state.collapsed
         });
+    }
+
+    // Submit search
+    submitSearch() {
+        this.props.setView("articles")
     }
 
     // Add functions for click event checks
@@ -93,36 +101,40 @@ class Navigation extends React.Component {
 
                             </DropdownMenu>
                         </UncontrolledDropdown>
-                        <NavbarBrand href="#" className="mr-auto" onClick={() => this.props.setView("articles")}>Matsku &nbsp;</NavbarBrand>
+                        <NavbarBrand href="#" className="mr-auto" onClick={() => this.props.setView("articles")}>&nbsp; Matsku &nbsp;</NavbarBrand>
                         <Form className = "nav-form">
-                            <Input type="text" id="textSearch" placeholder="Hae tuotetta..." />
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                            <InputGroup>
+                                <Input type="text" id="textSearch" placeholder="Hae tuotetta..." />
+                                <InputGroupAddon addonType="append"><Button color="primary" onClick={() => this.submitSearch()}>Hae</Button></InputGroupAddon>
+                            </InputGroup>
+
+                            {/*<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                                  fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                  stroke-linejoin="round" className="feather feather-search" type="submit" onClick={() => this.props.setView("articles")}>
                                 <circle cx="11" cy="11" r="8"/>
                                 <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                             </svg>
-                            {/*<Button className="btn btn-success" type="submit" onClick={() => this.props.setView("articles")}>Hae</Button>*/}
+                            <Button className="btn btn-success" type="submit" onClick={() => this.props.setView("articles")}>Hae</Button>*/}
                         </Form>
 
+                        <Nav classname="ml-auto" navbar>
 
+                            <UncontrolledTooltip placement="bottom" target="TooltipTarget">
+                                Kirjaudu ulos
+                            </UncontrolledTooltip>
+                                <NavItem>
+                                    <NavLink onClick={() => this.props.setView("login")} id = "TooltipTarget">
+                                        <svg xmlns="http://www.w3.org/2000/svg"  width="24" height="24" viewBox="0 0 24 24"
+                                             fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                             stroke-linejoin="round" className="feather feather-unlock">
+                                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                                            <path d="M7 11V7a5 5 0 0 1 9.9-1"/>
+                                        </svg>
 
-                                <Nav classname="ml-auto" navbar>
+                                    </NavLink>
+                                </NavItem>
 
-
-                        <NavItem>
-                            <NavLink onClick={() => this.props.setView("login")}>
-                                <svg xmlns="http://www.w3.org/2000/svg"  width="24" height="24" viewBox="0 0 24 24"
-                                     fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                     stroke-linejoin="round" className="feather feather-unlock">
-                                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
-                                    <path d="M7 11V7a5 5 0 0 1 9.9-1"/>
-                                </svg>
-
-                            </NavLink>
-                        </NavItem>
-                                </Nav>
-
+                        </Nav>
                 </Navbar>
             </div>
 
@@ -134,5 +146,9 @@ class Navigation extends React.Component {
 
 
 
+<<<<<<< HEAD
 export default Navigation;
 
+=======
+export default Navigation;
+>>>>>>> 8aa34a565ea7ebee3195e649c0128e3b2d7a781e

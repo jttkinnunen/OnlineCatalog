@@ -1,30 +1,52 @@
 import React from "react";
-import {Card, CardImg, CardText, CardBody,
-    CardTitle, CardSubtitle, Button, Col, Row, CardGroup, ButtonGroup, Media } from 'reactstrap';
+import {Card, CardDeck, Button, CardImg, CardSubtitle, CardText, CardBody,
+    CardTitle } from 'reactstrap';
 
-import Layout from './TestChar'
 import './Articles.css';
 
 class Articles extends React.Component {
 
+
+    // TODO: kuvan handlaus
+    // TODO: Tasoita vasemmalle sijainnit
+    // TODO: keskitä korttipakka
 
     render() {
         return (
 
              <div class="jumbotron" div className="body">
 
-                {this.props.articles.map((article, i) => <Article key = {i}
-                                                                  data = {article} />)}
+                 <CardDeck className="card-deck">
+                     {this.props.articles.map(function(item, key) {
+                         return (
+                             <Card className = "article-card">
+                                 <CardImg top width="100%" src="https://placeholdit.imgix.net/~text?txtsize=33&txt=256%C3%97180&w=256&h=180" alt="Card image cap" />
+                                 <CardBody>
+                                     <CardSubtitle>{item.name}</CardSubtitle>
+                                     <CardText className="text-left">
+                                         {item.locations.map(function(item, key) {
+                                             return (
+                                                 <div>{item.name}: {item.quantity}</div>
+                                             )
+                                         })
+                                         }
+                                     </CardText>
+                                 </CardBody>
+                             </Card>
+                         )
+                     })
+                     }
 
-
-                <Button className = "button">
-                    Lisää uusi tuote
-                </Button>
+                 </CardDeck>
+                 <Button className = "button">
+                     Lisää uusi tuote
+                 </Button>
             </div>
         );
     }
 }
 
+<<<<<<< HEAD
 class Article extends React.Component {
 
 
@@ -123,5 +145,7 @@ class Article extends React.Component {
         );
     }
 }
+=======
+>>>>>>> 8aa34a565ea7ebee3195e649c0128e3b2d7a781e
 
 export default Articles;

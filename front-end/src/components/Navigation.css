@@ -5,11 +5,11 @@
     width: 100%;
     margin:0;
     padding:0;
-    border: 2px solid black;
+    /*border: 2px solid black;*/
 }
 
 #textSearch {
-   margin-right: 3px;
+    margin-right: 3px;
 }
 .nav-form {
     display: inline-flex;
@@ -17,7 +17,7 @@
 }
 
 .nav-form .btn-success {
-  width:55px;
+    width:55px;
     margin-right: 3px;
 
 }
@@ -28,7 +28,7 @@
 }
 .hamburger {
 
-  display:inline-flex;
+    display:inline-flex;
     float:left;
     color:white;
 
