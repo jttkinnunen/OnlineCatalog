@@ -1,6 +1,6 @@
 import React from "react";
 import { Col, Button, Jumbotron, Form, FormGroup, FormFeedback, Label, Input, FormText } from 'reactstrap';
-import'./Login.css';
+import '../../css/Login.css';
 
 
 // TODO: Katso linkki alta, hyödyllinen
@@ -51,7 +51,7 @@ class Login extends React.Component {
 
              <Jumbotron>
                 <Form>
-                    <h5 className = "login-h5">Kirjaudu sisään</h5>
+                    <h5 className = "white-h5">Kirjaudu sisään</h5>
 
                     <FormGroup>
                         <span>
@@ -71,13 +71,13 @@ class Login extends React.Component {
                                d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>*/}
 
                             <Input type="password" name="password" id="examplePassword" placeholder="Salasana" value = {this.state.pass} onChange = {this.handlePassChange} />
-                                <h6 className = "login-h6">{login_result}</h6>
+                                <h6 className = "standard-text-color">{login_result}</h6>
                         </span>
                     </FormGroup>
                     <br/>
                 <FormGroup>
 
-                        <Button className="btn btn-success" onClick={this.handleSubmit}>Kirjaudu</Button>
+                        <Button className="btn btn-success btn-wide" onClick={this.handleSubmit}>Kirjaudu</Button>
 
                 </FormGroup>
                     <br/>

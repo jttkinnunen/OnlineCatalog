@@ -1,0 +1,22 @@
+.article-card {
+    width: 195px;
+    height: 285px;
+    margin: 5px;
+}
+
+.article-card-container {
+    display: flex;
+    justify-content: center;
+}
+.main-content {
+    margin: 0px;
+}
+.card-title{
+    color: black;
+}
+.card-body{
+    padding: 0px;
+}
+.card-image-top{
+   padding: 10px;
+}

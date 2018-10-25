@@ -6,11 +6,13 @@ import { Col, Button, Form, FormGroup, Label, FormFeedback, Progress, Input, For
 class AddArticle extends React.Component {
     render() {
         return (
-            <div>
-                <Form>
-                    <FormGroup>
+            <div className = "standard-text-color">
+                <Form >
+                    <FormGroup row>
                         <Label for="productName" sm={2}>Tuotenimi</Label>
-                        <Input valid placeholder='Esim. "FCGTalent, Paita, Punainen, XL ..."' />
+                        <Col sm={10}>
+                            <Input valid placeholder='Esim. "FCGTalent, Paita, Punainen, XL ..."' />
+                        </Col>
                         <FormFeedback valid tooltip>Tuotenimi on saatavilla</FormFeedback>
                     </FormGroup>
 
@@ -32,10 +34,10 @@ class AddArticle extends React.Component {
                         <Label for="sendImage" sm={2}>Kuva</Label>
                         <Col sm={10}>
                             <Input type="file" name="file" id="sendImage" />
-                            <FormText color="muted">
-                                Voit valita tuotteelle osuvan kuva käyttämältäsi laitteelta.
-                                Kuvan koko ei saa ylittää 999999 Mb
-                            </FormText>
+                        </Col>
+                        <Col>
+                            Voit valita tuotteelle osuvan kuva käyttämältäsi laitteelta.
+                            Kuvan koko ei saa ylittää 999999 Mb
                         </Col>
                     </FormGroup>
 
