@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
-import './App.css';
+import './css/App.css';
 import Content from './components/Content.js';
 import Events from './components/Events.js';
 import Navigation_bar from './components/Navigation.js';
 import Footer from './components/Footer.js';
+import Articles from "./components/content-components/Articles";
 
 const HOST = "http://localhost:8080";
 
@@ -162,7 +163,8 @@ class App extends Component {
                         <div className="flex-container">
                             <div className = "body">
                                 <Events current_view = {this.state.current_view} />
-                                <Content login_state = {this.state.login_state}
+                                <Content className = "content"
+                                         login_state = {this.state.login_state}
                                          users = {this.state.users}
                                          user = {this.state.user}
                                          current_view = {this.state.current_view}

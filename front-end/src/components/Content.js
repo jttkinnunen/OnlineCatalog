@@ -17,7 +17,7 @@ class Content extends React.Component {
     render() {
         if (this.props.current_view === "articles")
             return (
-                <Articles className = "Articles" articles = {this.props.articles}/>
+                <Articles articles = {this.props.articles} setView = {this.props.setView}/>
             );
 
         if (this.props.current_view === "add-article")

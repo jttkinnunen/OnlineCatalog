@@ -72,12 +72,18 @@ class DatabaseConnector(
         addArticle("Paita, Musta, FCGTalent, XL","/tshirt.png", "Unisex paita. Kestaa tuulta, sadetta ja luoteja")
         addArticle("Kynä, punainen, FCGTalent","/ballpenred.png", "Kuulakärkikynä jonka muste ei kuivu tai lopu koskaan")
         addArticle("Vihko, kovakantinen, FCGTalent","/notepad.png", "Kovakantinen ruutusivullinen vihko, jonka kannesa FCG Talent logo. Lorem ipsum dolor sit amet.")
+        addArticle("Kirjanmerkki, FCG","/bookmark.png", "Kirjanmerkki. Lorem ipsum dolor sit amet.")
+
 
         setArticlesAtLocation(1,1, 25)
+        setArticlesAtLocation(1,2, 52)
         setArticlesAtLocation(2,2, 12)
+        setArticlesAtLocation(2,1, 0)
         setArticlesAtLocation(1,3, 2)
         setArticlesAtLocation(2,4, 20)
         setArticlesAtLocation(3,4, 150)
+        setArticlesAtLocation(1,4, 0)
+        setArticlesAtLocation(1,5, 0)
     }
 
     @Throws(SQLException::class)

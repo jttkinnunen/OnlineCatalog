@@ -19,21 +19,11 @@ div {
 
 }
 
-
-.login-h6{
-    color: floralwhite;
-}
-
-.login-h5  {
-    color: floralwhite;
-    margin-bottom: 50px;
-}
-
-span, Button {
+span, .btn-wide {
     display:inline-flex;
     justify-content: center;
     max-width: 500px;
-    width:100%;
+    width: 100%;
 }
 .fa-envelope-square {
 
@@ -50,9 +40,6 @@ span, Button {
 .fa-key {
     color: yellow;
     font-size: 35px;
-}
-Button {
-    background-color: blue;
 }
 a {
     color: pink;

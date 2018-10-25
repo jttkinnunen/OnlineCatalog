@@ -66,10 +66,19 @@
   border-bottom: #cccccc 2px solid;
 }
 
-.card-deck {
+.justify-content-center {
+    display: flex;
+    justify-content: center;
+}
+
+.align-self-left {
     display:flex;
+    align-self: flex-start;
+}
+
+.align-self-center {
+    display: flex;
     align-self: center;
-    padding-top: 15px;
 }
 
 .body {
@@ -79,12 +88,15 @@
   align-content: flex-start;
   align-self: center;
 
-
   min-width: 320px;
-  max-width: 768px;
+  max-width: 1024px;
   font-size: calc(15px + 0vmin);
   background-color: #464c52; /*background-color: #242a30;*/
   color: black;
+}
+
+.content {
+    border: 200px;
 }
 
 .h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
@@ -96,4 +108,13 @@
 
 div.col-sm-6, div.text-right.col-sm-6{
   padding: 0px;
+}
+
+.standard-text-color{
+    color: lightgrey;
+}
+
+.white-h5  {
+    color: floralwhite;
+    margin-bottom: 50px;
 }

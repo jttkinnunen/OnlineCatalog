@@ -1,0 +1,10 @@
+.article-card {
+    width: 195px;
+    height: 285px;
+    margin: 5px;
+}
+
+.article-card-container {
+    display: flex;
+    justify-content: center;
+}
