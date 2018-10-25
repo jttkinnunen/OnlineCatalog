@@ -8,3 +8,15 @@
     display: flex;
     justify-content: center;
 }
+.main-content {
+    margin: 0px;
+}
+.card-title{
+    color: black;
+}
+.card-body{
+    padding: 0px;
+}
+.card-image-top{
+   padding: 10px;
+}
