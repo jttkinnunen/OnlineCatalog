@@ -16,12 +16,6 @@
   color: white;
 }
 
-
-.flex-container {
-  display: flex;
-  justify-content: center;
-}
-
 .button {
   display: flex;
   margin: 5px;
@@ -85,18 +79,20 @@
   display: flex;
   flex: 1 1 auto;
   flex-direction: column;
-  align-content: flex-start;
+  align-content: center;
   align-self: center;
 
   min-width: 320px;
   max-width: 1024px;
+  width: 100%;
   font-size: calc(15px + 0vmin);
   background-color: #464c52; /*background-color: #242a30;*/
   color: black;
 }
 
 .content {
-    border: 200px;
+    display: flex;
+    justify-content: center;
 }
 
 .h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {

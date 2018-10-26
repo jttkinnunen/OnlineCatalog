@@ -10,6 +10,7 @@ div {
 .jumbotron{
 
     margin: 20px;
+    min-width: 318px;
     max-width: 760px;
     text-align: center;
     /*border: 2px solid blue;*/
@@ -20,7 +21,7 @@ div {
 }
 
 span, .btn-wide {
-    display:inline-flex;
+    display: inline-flex;
     justify-content: center;
     max-width: 500px;
     width: 100%;

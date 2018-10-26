@@ -20,7 +20,7 @@ class App extends Component {
 
         this.state = {
             // TODO: Tähän kaikki mahdolliset muuttujat mitä sivulla voi olla. Päivitetään alielementeille tarvittaessa.
-            current_view: "articles", // articles, add-article, audit-log, article-detailed, login, manage-users, forgot-pass, change-pass, profile-page, add-user
+            current_view: "login", // articles, add-article, audit-log, article-detailed, login, manage-users, forgot-pass, change-pass, profile-page, add-user
             debugval: '',
             login_state: '',
             user: {
@@ -159,12 +159,10 @@ class App extends Component {
                         <div className = "navigation-bar" >
                             <Navigation_bar user = {this.state.user} setView = {this.setView} getUsers = {this.getUsers} current_view = {this.state.current_view} />
                         </div>
-
-                        <div className="flex-container">
-                            <div className = "body">
-                                <Events current_view = {this.state.current_view} />
-                                <Content className = "content"
-                                         login_state = {this.state.login_state}
+                        <div className = "body">
+                            <Events current_view = {this.state.current_view} />
+                            <div className = "content">
+                                <Content login_state = {this.state.login_state}
                                          users = {this.state.users}
                                          user = {this.state.user}
                                          current_view = {this.state.current_view}
@@ -174,9 +172,9 @@ class App extends Component {
                                 />
                             </div>
                         </div>
-                            <div className="footer">
-                            <Footer current_view = {this.state.current_view} debugval = {this.state.debugval}/>
-                            </div>
+                        <div className="footer">
+                        <Footer current_view = {this.state.current_view} debugval = {this.state.debugval}/>
+                        </div>
                     </header>
             </div>
         );
