@@ -1,0 +1,19 @@
+
+#addbtn {
+
+    position:relative;
+    float:left;
+}
+
+#deletebtn {
+
+    position: relative;
+    float: right;
+}
+
+.usermanagement-body
+ {
+
+    margin: 8px;
+    padding: 8px;
+}

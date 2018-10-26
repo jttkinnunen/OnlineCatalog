@@ -50,6 +50,7 @@ class Articles extends React.Component {
                                  </Card>
                              </Col>
 
+
                          )
                      })
                      }

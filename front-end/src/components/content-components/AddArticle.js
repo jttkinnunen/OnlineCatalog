@@ -1,12 +1,12 @@
 import React from "react";
 import { Col, Button, Form, FormGroup, Label, FormFeedback, Progress, Input, FormText } from 'reactstrap';
-
+import '../../css/AddArticle.css';
 // TODO: All functionality, formatting
 
 class AddArticle extends React.Component {
     render() {
         return (
-            <div className = "standard-text-color">
+            <div className = "standard-text-color" id="productform">
                 <Form >
                     <FormGroup row>
                         <Label for="productName" sm={2}>Tuotenimi</Label>
@@ -19,7 +19,11 @@ class AddArticle extends React.Component {
                     <FormGroup row>
                         <Label for="exampleSelect" sm={2}>Varasto</Label>
                         <Col sm={10}>
-                            <Input type="select" name="select" id="exampleSelect" />
+                            <Input type="select" name="select" id="exampleSelect" >
+                            <option>Oulu</option>
+                            <option>Helsinki</option>
+                            <option>Hianola</option>
+                            </Input>
                         </Col>
                     </FormGroup>
 

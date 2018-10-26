@@ -1,6 +1,6 @@
 import React from "react";
 import { Table, Input, Button } from 'reactstrap';
-
+import '../../css/UserManagement.css';
 class UserManagement extends React.Component {
     constructor(props) {
         super(props);
@@ -17,7 +17,7 @@ class UserManagement extends React.Component {
     render() {
 
         return(
-            <div>
+            <div classname="userTable">
                 <Table striped bordered hover responsive size="sm" className = "usermanagement-body">
                     <thead>
                         <tr>
@@ -27,6 +27,9 @@ class UserManagement extends React.Component {
                             <th>Sukunimi</th>
                             <th>Sähköposti</th>
                             <th>Ylläpitäjä</th>
+                            <th>Last Edit</th>
+                            <th>Last Login</th>
+
                         </tr>
                     </thead>
                     <tbody>{this.props.users.map(function(item, key) {
@@ -40,13 +43,15 @@ class UserManagement extends React.Component {
                                 <td>{item.first_name}</td>
                                 <td>{item.last_name}</td>
                                 <td>{item.email}</td>
+                               {/* <td>{item.user??}</td>
+                                <td>{item.user???}</td>*/}
                                 <td>{item.admin.toString()}</td>
                             </tr>
                         )
                     })}</tbody>
                 </Table>
-                <Button color="primary" onClick={() => this.props.setView("add-user")}>Lisää uusi käyttäjä</Button>
-                <Button color="danger">Poista valitut</Button>
+                <Button id="addbtn" color="primary" onClick={() => this.props.setView("add-user")}>Lisää uusi käyttäjä</Button>
+                <Button id="deletebtn" color="danger">Poista valitut</Button>
             </div>
         );
     }
