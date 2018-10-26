@@ -8,9 +8,9 @@ div {
 
 }
 .jumbotron{
-
+    flex: 1;
     margin: 20px;
-    min-width: 318px;
+    min-width: 320px;
     max-width: 760px;
     text-align: center;
     /*border: 2px solid blue;*/

@@ -26,7 +26,7 @@ class Events extends React.Component {
         if (this.props.current_view === "articles")
         return (
             <div className = "event-list" onClick={this.toggle}>
-                <Table className="event-text" striped size="sm">
+                <Table className="event-text" striped responsive size="sm">
                     <tbody>
                         <tr>
                             <th scope="row">Tänään 16:32</th>

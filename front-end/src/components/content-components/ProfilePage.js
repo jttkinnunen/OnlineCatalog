@@ -25,12 +25,7 @@ class ProfilePage extends React.Component {
                 <h6 className="standard-text-color">{this.props.user.first_name} {this.props.user.last_name}</h6>
                 <h6 className="standard-text-color">{this.props.user.email}</h6>
                 <h6 className="standard-text-color">{userType}</h6>
-
-                <Form>
-                    <FormGroup check row>
-                            <Button onClick={this.handleSubmit}>Vaihda salasana</Button>
-                    </FormGroup>
-                </Form>
+                <Button onClick={this.handleSubmit}>Vaihda salasana</Button>
             </div>
         );
     }

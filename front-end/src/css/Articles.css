@@ -1,12 +1,22 @@
-.article-card {
-    width: 193px;
-    height: 285px;
-    margin: 5px;
+
+.article-main-container {
+    display: flex;
+    justify-content: center;
 }
 
 .article-card-container {
     display: flex;
     justify-content: flex-start;
+    flex-wrap: wrap;
+    flex-basis: auto;
+
+    border: yellow 2px solid; /*//////////////////////DELETE AFTER TESTING/////////////////////////////*/
+}
+
+.article-card {
+    max-width: 180px;
+    height: 285px;
+    margin: 5px;
 }
 
 .main-content {

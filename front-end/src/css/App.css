@@ -88,11 +88,17 @@
   font-size: calc(15px + 0vmin);
   background-color: #464c52; /*background-color: #242a30;*/
   color: black;
+
+  border: red 2px solid; /*//////////////////////DELETE AFTER TESTING/////////////////////////////*/
+
 }
 
 .content {
     display: flex;
     justify-content: center;
+
+    border: blue 2px solid; /*////////////////////////DELETE AFTER TESTING///////////////////////////*/
+
 }
 
 .h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {

@@ -22,13 +22,12 @@ class Articles extends React.Component {
     }
 
     // TODO: kuvan handlaus
-    // TODO: Tasoita vasemmalle ylivaluneet kortit
-    // TODO: pidä korttipakka keskitettynä
+    // TODO: https://stackoverflow.com/questions/32802202/how-to-center-a-flex-container-but-left-align-flex-items
 
     render() {
         return (
-        <div >
-             <Container>
+        <div>
+             <Container className = "article-main-container">
                  <Row className = "article-card-container">
                      {this.props.articles.map(function(item, key) {
                          return (
@@ -38,7 +37,6 @@ class Articles extends React.Component {
                                      <CardBody>
                                          <CardSubtitle>{item.name}</CardSubtitle>
                                          <CardText className="text-left">
-                                             <br/>
                                              {item.locations.map(function(item, key) {
                                                  return (
                                                      <div>{item.name}: {item.quantity} kpl</div>
@@ -52,12 +50,13 @@ class Articles extends React.Component {
                          )
                      })
                      }
-
                  </Row>
             </Container>
+            {/*
                 <Button className = "button align-self-left" onClick={this.addArticle}>
                     Lisää uusi tuote
                 </Button>
+                */}
         </div>
         );
     }

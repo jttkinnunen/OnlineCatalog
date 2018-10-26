@@ -86,7 +86,7 @@ class Navigation extends React.Component {
                                     <line x1="3" y1="18" x2="21" y2="18"></line>
                                 </svg>
                             </DropdownToggle>
-                            <DropdownMenu left>
+                            <DropdownMenu left="true">
                                 <DropdownItem onClick={() => {this.props.setView("profile-page")}}>
                                     Profiili
                                 </DropdownItem>
@@ -117,7 +117,7 @@ class Navigation extends React.Component {
                             <Button className="btn btn-success" type="submit" onClick={() => this.props.setView("articles")}>Hae</Button>*/}
                         </Form>
 
-                        <Nav classname="ml-auto" navbar>
+                        <Nav navbar>
 
                             <UncontrolledTooltip placement="bottom" target="TooltipTarget">
                                 Kirjaudu ulos
@@ -125,7 +125,7 @@ class Navigation extends React.Component {
                                 <NavItem>
                                     <NavLink onClick={() => this.props.setView("login")} id = "TooltipTarget">
                                         <svg xmlns="http://www.w3.org/2000/svg"  width="24" height="24" viewBox="0 0 24 24"
-                                             fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                             fill="none" stroke="currentColor"  stroke-width="2" stroke-linecap="round"
                                              stroke-linejoin="round" className="feather feather-unlock">
                                             <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
                                             <path d="M7 11V7a5 5 0 0 1 9.9-1"/>
