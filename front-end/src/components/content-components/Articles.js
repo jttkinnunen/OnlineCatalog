@@ -27,7 +27,7 @@ class Articles extends React.Component {
 
     render() {
         return (
-        <div className="body">
+        <div >
              <Container>
                  <Row className = "article-card-container">
                      {this.props.articles.map(function(item, key) {
@@ -49,8 +49,6 @@ class Articles extends React.Component {
                                      </CardBody>
                                  </Card>
                              </Col>
-
-
                          )
                      })
                      }

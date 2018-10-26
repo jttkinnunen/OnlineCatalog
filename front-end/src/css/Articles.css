@@ -1,16 +1,18 @@
 .article-card {
-    width: 195px;
+    width: 193px;
     height: 285px;
     margin: 5px;
 }
 
 .article-card-container {
     display: flex;
-    justify-content: center;
+    justify-content: flex-start;
 }
+
 .main-content {
     margin: 0px;
 }
+
 /*
 .card-title{
     color: black;

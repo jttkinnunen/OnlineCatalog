@@ -47,8 +47,6 @@ class Login extends React.Component {
         }
 
         return(
-            <div className = "login-body">
-
              <Jumbotron>
                 <Form>
                     <h5 className = "white-h5">Kirjaudu sisään</h5>
@@ -88,7 +86,6 @@ class Login extends React.Component {
                     </FormGroup>
             </Form>
             </Jumbotron>
-            </div>
         );
     }
 }
