@@ -27,14 +27,14 @@ data class ArticleResult @JsonCreator constructor(
 
 // TODO fix up, remove and all other stuff......
 data class ArticlesInLocationsResult @JsonCreator constructor(
-        @JsonProperty val id: Int,
-        @JsonProperty val name: String,
-        @JsonProperty val image: String?,
-        @JsonProperty val last_change: Timestamp,
-        @JsonProperty val description: String?,
-        @JsonProperty("location_id") val locationId: Int,
-        @JsonProperty("location_name") val locationName: String,
-        @JsonProperty val quantity: Int
+    @JsonProperty val id: Int,
+    @JsonProperty val name: String,
+    @JsonProperty val image: String?,
+    @JsonProperty val last_change: Timestamp,
+    @JsonProperty val description: String?,
+    @JsonProperty("location_id") val locationId: Int,
+    @JsonProperty("location_name") val locationName: String,
+    @JsonProperty val quantity: Int
 )
 
 data class LocationResult @JsonCreator constructor(
@@ -58,6 +58,15 @@ data class AddUserBody @JsonCreator constructor(
     @JsonProperty val token: String
 )
 
+data class UpdateUserBody @JsonCreator constructor(
+    @JsonProperty val id: Int,
+    @JsonProperty("first_name") val firstName: String,
+    @JsonProperty("last_name") val lastName: String,
+    @JsonProperty val email: String,
+    @JsonProperty val admin: Boolean,
+    @JsonProperty val token: String
+)
+
 data class GetUsersBody @JsonCreator constructor(
     @JsonProperty val ids: List<Int>?,
     @JsonProperty val token: String
@@ -74,7 +83,21 @@ data class AddArticleBody @JsonCreator constructor(
     @JsonProperty val token: String
 )
 
+data class UpdateArticleBody @JsonCreator constructor(
+    @JsonProperty val id: Int,
+    @JsonProperty val name: String,
+    @JsonProperty val brand: String?,
+    @JsonProperty val description: String,
+    @JsonProperty val token: String
+)
+
 data class AddLocationBody @JsonCreator constructor(
+    @JsonProperty val name: String,
+    @JsonProperty val token: String
+)
+
+data class UpdateLocationBody @JsonCreator constructor(
+    @JsonProperty val id: Int,
     @JsonProperty val name: String,
     @JsonProperty val token: String
 )
