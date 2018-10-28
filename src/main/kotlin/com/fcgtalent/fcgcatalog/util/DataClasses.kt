@@ -19,7 +19,7 @@ data class UserResult @JsonCreator constructor(
 data class ArticleResult @JsonCreator constructor(
     @JsonProperty val id: Int,
     @JsonProperty val name: String,
-    @JsonProperty val brand: String?,
+    @JsonProperty val image: String?,
     @JsonProperty val last_change: Timestamp,
     @JsonProperty val description: String?,
     @JsonProperty val locations: MutableList<LocationQuantityResult>? = null
@@ -78,7 +78,7 @@ data class GetSelfBody @JsonCreator constructor(
 
 data class AddArticleBody @JsonCreator constructor(
     @JsonProperty val name: String,
-    @JsonProperty val brand: String?,
+    @JsonProperty val image: String?,
     @JsonProperty val description: String,
     @JsonProperty val token: String
 )
@@ -86,7 +86,7 @@ data class AddArticleBody @JsonCreator constructor(
 data class UpdateArticleBody @JsonCreator constructor(
     @JsonProperty val id: Int,
     @JsonProperty val name: String,
-    @JsonProperty val brand: String?,
+    @JsonProperty val image: String?,
     @JsonProperty val description: String,
     @JsonProperty val token: String
 )

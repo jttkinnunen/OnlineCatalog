@@ -146,19 +146,19 @@ class DatabaseConnector(
     }
 
     @Throws(SQLException::class)
-    fun addArticle(name: String, brand: String?, description: String) {
+    fun addArticle(name: String, image: String?, description: String) {
         val sql =
             "INSERT INTO $TABLE_ARTICLES($FIELD_ARTICLE_NAME, $FIELD_IMAGE, $FIELD_LAST_CHANGE, $FIELD_DESCRIPTION) VALUES (?, ?, ?, ?)"
 
-        jdbcTemplate.update(sql, name, brand, Timestamp(System.currentTimeMillis()), description)
+        jdbcTemplate.update(sql, name, image, Timestamp(System.currentTimeMillis()), description)
     }
 
     @Throws(SQLException::class)
-    fun updateArticle(id: Int, name: String, brand: String?, description: String) {
+    fun updateArticle(id: Int, name: String, image: String?, description: String) {
         val sql =
             "UPDATE $TABLE_ARTICLES SET $FIELD_ARTICLE_NAME = ?, $FIELD_IMAGE = ?, $FIELD_LAST_CHANGE = ?, $FIELD_DESCRIPTION = ? WHERE $FIELD_ID = ?"
 
-        jdbcTemplate.update(sql, name, brand, Timestamp(System.currentTimeMillis()), description, id)
+        jdbcTemplate.update(sql, name, image, Timestamp(System.currentTimeMillis()), description, id)
     }
 
     @Throws(SQLException::class)

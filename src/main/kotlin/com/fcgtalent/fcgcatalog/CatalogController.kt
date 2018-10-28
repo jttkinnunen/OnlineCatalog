@@ -133,7 +133,7 @@ class CatalogController {
         return encapsulateCall(addArticle.token, false, false) {
             databaseConnector.addArticle(
                 addArticle.name,
-                addArticle.brand,
+                addArticle.image,
                 addArticle.description
             )
 
@@ -153,7 +153,7 @@ class CatalogController {
             databaseConnector.updateArticle(
                 updateArticle.id,
                 updateArticle.name,
-                updateArticle.brand,
+                updateArticle.image,
                 updateArticle.description
             )
 
