@@ -84,11 +84,11 @@ class DatabaseConnectorTest(
 
         // Article related info, used for testing
         private const val name1 = "moo1"
-        private const val brand1 = "moo2"
+        private const val image1 = "moo2"
         private const val description1 = "korkein"
 
         private const val name2 = "moo1"
-        private const val brand2 = "moo2"
+        private const val image2 = "moo2"
         private const val description2 = "korkein"
 
         // Location test variables
@@ -222,11 +222,11 @@ class DatabaseConnectorTest(
     @Test
     fun testAddArticle_success() {
         // TODO improve this test
-        databaseHandler.addArticle(name1, brand1, description1)
-        databaseHandler.addArticle(name2, brand2, description2)
+        databaseHandler.addArticle(name1, image1, description1)
+        databaseHandler.addArticle(name2, image2, description2)
 
-//        Assert.assertThat(databaseHandler.addArticle(name1, brand1, shelf1), `is`(1))
-//        Assert.assertThat(databaseHandler.addArticle(name2, brand2, shelf2), `is`(2))
+//        Assert.assertThat(databaseHandler.addArticle(name1, image1, shelf1), `is`(1))
+//        Assert.assertThat(databaseHandler.addArticle(name2, image2, shelf2), `is`(2))
     }
 
     @Test
@@ -234,16 +234,15 @@ class DatabaseConnectorTest(
         val results = databaseHandler.getArticles(listOf())
         Assert.assertThat(results.size, `is`(2))
         val firstResult = results[0]
-        println(firstResult.toString())
         Assert.assertThat(firstResult.id, `is`(1))
         Assert.assertThat(firstResult.name, `is`(name1))
-        Assert.assertThat(firstResult.brand, `is`(brand1))
+        Assert.assertThat(firstResult.image, `is`(image1))
         Assert.assertThat(firstResult.description, `is`(description1))
 
         val secondResult = results[1]
         Assert.assertThat(secondResult.id, `is`(2))
         Assert.assertThat(secondResult.name, `is`(name2))
-        Assert.assertThat(secondResult.brand, `is`(brand2))
+        Assert.assertThat(secondResult.image, `is`(image2))
         Assert.assertThat(secondResult.description, `is`(description2))
     }
 
@@ -266,6 +265,85 @@ class DatabaseConnectorTest(
     }
 
     @Test
+    fun testUpdateArticle() {
+        // Confirm the current values
+        var results = databaseHandler.getArticles(listOf(1))
+        Assert.assertThat(results.size, `is`(1))
+        var firstResult = results[0]
+        Assert.assertThat(firstResult.id, `is`(1))
+        Assert.assertThat(firstResult.name, `is`(name1))
+        Assert.assertThat(firstResult.image, `is`(image1))
+        Assert.assertThat(firstResult.description, `is`(description1))
+
+        // Add new values
+        val newName = "mooawfewefe"
+        val newImage = "fsdmpofsd.png"
+        val newDescription = "descriptionwef"
+        databaseHandler.updateArticle(1, newName, newImage, newDescription)
+
+        // Check that new values are active
+        results = databaseHandler.getArticles(listOf(1))
+        Assert.assertThat(results.size, `is`(1))
+        firstResult = results[0]
+        Assert.assertThat(firstResult.id, `is`(1))
+        Assert.assertThat(firstResult.name, `is`(newName))
+        Assert.assertThat(firstResult.image, `is`(newImage))
+        Assert.assertThat(firstResult.description, `is`(newDescription))
+    }
+
+    @Test
+    fun testUpdateLocation() {
+        // Confirm the current values
+        var result = databaseHandler.getLocations(listOf(1))
+        Assert.assertThat(result.size, `is`(1))
+        var firstResult = result[0]
+
+        Assert.assertThat(firstResult.id, `is`(1))
+        Assert.assertThat(firstResult.name, `is`(locationName1))
+
+        // Add new values
+        val newName = "mooawdasfewefe"
+        databaseHandler.updateLocation(1, newName)
+
+        // check new values
+        result = databaseHandler.getLocations(listOf(1))
+        Assert.assertThat(result.size, `is`(1))
+        firstResult = result[0]
+
+        Assert.assertThat(firstResult.id, `is`(1))
+        Assert.assertThat(firstResult.name, `is`(newName))
+    }
+
+    @Test
+    fun testUpdateUser() {
+        var results = databaseHandler.getUsers(listOf(1))
+
+        // Confirm the current values
+        Assert.assertThat(results.size, `is`(1))
+        var firstResult = results[0] as UserResult
+        Assert.assertThat(firstResult.firstName, `is`(firstName1))
+        Assert.assertThat(firstResult.lastName, `is`(lastName1))
+        Assert.assertThat(firstResult.email, `is`(email1))
+        Assert.assertThat(firstResult.admin, `is`(admin1))
+
+        // Add new values
+        val newFirstName = "mooawfewefe"
+        val newLastName = "fsdmklmdsklm"
+        val newEmail = "fsdmpofsdvsd"
+        val newAdmin = false
+        databaseHandler.updateUser(1, newFirstName, newLastName, newEmail, newAdmin)
+
+        // Confirm new values
+        results = databaseHandler.getUsers(listOf(1))
+        Assert.assertThat(results.size, `is`(1))
+        firstResult = results[0] as UserResult
+        Assert.assertThat(firstResult.firstName, `is`(newFirstName))
+        Assert.assertThat(firstResult.lastName, `is`(newLastName))
+        Assert.assertThat(firstResult.email, `is`(newEmail))
+        Assert.assertThat(firstResult.admin, `is`(newAdmin))
+    }
+
+    @Test
     fun testSetArticlesAtLocation() {
 
         databaseHandler.setArticlesAtLocation(1, 1, 5)
@@ -285,7 +363,6 @@ class DatabaseConnectorTest(
         Assert.assertThat(result.size, `is`(2))
         Assert.assertThat(result[0].locations!!.size, `is`(1))
         Assert.assertThat(result[1].locations!!.size, `is`(1))
-
     }
 
     private fun addTestUsers() {
@@ -294,8 +371,8 @@ class DatabaseConnectorTest(
     }
 
     private fun addTestArticles() {
-        databaseHandler.addArticle(name1, brand1, description1)
-        databaseHandler.addArticle(name2, brand2, description2)
+        databaseHandler.addArticle(name1, image1, description1)
+        databaseHandler.addArticle(name2, image2, description2)
     }
 
     private fun addTestLocations() {

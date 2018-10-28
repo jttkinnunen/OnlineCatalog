@@ -15,6 +15,9 @@ import com.fcgtalent.fcgcatalog.util.GetUsersBody
 import com.fcgtalent.fcgcatalog.util.LoginBody
 import com.fcgtalent.fcgcatalog.util.LogoutBody
 import com.fcgtalent.fcgcatalog.util.SetArticlesAtLocationBody
+import com.fcgtalent.fcgcatalog.util.UpdateArticleBody
+import com.fcgtalent.fcgcatalog.util.UpdateLocationBody
+import com.fcgtalent.fcgcatalog.util.UpdateUserBody
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
@@ -88,6 +91,23 @@ class CatalogController {
         }
     }
 
+    // TODO Allow updating of self
+    @CrossOrigin
+    @PostMapping("/updateUser", MediaType.APPLICATION_JSON_VALUE)
+    fun updateUser(
+        @RequestBody updateUserBody: UpdateUserBody
+    ): ResponseEntity<Any> {
+        return encapsulateCall(updateUserBody.token, true, false) {
+            databaseConnector.updateUser(
+                updateUserBody.id,
+                updateUserBody.firstName,
+                updateUserBody.lastName,
+                updateUserBody.email,
+                updateUserBody.admin
+            )
+        }
+    }
+
     @CrossOrigin
     @PostMapping("/getUsers", MediaType.APPLICATION_JSON_VALUE)
     fun getUsers(@RequestBody getUsersBody: GetUsersBody): ResponseEntity<Any> {
@@ -113,8 +133,28 @@ class CatalogController {
         return encapsulateCall(addArticle.token, false, false) {
             databaseConnector.addArticle(
                 addArticle.name,
-                addArticle.brand,
+                addArticle.image,
                 addArticle.description
+            )
+
+            // image?.let { uploadImage(it, "article_$id") }
+
+            Any()
+        }
+    }
+
+    @CrossOrigin
+    @PostMapping("/updateArticle", MediaType.APPLICATION_JSON_VALUE)
+    fun updateArticle(
+        // @RequestParam("image") image: MultipartFile?,
+        @RequestBody updateArticle: UpdateArticleBody
+    ): ResponseEntity<Any> {
+        return encapsulateCall(updateArticle.token, false, false) {
+            databaseConnector.updateArticle(
+                updateArticle.id,
+                updateArticle.name,
+                updateArticle.image,
+                updateArticle.description
             )
 
             // image?.let { uploadImage(it, "article_$id") }
@@ -163,6 +203,19 @@ class CatalogController {
         return encapsulateCall(addLocationBody.token, true, false) {
             databaseConnector.addLocation(
                 addLocationBody.name
+            )
+        }
+    }
+
+    @CrossOrigin
+    @PostMapping("/updateLocation", MediaType.APPLICATION_JSON_VALUE)
+    fun updateLocation(
+        @RequestBody updateLocation: UpdateLocationBody
+    ): ResponseEntity<Any> {
+        return encapsulateCall(updateLocation.token, true, false) {
+            databaseConnector.updateLocation(
+                updateLocation.id,
+                updateLocation.name
             )
         }
     }

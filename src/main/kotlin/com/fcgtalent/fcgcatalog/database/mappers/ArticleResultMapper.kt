@@ -14,7 +14,7 @@ class ArticleResultMapper : RowMapper<ArticleResult> {
         return ArticleResult(
             id = resultSet.getInt(FIELD_ID),
             name = resultSet.getString(FIELD_ARTICLE_NAME),
-            brand = resultSet.getString(FIELD_IMAGE),
+            image = resultSet.getString(FIELD_IMAGE),
             last_change = resultSet.getTimestamp(FIELD_LAST_CHANGE),
             description = resultSet.getString(FIELD_DESCRIPTION)
         )

@@ -64,30 +64,37 @@ class DatabaseConnector(
         dropAllTables()
         createInitialTables()
         addUser("antti", "pantti", "hiano", "elefantti@hiano.fi", true)
-        addUser("Joni","Laitala","2479","joni.laitala@gmail.com", true)
+        addUser("Joni", "Laitala", "2479", "joni.laitala@gmail.com", true)
         addLocation("Oulu")
         addLocation("Helsinki")
         addLocation("Kiutaköngäs")
-        addArticle("Paita, Musta, FCGTalent, L","/tshirt.png", "Unisex paita. Kestaa tuulta, sadetta ja luoteja")
-        addArticle("Paita, Musta, FCGTalent, XL","/tshirt.png", "Unisex paita. Kestaa tuulta, sadetta ja luoteja")
-        addArticle("Kynä, punainen, FCGTalent","/ballpenred.png", "Kuulakärkikynä jonka muste ei kuivu tai lopu koskaan")
-        addArticle("Vihko, kovakantinen, FCGTalent","/notepad.png", "Kovakantinen ruutusivullinen vihko, jonka kannesa FCG Talent logo. Lorem ipsum dolor sit amet.")
-        addArticle("Kirjanmerkki, FCG","/bookmark.png", "Kirjanmerkki. Lorem ipsum dolor sit amet.")
+        addArticle("Paita, Musta, FCGTalent, L", "/tshirt.png", "Unisex paita. Kestaa tuulta, sadetta ja luoteja")
+        addArticle("Paita, Musta, FCGTalent, XL", "/tshirt.png", "Unisex paita. Kestaa tuulta, sadetta ja luoteja")
+        addArticle(
+            "Kynä, punainen, FCGTalent",
+            "/ballpenred.png",
+            "Kuulakärkikynä jonka muste ei kuivu tai lopu koskaan"
+        )
+        addArticle(
+            "Vihko, kovakantinen, FCGTalent",
+            "/notepad.png",
+            "Kovakantinen ruutusivullinen vihko, jonka kannesa FCG Talent logo. Lorem ipsum dolor sit amet."
+        )
+        addArticle("Kirjanmerkki, FCG", "/bookmark.png", "Kirjanmerkki. Lorem ipsum dolor sit amet.")
 
-
-        setArticlesAtLocation(1,1, 25)
-        setArticlesAtLocation(1,2, 52)
-        setArticlesAtLocation(2,2, 12)
-        setArticlesAtLocation(2,1, 0)
-        setArticlesAtLocation(1,3, 2)
-        setArticlesAtLocation(2,4, 20)
-        setArticlesAtLocation(3,4, 150)
-        setArticlesAtLocation(1,4, 0)
-        setArticlesAtLocation(1,5, 0)
+        setArticlesAtLocation(1, 1, 25)
+        setArticlesAtLocation(1, 2, 52)
+        setArticlesAtLocation(2, 2, 12)
+        setArticlesAtLocation(2, 1, 0)
+        setArticlesAtLocation(1, 3, 2)
+        setArticlesAtLocation(2, 4, 20)
+        setArticlesAtLocation(3, 4, 150)
+        setArticlesAtLocation(1, 4, 0)
+        setArticlesAtLocation(1, 5, 0)
     }
 
     @Throws(SQLException::class)
-    fun addUser(firstName: String, lastName: String, password: String, email: String, admin: Boolean) {
+    fun addUser(firstName: String, lastName: String, password: String, email: String, admin: Boolean, id: Int? = null) {
         val sql =
             "INSERT INTO $TABLE_USERS($FIELD_FIRST_NAME, $FIELD_LAST_NAME, $FIELD_PASSWORD, $FIELD_EMAIL, $FIELD_ADMIN) VALUES (?, ?, ?, ?, ?)"
 
@@ -98,6 +105,21 @@ class DatabaseConnector(
             BCrypt.hashpw(password, BCrypt.gensalt(4)),
             email,
             if (admin) 1 else 0
+        )
+    }
+
+    @Throws(SQLException::class)
+    fun updateUser(id: Int, firstName: String, lastName: String, email: String, admin: Boolean) {
+        val sql =
+            "UPDATE $TABLE_USERS SET $FIELD_FIRST_NAME = ?, $FIELD_LAST_NAME = ?, $FIELD_EMAIL = ?, $FIELD_ADMIN = ? WHERE $FIELD_ID = ?"
+
+        jdbcTemplate.update(
+            sql,
+            firstName,
+            lastName,
+            email,
+            if (admin) 1 else 0,
+            id
         )
     }
 
@@ -123,13 +145,20 @@ class DatabaseConnector(
         return result[0]
     }
 
-    // TODO move date to timestamp
     @Throws(SQLException::class)
-    fun addArticle(name: String, brand: String?, description: String) {
+    fun addArticle(name: String, image: String?, description: String) {
         val sql =
             "INSERT INTO $TABLE_ARTICLES($FIELD_ARTICLE_NAME, $FIELD_IMAGE, $FIELD_LAST_CHANGE, $FIELD_DESCRIPTION) VALUES (?, ?, ?, ?)"
 
-        jdbcTemplate.update(sql, name, brand, Timestamp(System.currentTimeMillis()), description)
+        jdbcTemplate.update(sql, name, image, Timestamp(System.currentTimeMillis()), description)
+    }
+
+    @Throws(SQLException::class)
+    fun updateArticle(id: Int, name: String, image: String?, description: String) {
+        val sql =
+            "UPDATE $TABLE_ARTICLES SET $FIELD_ARTICLE_NAME = ?, $FIELD_IMAGE = ?, $FIELD_LAST_CHANGE = ?, $FIELD_DESCRIPTION = ? WHERE $FIELD_ID = ?"
+
+        jdbcTemplate.update(sql, name, image, Timestamp(System.currentTimeMillis()), description, id)
     }
 
     @Throws(SQLException::class)
@@ -221,6 +250,12 @@ class DatabaseConnector(
     fun addLocation(name: String) {
         val sql = "INSERT INTO $TABLE_LOCATION($FIELD_LOCATION_NAME) VALUES (?)"
         jdbcTemplate.update(sql, name)
+    }
+
+    @Throws(SQLException::class)
+    fun updateLocation(id: Int, name: String) {
+        val sql = "UPDATE $TABLE_LOCATION SET $FIELD_LOCATION_NAME = ? WHERE $FIELD_ID = ?"
+        jdbcTemplate.update(sql, name, id)
     }
 
     @Throws(SQLException::class)
