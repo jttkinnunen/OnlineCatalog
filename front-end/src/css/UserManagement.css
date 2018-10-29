@@ -6,14 +6,18 @@
 }
 
 #deletebtn {
-
     position: relative;
     float: right;
 }
 
 .usermanagement-body
  {
-
     margin: 8px;
     padding: 8px;
+    color: whitesmoke;
+}
+
+.usermanagement-table
+{
+    flex-grow: 1;
 }

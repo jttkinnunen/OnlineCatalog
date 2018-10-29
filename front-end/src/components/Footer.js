@@ -1,6 +1,6 @@
 import React from "react";
 import { Container, Row, Col } from 'reactstrap';
-import './Footer.css';
+import '../css/Footer.css';
 class Footer extends React.Component {
 
     render() {
@@ -12,20 +12,20 @@ class Footer extends React.Component {
                         <Col xs="6"><strong>Tekijätiimi:</strong></Col>
                     </Row>
                     <Row>
-                        <Col xs="6">Mikonkatu 7 93456 Hianola</Col>
-                        <Col xs="6">Juppi</Col>
+                        <Col xs="6">Osmontie 34, 00610 Helsinki</Col>
+                        <Col xs="6">nimi1</Col>
                     </Row>
                     <Row>
-                        <Col xs="6">puh. 567 657987</Col>
-                        <Col xs="6">Hippi</Col>
+                        <Col xs="6">puh. +358 9 771 2627</Col>
+                        <Col xs="6">nimi2</Col>
                     </Row>
                     <Row>
-                        <Col xs="6">norsu.hiano@gmail.com</Col>
-                        <Col xs="6">Punkkari</Col>
+                        <Col xs="6">etu.suku@fcg.fi</Col>
+                        <Col xs="6">nimi3</Col>
                     </Row>
                     <Row>
-                        <Col xs="6">www.hiano.com</Col>
-                        <Col xs="6">Juntti</Col>
+                        <Col xs="6">http://www.fcg.fi/</Col>
+                        <Col xs="6">nimi4</Col>
                     </Row>
                 </Container>
                 {/*Current view: {this.props.current_view} Debug: {this.props.debugval}*/}
