@@ -8,7 +8,7 @@ class ProfilePage extends React.Component {
     }
 
     handleSubmit() {
-        this.props.setView("change-password");
+        this.props.setView("change-pass");
     }
 
     // TODO: Linkkaa
@@ -22,9 +22,11 @@ class ProfilePage extends React.Component {
 
         return(
             <div>
+                <br/>
                 <h6 className="standard-text-color">{this.props.user.first_name} {this.props.user.last_name}</h6>
                 <h6 className="standard-text-color">{this.props.user.email}</h6>
                 <h6 className="standard-text-color">{userType}</h6>
+                <br/>
                 <Button onClick={this.handleSubmit}>Vaihda salasana</Button>
             </div>
         );

@@ -1,5 +1,5 @@
 import React from "react";
-import './Navigation.css';
+import '../css/Navigation.css';
 // Importing from reactstrap like this:
 import { Collapse,
     Navbar,
@@ -19,7 +19,7 @@ import { Collapse,
     Input,
     Form,
     DropdownItem } from 'reactstrap';
-import'./Navigation.css';
+import '../css/Navigation.css';
 
 class Navigation extends React.Component {
     constructor(props) {
@@ -27,8 +27,10 @@ class Navigation extends React.Component {
 
         this.toggleNavbar = this.toggleNavbar.bind(this);
         this.submitSearch = this.submitSearch.bind(this);
+        this.handleQueryChange = this.handleQueryChange.bind(this);
         this.state = {
-            collapsed: true
+            collapsed: true,
+            query: "",
         };
     }
 
@@ -38,9 +40,18 @@ class Navigation extends React.Component {
         });
     }
 
+    handleQueryChange(event) {
+        this.setState({
+            query: event.target.value,
+        })
+
+        // Send query to app.js as well
+        this.props.setQuery(event.target.value);
+    }
+
     // Submit search
     submitSearch() {
-        this.props.setView("articles")
+        this.props.setQuery(this.state.query);
     }
 
     // Add functions for click event checks
@@ -62,6 +73,10 @@ class Navigation extends React.Component {
                     <DropdownItem onClick={() => this.props.setView("audit-log")}>
                         Tapahtumat (Admin)
                     </DropdownItem>
+
+                    <DropdownItem onClick={() => this.props.setView("activate-user")}>
+                        Aktivoi tunnus (TESTI)
+                    </DropdownItem>
                 </div>
             )
         }
@@ -70,7 +85,7 @@ class Navigation extends React.Component {
         }
 
 
-        if (this.props.current_view !== "login")
+        if (this.props.current_view !== "login" && this.props.current_view !== "activate-user" && this.props.current_view !== "forgot-pass")
         return (
                 <div className="container-fluid">
                     <Navbar color="light" light  expand="sm">
@@ -94,7 +109,7 @@ class Navigation extends React.Component {
                                     Etusivu
                                 </DropdownItem>
                                 <DropdownItem onClick={() => this.props.setView("add-article")}>
-                                    Lisää tuote
+                                    Lisää uusi tuote
                                 </DropdownItem>
 
                                 {adminTools}
@@ -104,7 +119,7 @@ class Navigation extends React.Component {
                         <NavbarBrand href="#" className="mr-auto" onClick={() => this.props.setView("articles")}>&nbsp; Matsku &nbsp;</NavbarBrand>
                         <Form className = "nav-form">
                             <InputGroup>
-                                <Input type="text" id="textSearch" placeholder="Hae tuotetta..." />
+                                <Input type="text" id="textSearch" placeholder="Hae tuotetta..." value = {this.state.query} onChange = {this.handleQueryChange} />
                                 <InputGroupAddon addonType="append"><Button color="primary" onClick={() => this.submitSearch()}>Hae</Button></InputGroupAddon>
                             </InputGroup>
 

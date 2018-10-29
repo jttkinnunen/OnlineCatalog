@@ -11,29 +11,21 @@ import FormGroup from "react-bootstrap/es/FormGroup";
 
 class ArticleDetailed extends React.Component {
 
-
-
-
-
     constructor(props) {
-
         super(props);
         this.state = {
 
             count: 0
         };
-
          this.handleIncrement=this.handleIncrement.bind(this);
-
          this.handleDecrement=this.handleDecrement.bind(this);
-
     }
     handleIncrement =() => {
-        // this.setState({ count: this.state.count+1});
+        this.setState({ count: this.state.count-1});
 
     };
     handleDecrement= () => {
-        // this.setState({ count: this.state.count-1});
+        this.setState({ count: this.state.count+1});
 
     };
 
@@ -41,24 +33,18 @@ class ArticleDetailed extends React.Component {
         return(
 
             <div>
-
-                        <Input type="select" name="select" id="exampleSelect">
-                            <option>Oulu</option>
-                            <option>Helsinki</option>
-                            <option>Hianola</option>
-
-                        </Input>
+                <Input type="select" name="select" id="exampleSelect">
+                    <option>Oulu</option>
+                    <option>Helsinki</option>
+                    <option>Hianola</option>
+                </Input>
             <br/>
 
-                <span >
-
-                    <Button id="incbtn" color="primary" onClick= {this.handleIncrement()}>-</Button>
-                    <span className="order"> {this.count} </span>
-                    <Button id="decbtn" color="danger" onClick= {this.handleDecrement()}>+</Button>
-
-                 </span>
-
-
+            <span>
+                <Button id="incbtn" color="primary" onClick={() => {this.handleIncrement()}}>-</Button>
+                <span className="order"> {this.state.count} </span>
+                <Button id="decbtn" color="danger" onClick={() => {this.handleDecrement()}}>+</Button>
+            </span>
 
             </div>
         );

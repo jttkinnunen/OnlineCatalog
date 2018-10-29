@@ -1,10 +1,16 @@
 import React from "react";
-import { Col, Button, Form, FormGroup, Label, FormFeedback, Progress, Input, FormText } from 'reactstrap';
+import { Col, Button, Form, FormGroup, Label, FormFeedback, Progress, Input, Alert, FormText } from 'reactstrap';
 import '../../css/AddArticle.css';
 // TODO: All functionality, formatting
 
 class AddArticle extends React.Component {
+
+
+
     render() {
+
+        let success;
+
         return (
             <div className = "standard-text-color" id="productform">
                 <Form >
@@ -40,7 +46,7 @@ class AddArticle extends React.Component {
                             <Input type="file" name="file" id="sendImage" />
                         </Col>
                         <Col>
-                            Voit valita tuotteelle osuvan kuva käyttämältäsi laitteelta.
+                            Voit valita tuotteelle osuvan kuvan laitteeltasi.
                             Kuvan koko ei saa ylittää 999999 Mb
                         </Col>
                     </FormGroup>
@@ -53,6 +59,7 @@ class AddArticle extends React.Component {
                 </Form>
                 <div className="text-center">75%</div>
                 <Progress value={75} />
+
             </div>
         );
     }

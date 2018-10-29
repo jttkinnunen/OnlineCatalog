@@ -1,6 +1,7 @@
 import React from "react";
 import { Table, Input, Button } from 'reactstrap';
 import '../../css/UserManagement.css';
+
 class UserManagement extends React.Component {
     constructor(props) {
         super(props);
@@ -17,8 +18,8 @@ class UserManagement extends React.Component {
     render() {
 
         return(
-            <div classname="userTable">
-                <Table striped bordered hover responsive size="sm" className = "usermanagement-body">
+            <div className = "usermanagement-body">
+                <Table striped bordered hover responsive size="sm" className = "usermanagement-table">
                     <thead>
                         <tr>
                             <th></th>
@@ -44,8 +45,8 @@ class UserManagement extends React.Component {
                                 <td>{item.last_name}</td>
                                 <td>{item.email}</td>
                                 <td>{item.admin.toString()}</td>
-                                {/*<td>{item.user??}</td>*/}
-                                {/*<td>{item.user???}</td>*/}
+                                {/*<td>{item.last_activity}</td>*/}
+                                {/*<td>{item.last_login}</td>*/}
                             </tr>
                         )
                     })}</tbody>

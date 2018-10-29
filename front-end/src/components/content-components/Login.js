@@ -20,7 +20,9 @@ class Login extends React.Component {
         this.handleUserChange = this.handleUserChange.bind(this);
         this.handlePassChange = this.handlePassChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
-        this.handleKeyPress=this.handleKeyPress.bind(this);
+        this.handleKeyPress = this.handleKeyPress.bind(this);
+        this.handleForgot = this.handleForgot.bind(this);
+
     }
     handleKeyPress = (event) => {
         if(event.key === 'Enter'){
@@ -46,6 +48,10 @@ class Login extends React.Component {
         this.props.login(this.state.user, this.state.pass);
     }
 
+    handleForgot() {
+        this.props.setView("forgot-pass");
+    }
+
     render() {
         let login_result = "";
 
@@ -65,7 +71,6 @@ class Login extends React.Component {
                             <Input type="email" name="email" id="exampleEmail" placeholder="Sähköposti" value = {this.state.user} onChange = {this.handleUserChange} />
                         </span>
                      </FormGroup>
-                        <br/>
                     <FormGroup>
                         <span>
 
@@ -77,10 +82,11 @@ class Login extends React.Component {
                                d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>*/}
 
                             <Input type="password" name="password" id="examplePassword" placeholder="Salasana" value = {this.state.pass} onChange = {this.handlePassChange} onKeyDown={this.handleKeyPress}  tabIndex="0" />
-                                <h6 className = "standard-text-color">{login_result}</h6>
+                                <br/>
+
                         </span>
                     </FormGroup>
-                    <br/>
+                    <h6 className = "standard-text-color">{login_result}</h6>
                 <FormGroup>
 
                         <Button className="btn btn-success btn-wide" onClick={this.handleSubmit}>Kirjaudu</Button>
@@ -89,7 +95,7 @@ class Login extends React.Component {
                     <br/>
                     <FormGroup>
 
-                        <a href="#">Unohtuiko salasana?</a>
+                        <a href="#" onClick={this.handleForgot}>Unohtuiko salasana?</a>
 
                     </FormGroup>
             </Form>

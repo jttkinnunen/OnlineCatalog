@@ -22,9 +22,6 @@
   align-self: flex-start;
 }
 
-.usermanagement-body {
-    color: whitesmoke;
-}
 
 .nav-form {
   display: flex;
@@ -38,8 +35,11 @@
   flex-direction: column;
   background-color: #6fcc6a;
   color: #000000;
-  padding: 5px;
-  border: #339933 1px solid;
+}
+
+.event-text {
+    font-size: calc(15px + 0vmin);
+    color: #000000;
 }
 
 .footer {
@@ -51,13 +51,8 @@
   padding: 5px;
 }
 
-.event-text {
-  font-size: calc(15px + 0vmin);
-  color: #000000;
-}
-
 .navigation-bar {
-  border-bottom: #cccccc 2px solid;
+
 }
 
 .justify-content-center {
@@ -117,6 +112,10 @@ div.col-sm-6, div.text-right.col-sm-6{
 }
 
 .white-h5  {
+    color: floralwhite;
+    margin-bottom: 50px;
+}
+.white-h6  {
     color: floralwhite;
     margin-bottom: 50px;
 }
