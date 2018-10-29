@@ -43,9 +43,9 @@ class UserManagement extends React.Component {
                                 <td>{item.first_name}</td>
                                 <td>{item.last_name}</td>
                                 <td>{item.email}</td>
-                               {/* <td>{item.user??}</td>
-                                <td>{item.user???}</td>*/}
                                 <td>{item.admin.toString()}</td>
+                                {/*<td>{item.user??}</td>*/}
+                                {/*<td>{item.user???}</td>*/}
                             </tr>
                         )
                     })}</tbody>

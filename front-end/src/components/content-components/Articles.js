@@ -17,8 +17,8 @@ class Articles extends React.Component {
     }
 
     // Open detailed view of product when clicked
-    openDetailed(id) {
-
+    openDetailed() {
+        this.props.setView("article-detailed");
     }
 
     // TODO: kuvan handlaus
@@ -27,16 +27,16 @@ class Articles extends React.Component {
     render() {
         return (
         <div>
-             <Container className = "article-main-container">
-                 <Row className = "article-card-container">
+             <Container className = "article-main-container" >
+                 <Row className = "article-card-container" >
                      {this.props.articles.map(function(item, key) {
                          return (
                              <Col  sm={{ offset: 0 }}>
                                  <Card className = "article-card ">
-                                     <CardImg top width="100%" src="https://placeholdit.imgix.net/~text?txtsize=33&txt=256%C3%97180&w=256&h=180" alt="Card image cap" />
-                                     <CardBody>
+                                     <CardImg top width="100%" src="https://placeholdit.imgix.net/~text?txtsize=33&txt=256%C3%97180&w=256&h=180" alt="Card image cap"  />
+                                     <CardBody >
                                          <CardSubtitle>{item.name}</CardSubtitle>
-                                         <CardText className="text-left">
+                                         <CardText className="text-left" >
                                              {item.locations.map(function(item, key) {
                                                  return (
                                                      <div>{item.name}: {item.quantity} kpl</div>

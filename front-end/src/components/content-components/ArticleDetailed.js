@@ -1,15 +1,64 @@
 import React from "react";
 import Articles from "./Articles";
-import {Card, Button, CardImg, CardText, CardBody, CardTitle, Row, Col, ButtonGroup, CardSubtitle } from 'reactstrap';
+import {Card, Button, CardImg, CardText, CardBody, CardTitle, Row, Col, ButtonGroup, CardSubtitle, Input } from 'reactstrap';
 import Layout from "./TestChar";
+import '../../css/ArticleDetailed.css';
+import Form from "react-bootstrap/es/Form";
+import FormGroup from "react-bootstrap/es/FormGroup";
 
 
 // TODO: korjaa tämä täysin, poista koodia tarvittaessa. Alla Juhan esimerkkikoodia joka oli aiemmin etusivulla
 
 class ArticleDetailed extends React.Component {
+
+
+
+
+
+    constructor(props) {
+
+        super(props);
+        this.state = {
+
+            count: 0
+        };
+
+         this.handleIncrement=this.handleIncrement.bind(this);
+
+         this.handleDecrement=this.handleDecrement.bind(this);
+
+    }
+    handleIncrement =() => {
+        // this.setState({ count: this.state.count+1});
+
+    };
+    handleDecrement= () => {
+        // this.setState({ count: this.state.count-1});
+
+    };
+
     render() {
         return(
+
             <div>
+
+                        <Input type="select" name="select" id="exampleSelect">
+                            <option>Oulu</option>
+                            <option>Helsinki</option>
+                            <option>Hianola</option>
+
+                        </Input>
+            <br/>
+
+                <span >
+
+                    <Button id="incbtn" color="primary" onClick= {this.handleIncrement()}>-</Button>
+                    <span className="order"> {this.count} </span>
+                    <Button id="decbtn" color="danger" onClick= {this.handleDecrement()}>+</Button>
+
+                 </span>
+
+
 
             </div>
         );
