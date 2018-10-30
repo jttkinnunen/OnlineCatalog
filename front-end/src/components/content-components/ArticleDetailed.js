@@ -1,10 +1,12 @@
 import React from "react";
 import Articles from "./Articles";
 import {Card, Button, CardImg, CardText, CardBody, CardTitle, Row, Col, ButtonGroup, CardSubtitle, Input } from 'reactstrap';
+import NumericInput from 'react-numeric-input';
 import Layout from "./TestChar";
 import '../../css/ArticleDetailed.css';
 import Form from "react-bootstrap/es/Form";
 import FormGroup from "react-bootstrap/es/FormGroup";
+import Label from "react-bootstrap/es/Label";
 
 
 // TODO: korjaa tämä täysin, poista koodia tarvittaessa. Alla Juhan esimerkkikoodia joka oli aiemmin etusivulla
@@ -14,38 +16,81 @@ class ArticleDetailed extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-
+            value: "",
             count: 0
         };
          this.handleIncrement=this.handleIncrement.bind(this);
          this.handleDecrement=this.handleDecrement.bind(this);
+        this.onRadioBtnClick = this.onRadioBtnClick.bind(this);
     }
+
+    onRadioBtnClick(rSelected) {
+        this.setState({ rSelected });
+    }
+
     handleIncrement =() => {
-        this.setState({ count: this.state.count-1});
+        this.setState({ count: this.state.count+1});
 
     };
     handleDecrement= () => {
-        this.setState({ count: this.state.count+1});
+        this.setState({ count: this.state.count-1});
 
     };
 
     render() {
         return(
 
-            <div>
-                <Input type="select" name="select" id="exampleSelect">
-                    <option>Oulu</option>
-                    <option>Helsinki</option>
-                    <option>Hianola</option>
-                </Input>
-            <br/>
+            <div className="detailed-articles">
 
-            <span>
-                <Button id="incbtn" color="primary" onClick={() => {this.handleIncrement()}}>-</Button>
-                <span className="order"> {this.state.count} </span>
-                <Button id="decbtn" color="danger" onClick={() => {this.handleDecrement()}}>+</Button>
-            </span>
+                <div className="card-holder">
+                    <Card classname ="detailed">
+                        <CardImg top width="100%" src="https://placeholdit.imgix.net/~text?txtsize=33&txt=256%C3%97180&w=256&h=180" alt="Card image cap" />
+                        <CardBody>
+                            <CardTitle>Card title</CardTitle>
+                            <CardSubtitle>Card subtitle</CardSubtitle>
+                            <CardText>Some quick example </CardText>
+                            <Button>Button</Button>
+                        </CardBody>
+                    </Card>
+                </div>
+                <br/>
 
+                <div className="container" id="warehouses">
+
+                        <Button color="primary" id="rightbtn" onClick={() => this.onRadioBtnClick("Tuotteiden Otto")} active={this.state.rSelected === 1}>Otto</Button>
+                        <Button color="success" id="leftbtn" onClick={() => this.onRadioBtnClick("Tuotteiden palautus")} active={this.state.rSelected === 2}>Palautus</Button>
+
+
+                    <p>{this.state.rSelected}</p>
+
+                    <br/>
+                    <Input type="select" name="select" id="exampleSelect">
+                        <option>Oulu</option>
+                        <option>Helsinki</option>
+                        <option>Hianola</option>
+                    </Input>
+                    <br/>
+
+
+
+                    <span className="howmany">
+                        {/*<Button id="decbtn" color="danger" onClick={() => {this.handleDecrement()}}>-</Button>*/}
+
+                          <NumericInput
+                              value={0}
+                              precision={0}
+                              size={15}
+                              step={1}
+                              height={30}
+                              mobile={true} />
+
+
+
+                        {/*<Button id="incbtn" color="primary" onClick={() => {this.handleIncrement()}}>+</Button>*/}
+
+
+                    </span>
+                </div>
             </div>
         );
     }
