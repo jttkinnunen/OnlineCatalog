@@ -27,9 +27,9 @@ class UserManagement extends React.Component {
                             <th>Etunimi</th>
                             <th>Sukunimi</th>
                             <th>Sähköposti</th>
+                            <th>Viimeisin toiminta</th>
+                            <th>Kirjautunut</th>
                             <th>Ylläpitäjä</th>
-                            <th>Last Edit</th>
-                            <th>Last Login</th>
 
                         </tr>
                     </thead>
@@ -44,9 +44,9 @@ class UserManagement extends React.Component {
                                 <td>{item.first_name}</td>
                                 <td>{item.last_name}</td>
                                 <td>{item.email}</td>
+                                <td></td>{/*{item.last_activity}*/}
+                                <td></td>{/*{item.last_login}*/}
                                 <td>{item.admin.toString()}</td>
-                                {/*<td>{item.last_activity}</td>*/}
-                                {/*<td>{item.last_login}</td>*/}
                             </tr>
                         )
                     })}</tbody>

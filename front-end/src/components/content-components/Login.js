@@ -64,6 +64,7 @@ class Login extends React.Component {
              <Jumbotron>
                 <Form>
                     <h5 className = "white-h5">Kirjaudu sisään</h5>
+                    <h6 className = "white-h6">(Käytä sähköpostia erkki.esimerkki@fcg.fi ja salasanaa 1234)</h6>
 
                     <FormGroup>
                         <span>

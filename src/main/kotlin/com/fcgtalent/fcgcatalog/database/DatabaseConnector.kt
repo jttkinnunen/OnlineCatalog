@@ -65,6 +65,7 @@ class DatabaseConnector(
         createInitialTables()
         addUser("antti", "pantti", "hiano", "elefantti@hiano.fi", true)
         addUser("Joni", "Laitala", "2479", "joni.laitala@gmail.com", true)
+        addUser("Erkki", "Esimerkki", "1234", "erkki.esimerkki@fcg.fi", true)
         addLocation("Oulu")
         addLocation("Helsinki")
         addLocation("Kiutaköngäs")

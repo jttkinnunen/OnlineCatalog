@@ -60,7 +60,6 @@ class ArticleDetailed extends React.Component {
                         <Button color="primary" id="rightbtn" onClick={() => this.onRadioBtnClick("Tuotteiden Otto")} active={this.state.rSelected === 1}>Otto</Button>
                         <Button color="success" id="leftbtn" onClick={() => this.onRadioBtnClick("Tuotteiden palautus")} active={this.state.rSelected === 2}>Palautus</Button>
 
-
                     <p>{this.state.rSelected}</p>
 
                     <br/>

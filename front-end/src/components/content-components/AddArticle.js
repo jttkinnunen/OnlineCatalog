@@ -25,7 +25,7 @@ class AddArticle extends React.Component {
                     <FormGroup row>
                         <Label for="exampleSelect" sm={2}>Varasto</Label>
                         <Col sm={10}>
-                            <Input type="select" name="select" id="exampleSelect" >
+                            <Input type="select" name="select" id="locatioms" >
                             <option>Oulu</option>
                             <option>Helsinki</option>
                             <option>Hianola</option>

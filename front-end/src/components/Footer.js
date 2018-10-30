@@ -5,8 +5,9 @@ class Footer extends React.Component {
 
     render() {
         return (
-            <div className="event-text" id="fuutteri">
-                <Container>
+            <div id="fuutteri">
+                <Container className = "footer-content">
+                    {/*
                     <Row>
                         <Col xs="6"><strong>FCG Talent Oy</strong></Col>
                         <Col xs="6"><strong>Tekijätiimi:</strong></Col>
@@ -26,6 +27,10 @@ class Footer extends React.Component {
                     <Row>
                         <Col xs="6">http://www.fcg.fi/</Col>
                         <Col xs="6">nimi4</Col>
+                    </Row>*/}
+
+                    <Row>
+                        2018 FCG Talent Oy.  Team Matsku: Juha Kinnunen, Joni Laitala, Juha-Pekka Koski, Antti Keistinen
                     </Row>
                 </Container>
                 {/*Current view: {this.props.current_view} Debug: {this.props.debugval}*/}

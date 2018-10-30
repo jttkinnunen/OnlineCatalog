@@ -119,8 +119,8 @@ class Navigation extends React.Component {
                         <NavbarBrand href="#" className="mr-auto" onClick={() => this.props.setView("articles")}>&nbsp; Matsku &nbsp;</NavbarBrand>
                         <Form className = "nav-form">
                             <InputGroup>
-                                <Input type="text" id="textSearch" placeholder="Hae tuotetta..." value = {this.state.query} onChange = {this.handleQueryChange} />
-                                <InputGroupAddon addonType="append"><Button color="primary" onClick={() => this.submitSearch()}>Hae</Button></InputGroupAddon>
+                                <Input type="text" id="textSearch" placeholder="Hae nimellä ..." value = {this.state.query} onChange = {this.handleQueryChange} />
+                                {/*<InputGroupAddon addonType="append"><Button color="primary" onClick={() => this.submitSearch()}>Hae</Button></InputGroupAddon>*/}
                             </InputGroup>
 
                             {/*<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"

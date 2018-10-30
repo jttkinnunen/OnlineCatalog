@@ -1,9 +1,13 @@
 
 #fuutteri {
-
     padding: 10px;
-    background-color: white;
+    background-color: #556666;
     max-width: 1024px;
     width: 100%;
     align-self: center;
+}
+
+.footer-content{
+    display: flex;
+    justify-content: center;
 }
