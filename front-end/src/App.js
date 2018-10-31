@@ -6,7 +6,7 @@ import Navigation_bar from './components/Navigation.js';
 import Footer from './components/Footer.js';
 import Articles from "./components/content-components/Articles";
 
-const HOST = "http://85.23.104.44:8080";
+const HOST = "http://localhost:8080"
 
 // TODO: Env variables for IP, POST queries
 
