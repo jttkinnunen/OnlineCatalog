@@ -8,7 +8,7 @@
 
 
 .App-header {
-  background-color: #282c34; /*background-color: #282c34;*/
+  background-color: rgb(0,117,160);/*rgb(0,71,111);#282c34; background-color: #282c34;*/
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -46,7 +46,7 @@
   display: flex;
   justify-content: center;
   flex-direction: column;
-  background-color: #282c34;
+  background-color: rgb(0,71,111);/*#282c34;*/
   color: #000000;
 }
 
@@ -80,7 +80,7 @@
   max-width: 1024px;
   width: 100%;
   font-size: calc(15px + 0vmin);
-  background-color: #464c52; /*background-color: #242a30;*/
+  background-color: rgb(0,117,160);/*#464c52; background-color: #242a30;*/
   color: black;
 
     /*border: red 2px solid; //////////////////////DELETE AFTER TESTING/////////////////////////////*/
@@ -107,7 +107,7 @@ div.col-sm-6, div.text-right.col-sm-6{
 }
 
 .standard-text-color{
-    color: lightgrey;
+    color: #e6e6e6;
 }
 
 .white-h5  {

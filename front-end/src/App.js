@@ -6,7 +6,7 @@ import Navigation_bar from './components/Navigation.js';
 import Footer from './components/Footer.js';
 import Articles from "./components/content-components/Articles";
 
-const HOST = "http://localhost:8080"
+const HOST = "http://localhost:8080";
 
 // TODO: Env variables for IP, POST queries
 
@@ -249,8 +249,8 @@ class App extends Component {
                                             setQuery = {this.setQuery}
                             />
                         </div>
+                        <Events current_view = {this.state.current_view} />
                         <div className = "body">
-                            <Events current_view = {this.state.current_view} />
                             <div className = "content">
                                 <Content login_state = {this.state.login_state}
                                          users = {this.state.users}

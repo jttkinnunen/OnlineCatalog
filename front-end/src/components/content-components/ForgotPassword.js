@@ -28,7 +28,7 @@ class ForgotPassword extends React.Component {
                 <Form>
                     <h5 className = "white-h5">Unohdin salasanani :(</h5>
                     <p>
-                        <h6 className = "white-h6">Ei hätää, kirjoita tunnukseesi liitetty sähköpostiosoite alle niin lähetämme sinulle linkin salasanan resetoimista varten.</h6>
+                        <h6 className = "white-h6">Ei hätää, kirjoita sähköpostiosoitteesi alle niin lähetämme sinulle linkin salasanan vaihtamista varten.</h6>
                     </p>
 
 

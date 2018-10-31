@@ -6,7 +6,7 @@ class Footer extends React.Component {
     render() {
         return (
             <div id="fuutteri">
-                <Container className = "footer-content">
+                <Container className = "footer-content standard-text-color">
                     {/*
                     <Row>
                         <Col xs="6"><strong>FCG Talent Oy</strong></Col>
