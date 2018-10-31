@@ -41,7 +41,7 @@
     margin-top: 5px;
 }
 
-#exampleSelect {
+#storage_sel {
 
     max-width: 180px;
     margin: 30px auto;
@@ -55,20 +55,59 @@
     height: 285px;
     margin: 5px;
 }
-.howmany {
+#tabit {
+    display: flex;
+    justify-content: left;
+
+}
+#ret {
+    margin-bottom: 0;
+    background: #8fde5f;
+
+}
+#return  {
 
     width:100%;
     margin: 0 auto;
-    max-width: 200px;
+    padding: 2px;
+    border: #464c52 2px solid;
+    box-shadow: #556666;
+    max-width: 760px;
 
 }
-.react-numeric-input input {
-    height: 50px;
-    font-size: 25px;
+#return {
+
+
 }
-#textfield {
+.retrieve {
+
+}
+.inventory  {
+
+
+}
+.addings {
+    margin: 15px auto;
+    max-width: 250px;
+}
+
+#number_field {
 
     text-align: center;
-    width: 20%;
-    margin: 0 10px 0 10px;
+    max-width: 180px;
+    height:40px;
+    margin: 0 auto;
+}
+#addbtn {
+    height: 40px;
+
+}
+#react-tabs-4 {
+
+
+
+}
+.react-tabs {
+
+
 }

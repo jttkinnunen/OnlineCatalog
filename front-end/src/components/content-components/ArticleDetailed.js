@@ -1,12 +1,12 @@
 import React from "react";
 import Articles from "./Articles";
-import {Card, Button, CardImg, CardText, CardBody, CardTitle, Row, Col, ButtonGroup, CardSubtitle, Input } from 'reactstrap';
-import NumericInput from 'react-numeric-input';
-import Layout from "./TestChar";
+import {Card, Button, CardImg, CardText, CardBody, CardTitle, Row, Col, ButtonGroup, CardSubtitle, Input,TabPane, InputGroup } from 'reactstrap';
+import {Tab, Tabs, TabList, TabPanel} from 'react-tabs';
+import 'react-tabs/style/react-tabs.css';
 import '../../css/ArticleDetailed.css';
-import Form from "react-bootstrap/es/Form";
-import FormGroup from "react-bootstrap/es/FormGroup";
-import Label from "react-bootstrap/es/Label";
+
+
+
 
 
 // TODO: korjaa tämä täysin, poista koodia tarvittaessa. Alla Juhan esimerkkikoodia joka oli aiemmin etusivulla
@@ -17,12 +17,26 @@ class ArticleDetailed extends React.Component {
         super(props);
         this.state = {
             value: "",
-            count: 0
+            count: 0,
+            index: '1'
         };
-         this.handleIncrement=this.handleIncrement.bind(this);
-         this.handleDecrement=this.handleDecrement.bind(this);
+
+        this.handleIncrement = this.handleIncrement.bind(this);
+        this.handleDecrement = this.handleDecrement.bind(this);
         this.onRadioBtnClick = this.onRadioBtnClick.bind(this);
+        this.toggle = this.toggle.bind(this);
+
+
     }
+
+    toggle(index) {
+        if (this.state.activeTab !== index) {
+            this.setState({
+               index
+            });
+        }
+    }
+
 
     onRadioBtnClick(rSelected) {
         this.setState({ rSelected });
@@ -55,46 +69,119 @@ class ArticleDetailed extends React.Component {
                 </div>
                 <br/>
 
-                <div className="container" id="warehouses">
 
-                        <Button color="primary" id="rightbtn" onClick={() => this.onRadioBtnClick("Tuotteiden Otto")} active={this.state.rSelected === 1}>Otto</Button>
+
+
+                    <Tabs defaultIndex={1} onSelect={index => console.log(index)}>
+                        <TabList id="tabit">
+                            <Tab id="ret">Palautus</Tab>
+                            <Tab id="retri">Otto</Tab>
+                            <Tab id="inven">Inventaario</Tab>
+                        </TabList>
+
+                        <TabPanel id="return">
+
+
+                                <Input type="select" name="select" id="storage_sel">
+                                    <option>Oulu</option>
+                                    <option>Helsinki</option>
+                                    <option>Hianola</option>
+                                </Input>
+                                <br/>  <br/>  <br/>
+                                <InputGroup className="addings">
+
+                                    <Button color="danger" id="addbtn" onClick={() => {this.handleDecrement()}}>-</Button>
+
+                                    <Input type="text" name="number" value={this.state.count} id="number_field"/>
+
+                                    <Button color="success" id="subbtn" onClick={() => {this.handleIncrement()}}>+</Button>
+
+                                </InputGroup>
+
+                        </TabPanel>
+
+
+                        <TabPanel className="retrieve">
+
+
+                                <Input type="select" name="select" id="storage_sel">
+                                    <option>Oulu</option>
+                                    <option>Helsinki</option>
+                                    <option>Hianola</option>
+                                </Input>
+                                <br/>  <br/>  <br/>
+                                <InputGroup className="addings">
+
+                                    <Button color="danger" id="addbtn" onClick={() => {this.handleDecrement()}}>-</Button>
+
+                                    <Input type="text" name="number" value={this.state.count} id="number_field"/>
+
+                                    <Button color="success" id="subbtn" onClick={() => {this.handleIncrement()}}>+</Button>
+
+                                </InputGroup>
+
+                        </TabPanel>
+
+                        <TabPanel className="inventory">
+
+
+                                <Input type="select" name="select" id="storage_sel">
+                                    <option>Oulu</option>
+                                    <option>Helsinki</option>
+                                    <option>Hianola</option>
+                                </Input>
+                                <br/>  <br/>  <br/>
+                                <InputGroup className="addings">
+
+                                    <Button color="danger" id="addbtn" onClick={() => {this.handleDecrement()}}>-</Button>
+
+                                    <Input type="text" name="number" value={this.state.count} id="number_field"/>
+
+                                    <Button color="success" id="subbtn" onClick={() => {this.handleIncrement()}}>+</Button>
+
+                                </InputGroup>
+
+                        </TabPanel>
+                    </Tabs>
+
+
+
+
+
+
+                   {/*     <Button color="primary" id="rightbtn" onClick={() => this.onRadioBtnClick("Tuotteiden Otto")} active={this.state.rSelected === 1}>Otto</Button>
                         <Button color="success" id="leftbtn" onClick={() => this.onRadioBtnClick("Tuotteiden palautus")} active={this.state.rSelected === 2}>Palautus</Button>
 
                     <p>{this.state.rSelected}</p>
 
-                    <br/>
-                    <Input type="select" name="select" id="exampleSelect">
-                        <option>Oulu</option>
-                        <option>Helsinki</option>
-                        <option>Hianola</option>
-                    </Input>
-                    <br/>
 
 
 
-                    <span className="howmany">
-                        {/*<Button id="decbtn" color="danger" onClick={() => {this.handleDecrement()}}>-</Button>*/}
 
-                          <NumericInput
+
+                        <Button id="decbtn" color="danger" onClick={() => {this.handleDecrement()}}>-</Button>*/}
+
+                        {/*  <NumericInput
                               value={0}
                               precision={0}
                               size={15}
                               step={1}
                               height={30}
-                              mobile={true} />
+                              mobile={true} />*/}
 
 
 
                         {/*<Button id="incbtn" color="primary" onClick={() => {this.handleIncrement()}}>+</Button>*/}
 
 
-                    </span>
-                </div>
+
+                {/*</div>*/}
             </div>
         );
     }
 }
 
+/*
 class Article extends React.Component {
 
 
@@ -194,5 +281,6 @@ class Article extends React.Component {
         );
     }
 }
+*/
 
 export default ArticleDetailed;
