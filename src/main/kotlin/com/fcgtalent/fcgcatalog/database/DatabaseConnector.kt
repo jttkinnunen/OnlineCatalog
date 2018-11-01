@@ -1,5 +1,6 @@
 package com.fcgtalent.fcgcatalog.database
 
+import com.fcgtalent.fcgcatalog.components.EmailHandler
 import com.fcgtalent.fcgcatalog.configuration.DatabaseConfiguration
 import com.fcgtalent.fcgcatalog.database.mappers.ArticleResultMapper
 import com.fcgtalent.fcgcatalog.database.mappers.ArticlesInLocationsMapper
@@ -26,9 +27,10 @@ import java.sql.Timestamp
 // TODO explain why twice, or dont
 @Repository
 class DatabaseConnector(
-    protected val configuration: DatabaseConfiguration,
+    private val configuration: DatabaseConfiguration,
     private val jdbcTemplate: JdbcTemplate,
-    private val namedParameterJdbcTemplate: NamedParameterJdbcTemplate
+    private val namedParameterJdbcTemplate: NamedParameterJdbcTemplate,
+    private val emailHandler: EmailHandler
 ) {
 
     companion object {
@@ -45,6 +47,7 @@ class DatabaseConnector(
         const val FIELD_EMAIL = "email"
         const val FIELD_ADMIN = "admin"
         const val FIELD_TOKEN = "token"
+        const val FIELD_RESET_TOKEN = "reset_token"
 
         // Article fields
         const val FIELD_ARTICLE_NAME = "article_name"
@@ -63,9 +66,9 @@ class DatabaseConnector(
         // TODO rethink this, this is just initial testing. But rethink the intiial table geneartion
         dropAllTables()
         createInitialTables()
-        addUser("antti", "pantti", "hiano", "elefantti@hiano.fi", true)
-        addUser("Joni", "Laitala", "2479", "joni.laitala@gmail.com", true)
-        addUser("Erkki", "Esimerkki", "1234", "erkki.esimerkki@fcg.fi", true)
+        addUser("antti", "pantti", "elefantti@hiano.fi", true)
+        addUser("Joni", "Laitala", "joni.laitala@gmail.com", true)
+        addUser("Erkki", "Esimerkki", "erkki.esimerkki@fcg.fi", true)
         addLocation("Oulu")
         addLocation("Helsinki")
         addLocation("Kiutaköngäs")
@@ -77,9 +80,9 @@ class DatabaseConnector(
             "Kuulakärkikynä jonka muste ei kuivu tai lopu koskaan"
         )
         addArticle(
-                "Kynä, sininen, FCGTalent",
-                "ballpenblue.png",
-                "Kuulakärkikynä jonka muste ei kuivu tai lopu koskaan"
+            "Kynä, sininen, FCGTalent",
+            "ballpenblue.png",
+            "Kuulakärkikynä jonka muste ei kuivu tai lopu koskaan"
         )
         addArticle(
             "Vihko, kovakantinen, FCGTalent",
@@ -87,14 +90,14 @@ class DatabaseConnector(
             "Kovakantinen ruutusivullinen vihko, jonka kannesa FCG Talent logo. Lorem ipsum dolor sit amet."
         )
         addArticle(
-                "Karkkirasia",
-                "candybox.png",
-                "Pieni rasia hedelmäkarkkeja FCG Talent logolla. Lorem ipsum dolor sit amet."
+            "Karkkirasia",
+            "candybox.png",
+            "Pieni rasia hedelmäkarkkeja FCG Talent logolla. Lorem ipsum dolor sit amet."
         )
         addArticle(
-                "Purukumi, Laatikko",
-                "gum.png",
-                "Iso laatikko Jenkki xylitol purukumia. Lorem ipsum dolor sit amet."
+            "Purukumi, Laatikko",
+            "gum.png",
+            "Iso laatikko Jenkki xylitol purukumia. Lorem ipsum dolor sit amet."
         )
         addArticle("Kirjanmerkki, FCG", "bookmark.png", "Kirjanmerkki. Lorem ipsum dolor sit amet.")
 
@@ -113,18 +116,20 @@ class DatabaseConnector(
     }
 
     @Throws(SQLException::class)
-    fun addUser(firstName: String, lastName: String, password: String, email: String, admin: Boolean, id: Int? = null) {
+    fun addUser(firstName: String, lastName: String, email: String, admin: Boolean, id: Int? = null) {
         val sql =
-            "INSERT INTO $TABLE_USERS($FIELD_FIRST_NAME, $FIELD_LAST_NAME, $FIELD_PASSWORD, $FIELD_EMAIL, $FIELD_ADMIN) VALUES (?, ?, ?, ?, ?)"
-
-        jdbcTemplate.update(
+            "INSERT INTO $TABLE_USERS($FIELD_FIRST_NAME, $FIELD_LAST_NAME, $FIELD_EMAIL, $FIELD_ADMIN, $FIELD_RESET_TOKEN) VALUES (?, ?, ?, ?, ?)"
+        val resetToken = UUID.randomUUID().toString()
+        if(jdbcTemplate.update(
             sql,
             firstName,
             lastName,
-            BCrypt.hashpw(password, BCrypt.gensalt(4)),
             email,
-            if (admin) 1 else 0
-        )
+            if (admin) 1 else 0,
+            resetToken
+        ) == 1) {
+            emailHandler.sendActivateAccount(email, resetToken)
+        }
     }
 
     @Throws(SQLException::class)
@@ -311,6 +316,23 @@ class DatabaseConnector(
     fun logout(token: String) {
         val sql = "UPDATE $TABLE_USERS SET $FIELD_TOKEN = ? WHERE $FIELD_TOKEN = ?"
         if (jdbcTemplate.update(sql, null, token) == 0) {
+            throw AuthenticationException()
+        }
+    }
+
+    @Throws(Exception::class)
+    fun initiatePasswordReset(email: String) {
+        val sql = "UPDATE $TABLE_USERS SET $FIELD_RESET_TOKEN = ? WHERE $FIELD_EMAIL = ?"
+        val resetToken = UUID.randomUUID().toString()
+        if(jdbcTemplate.update(sql, resetToken, email) == 1) {
+            emailHandler.sendPasswordReset(email, resetToken)
+        } // TODO throw error
+    }
+
+    @Throws(Exception::class)
+    fun setPassword(resetToken: String, newPassword: String) {
+        val sql = "UPDATE $TABLE_USERS SET $FIELD_PASSWORD = ?, $FIELD_RESET_TOKEN = ? WHERE $FIELD_RESET_TOKEN = ?"
+        if (jdbcTemplate.update(sql, BCrypt.hashpw(newPassword, BCrypt.gensalt(4)), null, resetToken) == 0) {
             throw AuthenticationException()
         }
     }

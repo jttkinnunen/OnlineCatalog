@@ -15,6 +15,8 @@ import com.fcgtalent.fcgcatalog.util.GetUsersBody
 import com.fcgtalent.fcgcatalog.util.LoginBody
 import com.fcgtalent.fcgcatalog.util.LogoutBody
 import com.fcgtalent.fcgcatalog.util.SetArticlesAtLocationBody
+import com.fcgtalent.fcgcatalog.util.SetPasswordBody
+import com.fcgtalent.fcgcatalog.util.StartPasswordResetBody
 import com.fcgtalent.fcgcatalog.util.UpdateArticleBody
 import com.fcgtalent.fcgcatalog.util.UpdateLocationBody
 import com.fcgtalent.fcgcatalog.util.UpdateUserBody
@@ -32,6 +34,7 @@ import java.nio.file.Files
 import java.nio.file.Paths
 import java.nio.file.StandardCopyOption
 import java.sql.SQLException
+import java.util.UUID
 
 @RestController
 class CatalogController {
@@ -84,7 +87,6 @@ class CatalogController {
             databaseConnector.addUser(
                 addUserBody.firstName,
                 addUserBody.lastName,
-                addUserBody.password,
                 addUserBody.email,
                 addUserBody.admin
             )
@@ -241,6 +243,22 @@ class CatalogController {
     ): ResponseEntity<Any> {
         println("Got username ${loginBody.username} got password ${loginBody.password}")
         return encapsulateCall(null, false, true) { databaseConnector.login(loginBody.username, loginBody.password) }
+    }
+
+    @CrossOrigin
+    @PostMapping("/setPassword")
+    fun setPassword(@RequestBody setPasswordBody: SetPasswordBody): ResponseEntity<Any> {
+        return encapsulateCall(null, adminOnly = false, publicCall = true) {
+            databaseConnector.setPassword(newPassword = setPasswordBody.newPassword, resetToken = setPasswordBody.resetToken)
+        }
+    }
+
+    @CrossOrigin
+    @PostMapping("/startPasswordReset")
+    fun startPasswordReset(@RequestBody startPasswordResetBody: StartPasswordResetBody): ResponseEntity<Any> {
+        return encapsulateCall(null, adminOnly = false, publicCall = true) {
+            databaseConnector.initiatePasswordReset(startPasswordResetBody.email)
+        }
     }
 
     @Throws(Exception::class)

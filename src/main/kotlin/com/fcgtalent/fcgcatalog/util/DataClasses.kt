@@ -52,7 +52,6 @@ data class LocationQuantityResult @JsonCreator constructor(
 data class AddUserBody @JsonCreator constructor(
     @JsonProperty("first_name") val firstName: String,
     @JsonProperty("last_name") val lastName: String,
-    @JsonProperty val password: String,
     @JsonProperty val email: String,
     @JsonProperty val admin: Boolean,
     @JsonProperty val token: String
@@ -130,4 +129,13 @@ data class LogoutBody @JsonCreator constructor(@JsonProperty val token: String)
 data class LoginBody @JsonCreator constructor(
     @JsonProperty val username: String,
     @JsonProperty val password: String
+)
+
+data class SetPasswordBody @JsonCreator constructor(
+    @JsonProperty("reset_token") val resetToken: String,
+    @JsonProperty val newPassword: String
+)
+
+data class StartPasswordResetBody @JsonCreator constructor(
+    @JsonProperty val email: String
 )
