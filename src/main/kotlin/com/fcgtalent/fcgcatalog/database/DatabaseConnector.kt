@@ -120,14 +120,15 @@ class DatabaseConnector(
         val sql =
             "INSERT INTO $TABLE_USERS($FIELD_FIRST_NAME, $FIELD_LAST_NAME, $FIELD_EMAIL, $FIELD_ADMIN, $FIELD_RESET_TOKEN) VALUES (?, ?, ?, ?, ?)"
         val resetToken = UUID.randomUUID().toString()
-        if(jdbcTemplate.update(
-            sql,
-            firstName,
-            lastName,
-            email,
-            if (admin) 1 else 0,
-            resetToken
-        ) == 1) {
+        if (jdbcTemplate.update(
+                sql,
+                firstName,
+                lastName,
+                email,
+                if (admin) 1 else 0,
+                resetToken
+            ) == 1
+        ) {
             emailHandler.sendActivateAccount(email, resetToken)
         }
     }
@@ -324,7 +325,7 @@ class DatabaseConnector(
     fun initiatePasswordReset(email: String) {
         val sql = "UPDATE $TABLE_USERS SET $FIELD_RESET_TOKEN = ? WHERE $FIELD_EMAIL = ?"
         val resetToken = UUID.randomUUID().toString()
-        if(jdbcTemplate.update(sql, resetToken, email) == 1) {
+        if (jdbcTemplate.update(sql, resetToken, email) == 1) {
             emailHandler.sendPasswordReset(email, resetToken)
         } // TODO throw error
     }

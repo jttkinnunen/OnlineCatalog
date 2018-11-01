@@ -4,7 +4,6 @@ import org.springframework.mail.SimpleMailMessage
 import org.springframework.mail.javamail.JavaMailSender
 import org.springframework.stereotype.Component
 
-
 @Component
 class EmailHandler(val emailSender: JavaMailSender) {
 
@@ -23,7 +22,6 @@ class EmailHandler(val emailSender: JavaMailSender) {
             "To reset your password")
         emailSender.send(message)
     }
-
 
     fun sendActivateAccount(
         to: String,

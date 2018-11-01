@@ -7,7 +7,6 @@ import com.fcgtalent.fcgcatalog.util.AuthenticationException
 import com.fcgtalent.fcgcatalog.util.UserResult
 import io.mockk.every
 import io.mockk.mockk
-import io.mockk.mockkStatic
 import io.mockk.slot
 import org.hamcrest.CoreMatchers.`is`
 import org.junit.After

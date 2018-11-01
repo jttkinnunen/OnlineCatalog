@@ -16,7 +16,5 @@ class FCGCatalogApplicationTests {
 
     @Test
     fun testEmpty() {
-
     }
-
 }
