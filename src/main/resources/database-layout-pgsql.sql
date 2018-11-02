@@ -2,10 +2,11 @@ CREATE TABLE IF NOT EXISTS users (
   id SERIAL PRIMARY KEY,
   first_name TEXT NOT NULL,
   last_name TEXT NOT NULL,
-  password TEXT NOT NULL,
+  password TEXT DEFAULT NULL,
   email TEXT NOT NULL UNIQUE,
   admin INTEGER DEFAULT 0 NOT NULL,
-  token TEXT UNIQUE
+  token TEXT UNIQUE,
+  reset_token TEXT UNIQUE
 );
 
 CREATE TABLE IF NOT EXISTS articles (

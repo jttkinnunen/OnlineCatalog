@@ -1,11 +1,13 @@
 package com.fcgtalent.fcgcatalog.database
 
 import com.fcgtalent.fcgcatalog.IntegrationTests
+import com.fcgtalent.fcgcatalog.components.EmailHandler
 import com.fcgtalent.fcgcatalog.configuration.DatabaseConfiguration
 import com.fcgtalent.fcgcatalog.util.AuthenticationException
 import com.fcgtalent.fcgcatalog.util.UserResult
 import io.mockk.every
 import io.mockk.mockk
+import io.mockk.slot
 import org.hamcrest.CoreMatchers.`is`
 import org.junit.After
 import org.junit.Assert
@@ -75,12 +77,14 @@ class DatabaseConnectorTest(
         private const val password1 = "hiano"
         private const val email1 = "joo@koo.com"
         private const val admin1 = true
+        private lateinit var resetToken1: String
 
         private const val firstName2 = "Mofweo1"
         private const val lastName2 = "MOfweoo2"
         private const val password2 = "hiawefno"
         private const val email2 = "joowefwe@fwefwe.org"
         private const val admin2 = false
+        private lateinit var resetToken2: String
 
         // Article related info, used for testing
         private const val name1 = "moo1"
@@ -97,13 +101,30 @@ class DatabaseConnectorTest(
         private const val locationName3 = "fexcvxcpokf"
     }
 
-    lateinit var databaseHandler: DatabaseConnector
+    private lateinit var databaseHandler: DatabaseConnector
+    private lateinit var emailHandler: EmailHandler
 
     @Before
     fun setUp() {
+        // TODO verify those emailhandler thignys
+        emailHandler = mockk(relaxed = true)
+        val tokenCaptureSlot1 = slot<String>()
+        val tokenCaptureSlot2 = slot<String>()
+
+        every { emailHandler.sendActivateAccount(email1, capture(tokenCaptureSlot1)) } answers {
+            resetToken1 = tokenCaptureSlot1.captured
+        }
+        every { emailHandler.sendActivateAccount(email2, capture(tokenCaptureSlot2)) } answers {
+            resetToken2 = tokenCaptureSlot2.captured
+        }
 
         databaseHandler =
-            DatabaseConnector(configuration, JdbcTemplate(dataSourceParam), NamedParameterJdbcTemplate(dataSourceParam))
+            DatabaseConnector(
+                configuration,
+                JdbcTemplate(dataSourceParam),
+                NamedParameterJdbcTemplate(dataSourceParam),
+                emailHandler
+            )
         databaseHandler.dropAllTables()
         databaseHandler.createInitialTables()
         addTestUsers()
@@ -366,8 +387,10 @@ class DatabaseConnectorTest(
     }
 
     private fun addTestUsers() {
-        databaseHandler.addUser(firstName1, lastName1, password1, email1, admin1)
-        databaseHandler.addUser(firstName2, lastName2, password2, email2, admin2)
+        databaseHandler.addUser(firstName1, lastName1, email1, admin1)
+        databaseHandler.setPassword(resetToken1, password1)
+        databaseHandler.addUser(firstName2, lastName2, email2, admin2)
+        databaseHandler.setPassword(resetToken2, password2)
     }
 
     private fun addTestArticles() {

@@ -61,9 +61,10 @@ dependencies {
     compile group: 'org.springframework', name: 'spring-jdbc', version: '5.1.1.RELEASE'
 
     compile group: 'com.zaxxer', name: 'HikariCP', version: '3.2.0'
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-mail', version: '2.1.0.RELEASE'
     
     testImplementation('org.springframework.boot:spring-boot-starter-test')
-    testImplementation("io.mockk:mockk:1.8.8")
+    testImplementation("io.mockk:mockk:1.8.10")
     testImplementation('junit:junit:4.12')
 }
 
