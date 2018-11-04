@@ -219,7 +219,6 @@ class DatabaseConnector(
             arrayThingy1 = "string_agg($FIELD_LOCATION_ID::character varying, ',') AS $FIELD_LOCATION_ID"
             arrayThingy2 = "string_agg($FIELD_LOCATION_NAME, ',') AS $FIELD_LOCATION_NAME"
             arrayThingy3 = "string_agg($FIELD_QUANTITY::character varying, ',') AS $FIELD_QUANTITY"
-
         }
 
         var sql =

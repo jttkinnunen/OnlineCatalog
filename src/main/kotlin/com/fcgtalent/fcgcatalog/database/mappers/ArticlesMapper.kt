@@ -25,7 +25,13 @@ open class ArticlesMapper : RowMapper<ArticleResult> {
         // TODO add what you ma call it, index out of bound protection
         try {
             locationIds?.forEachIndexed { index: Int, it ->
-                locationQuantity.add(LocationQuantityResult(it.toInt(), locationNames!![index], quantities!![index].toInt()))
+                locationQuantity.add(
+                    LocationQuantityResult(
+                        it.toInt(),
+                        locationNames!![index],
+                        quantities!![index].toInt()
+                    )
+                )
             }
         } catch (e: IndexOutOfBoundsException) {
             assert(false) { "Index out of bounds, shouldn't happen ${e.message}" }
@@ -43,7 +49,7 @@ open class ArticlesMapper : RowMapper<ArticleResult> {
     }
 }
 
-class ArticlesMapperNullDescription: ArticlesMapper() {
+class ArticlesMapperNullDescription : ArticlesMapper() {
     override fun mapRow(resultSet: ResultSet, rowNum: Int): ArticleResult? {
         val articleResult = super.mapRow(resultSet, rowNum)
         articleResult?.description = null

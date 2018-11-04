@@ -248,7 +248,10 @@ class CatalogController {
     @PostMapping("/setPassword")
     fun setPassword(@RequestBody setPasswordBody: SetPasswordBody): ResponseEntity<Any> {
         return encapsulateCall(null, adminOnly = false, publicCall = true) {
-            databaseConnector.setPassword(newPassword = setPasswordBody.newPassword, resetToken = setPasswordBody.resetToken)
+            databaseConnector.setPassword(
+                newPassword = setPasswordBody.newPassword,
+                resetToken = setPasswordBody.resetToken
+            )
         }
     }
 

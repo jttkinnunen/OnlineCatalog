@@ -253,7 +253,6 @@ class DatabaseConnectorTest(
     @Test
     fun testGetArticles() {
 
-
         val results = databaseHandler.getArticles(listOf(), listOf(), true)
         Assert.assertThat(results.size, `is`(2))
         val firstResult = results[0]
