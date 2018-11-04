@@ -168,7 +168,7 @@ class CatalogController {
     @PostMapping("/getArticlesDetailed", MediaType.APPLICATION_JSON_VALUE)
     fun getArticlesDetailed(@RequestBody getArticlesBody: GetArticlesBody): ResponseEntity<Any> {
         return encapsulateCall(getArticlesBody.token, false, false) {
-            databaseConnector.getArticles(getArticlesBody.ids ?: listOf())
+            databaseConnector.getArticles(getArticlesBody.ids ?: listOf(), listOf(), true)
         }
     }
 
@@ -176,7 +176,7 @@ class CatalogController {
     @PostMapping("/getArticles", MediaType.APPLICATION_JSON_VALUE)
     fun getArticles(@RequestBody getArticlesInLocationsBody: GetArticlesInLocationsBody): ResponseEntity<Any> {
         return encapsulateCall(getArticlesInLocationsBody.token, false, false) {
-            databaseConnector.getArticlesInLocations(
+            databaseConnector.getArticles(
                 getArticlesInLocationsBody.articleIds ?: listOf(),
                 getArticlesInLocationsBody.locationIds ?: listOf()
             )

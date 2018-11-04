@@ -16,25 +16,17 @@ data class UserResult @JsonCreator constructor(
     @JsonProperty val token: String? = null
 )
 
+/**
+ *
+ * article result is var, so it can be set to null if needed
+ */
 data class ArticleResult @JsonCreator constructor(
     @JsonProperty val id: Int,
     @JsonProperty val name: String,
     @JsonProperty val image: String?,
     @JsonProperty val last_change: Timestamp,
-    @JsonProperty val description: String?,
+    @JsonProperty var description: String?,
     @JsonProperty val locations: MutableList<LocationQuantityResult>? = null
-)
-
-// TODO fix up, remove and all other stuff......
-data class ArticlesInLocationsResult @JsonCreator constructor(
-    @JsonProperty val id: Int,
-    @JsonProperty val name: String,
-    @JsonProperty val image: String?,
-    @JsonProperty val last_change: Timestamp,
-    @JsonProperty val description: String?,
-    @JsonProperty("location_id") val locationId: Int,
-    @JsonProperty("location_name") val locationName: String,
-    @JsonProperty val quantity: Int
 )
 
 data class LocationResult @JsonCreator constructor(

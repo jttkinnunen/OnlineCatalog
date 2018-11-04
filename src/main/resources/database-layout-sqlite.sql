@@ -30,3 +30,19 @@ CREATE TABLE IF NOT EXISTS article_locations (
   FOREIGN KEY(location_id) REFERENCES location(id),
   PRIMARY KEY (location_id, article_id)
 );
+
+/*
+INSERt INTO articles(article_name) VALUES ("moo");
+INSERt INTO articles(article_name) VALUES ("moo2");
+INSERt INTO articles(article_name) VALUES ("moo3");
+
+INSERt INTO location(location_name) VALUES ("lccation");
+INSERt INTO location(location_name) VALUES ("lccation2");
+INSERt INTO location(location_name) VALUES ("lccation3");
+
+INSERT INTO article_locations(location_id, article_id, quantity) VALUES (1, 1, 2);
+INSERT INTO article_locations(location_id, article_id, quantity) VALUES (2, 1, 3);
+INSERT INTO article_locations(location_id, article_id, quantity) VALUES (1, 2, 4);
+
+SELECT location_id, article_id, location_name, quantity, article_name, image, last_change, description FROM articles INNER JOIN article_locations ON articles.id = article_locations.article_id INNER JOIN location ON location.id = article_locations.location_id
+ */
