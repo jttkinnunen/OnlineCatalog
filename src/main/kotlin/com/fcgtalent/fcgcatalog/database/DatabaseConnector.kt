@@ -2,16 +2,14 @@ package com.fcgtalent.fcgcatalog.database
 
 import com.fcgtalent.fcgcatalog.components.EmailHandler
 import com.fcgtalent.fcgcatalog.configuration.DatabaseConfiguration
-import com.fcgtalent.fcgcatalog.database.mappers.ArticleResultMapper
-import com.fcgtalent.fcgcatalog.database.mappers.ArticlesInLocationsMapper
+import com.fcgtalent.fcgcatalog.database.mappers.ArticlesMapper
+import com.fcgtalent.fcgcatalog.database.mappers.ArticlesMapperNullDescription
 import com.fcgtalent.fcgcatalog.database.mappers.AuthenticateTokenMapper
 import com.fcgtalent.fcgcatalog.database.mappers.LocationResultMapper
 import com.fcgtalent.fcgcatalog.database.mappers.LoginMapper
 import com.fcgtalent.fcgcatalog.database.mappers.UserResultMapper
 import com.fcgtalent.fcgcatalog.util.ArticleResult
-import com.fcgtalent.fcgcatalog.util.ArticlesInLocationsResult
 import com.fcgtalent.fcgcatalog.util.AuthenticationException
-import com.fcgtalent.fcgcatalog.util.LocationQuantityResult
 import com.fcgtalent.fcgcatalog.util.LocationResult
 import com.fcgtalent.fcgcatalog.util.UserResult
 import org.springframework.security.crypto.bcrypt.BCrypt
@@ -66,9 +64,9 @@ class DatabaseConnector(
         // TODO rethink this, this is just initial testing. But rethink the intiial table geneartion
         dropAllTables()
         createInitialTables()
-        addUser("antti", "pantti", "elefantti@hiano.fi", true)
-        addUser("Joni", "Laitala", "joni.laitala@gmail.com", true)
-        addUser("Erkki", "Esimerkki", "erkki.esimerkki@fcg.fi", true)
+        addUser("antti", "pantti", "test2", "elefantti@hiano.fi", true)
+        addUser("Joni", "Laitala", "test1", "joni.laitala@gmail.com", true)
+        addUser("Erkki", "Esimerkki", "test3", "erkki.esimerkki@fcg.fi", true)
         addLocation("Oulu")
         addLocation("Helsinki")
         addLocation("Kiutaköngäs")
@@ -133,6 +131,21 @@ class DatabaseConnector(
         }
     }
 
+    // This is for debug useasge, so that we don't neeed to deal with activateion always
+    @Throws(SQLException::class)
+    fun addUser(firstName: String, lastName: String, password: String, email: String, admin: Boolean, id: Int? = null) {
+        val sql =
+            "INSERT INTO $TABLE_USERS($FIELD_FIRST_NAME, $FIELD_LAST_NAME, $FIELD_PASSWORD, $FIELD_EMAIL, $FIELD_ADMIN) VALUES (?, ?, ?, ?, ?)"
+        jdbcTemplate.update(
+            sql,
+            firstName,
+            lastName,
+            password,
+            email,
+            if (admin) 1 else 0
+        )
+    }
+
     @Throws(SQLException::class)
     fun updateUser(id: Int, firstName: String, lastName: String, email: String, admin: Boolean) {
         val sql =
@@ -187,74 +200,55 @@ class DatabaseConnector(
     }
 
     @Throws(SQLException::class)
-    fun getArticles(articleIds: List<Int>): List<ArticleResult> {
-        var sql = "SELECT * FROM $TABLE_ARTICLES"
+    fun getArticles(
+        articleIds: List<Int>,
+        locationIds: List<Int>,
+        includeDescription: Boolean = false
+    ): List<ArticleResult> {
+        // TODO improve this fucking stupid array thingy roska moska
+        val arrayThingy1: String
+        val arrayThingy2: String
+        val arrayThingy3: String
 
-        if (articleIds.isEmpty()) {
-            return jdbcTemplate.query(sql, ArticleResultMapper())
+        // TODO clean this alias stuff? MNove it to the largtet statemenet?
+        if (configuration.type == "sqlite") {
+            arrayThingy1 = "GROUP_CONCAT($FIELD_LOCATION_ID) AS $FIELD_LOCATION_ID"
+            arrayThingy2 = "GROUP_CONCAT($FIELD_LOCATION_NAME) AS $FIELD_LOCATION_NAME"
+            arrayThingy3 = "GROUP_CONCAT($FIELD_QUANTITY) AS $FIELD_QUANTITY"
         } else {
-            // Need do build the statement manually, since sqlite doesn't support setArray
-            val parameters = MapSqlParameterSource()
-            parameters.addValue("ids", articleIds)
-            sql += " WHERE id IN (:ids)"
-            return namedParameterJdbcTemplate.query(sql, parameters, ArticleResultMapper())
+            arrayThingy1 = "string_agg($FIELD_LOCATION_ID::character varying, ',') AS $FIELD_LOCATION_ID"
+            arrayThingy2 = "string_agg($FIELD_LOCATION_NAME, ',') AS $FIELD_LOCATION_NAME"
+            arrayThingy3 = "string_agg($FIELD_QUANTITY::character varying, ',') AS $FIELD_QUANTITY"
         }
-    }
 
-    /**
-     * Damn this is ugly, but what can you do.. with having to use inner join and manually adding WHERE IN
-     */
-    @Throws(SQLException::class)
-    fun getArticlesInLocations(articleIds: List<Int>, locationIds: List<Int>): List<ArticleResult> {
         var sql =
-            "SELECT * FROM $TABLE_ARTICLE_LOCATIONS INNER JOIN $TABLE_ARTICLES ON $TABLE_ARTICLES.$FIELD_ID = " +
-                "$TABLE_ARTICLE_LOCATIONS.$FIELD_ARTICLE_ID INNER JOIN $TABLE_LOCATION ON $TABLE_LOCATION.$FIELD_ID = " +
-                "$TABLE_ARTICLE_LOCATIONS.$FIELD_LOCATION_ID"
+            "SELECT $arrayThingy1, $TABLE_ARTICLES.$FIELD_ID AS $FIELD_ARTICLE_ID, $arrayThingy2, $arrayThingy3, $FIELD_ARTICLE_NAME, $FIELD_IMAGE, $FIELD_LAST_CHANGE, $FIELD_DESCRIPTION " +
+                "FROM $TABLE_ARTICLES LEFT JOIN $TABLE_ARTICLE_LOCATIONS ON $TABLE_ARTICLES.$FIELD_ID = $TABLE_ARTICLE_LOCATIONS.$FIELD_ARTICLE_ID " +
+                "LEFT JOIN $TABLE_LOCATION ON $TABLE_LOCATION.$FIELD_ID = $TABLE_ARTICLE_LOCATIONS.$FIELD_LOCATION_ID"
 
-        val result: List<ArticlesInLocationsResult>
-        // TODO clean this if mess up a little
+        val result: List<ArticleResult>
+
+        val parameters = MapSqlParameterSource()
         if (locationIds.isNotEmpty() && articleIds.isNotEmpty()) {
             sql += " WHERE $TABLE_ARTICLES.$FIELD_ID IN (:articleIds) AND $TABLE_LOCATION.$FIELD_ID IN (:locationIds)"
-            val parameters = MapSqlParameterSource()
             parameters.addValue("articleIds", articleIds)
             parameters.addValue("locationIds", locationIds)
-            result = namedParameterJdbcTemplate.query(sql, parameters, ArticlesInLocationsMapper())
         } else if (locationIds.isNotEmpty()) {
             sql += " WHERE $TABLE_LOCATION.$FIELD_ID IN (:locationIds)"
-            val parameters = MapSqlParameterSource()
             parameters.addValue("locationIds", locationIds)
-            result = namedParameterJdbcTemplate.query(sql, parameters, ArticlesInLocationsMapper())
         } else if (articleIds.isNotEmpty()) {
             sql += " WHERE $TABLE_ARTICLES.$FIELD_ID IN (:articleIds)"
-            val parameters = MapSqlParameterSource()
             parameters.addValue("articleIds", articleIds)
-            result = namedParameterJdbcTemplate.query(sql, parameters, ArticlesInLocationsMapper())
-        } else {
-            result = jdbcTemplate.query(sql, ArticlesInLocationsMapper())
         }
+        sql += " GROUP BY $TABLE_ARTICLES.$FIELD_ID, $FIELD_ARTICLE_NAME, $FIELD_IMAGE, $FIELD_LAST_CHANGE, $FIELD_DESCRIPTION"
 
-        // TODO improve this and the entire thing. Just an ugly fast way of getting it to spec. Do better later
-        val finalResult = HashMap<Int, ArticleResult>()
+        result = namedParameterJdbcTemplate.query(
+            sql,
+            parameters,
+            if (includeDescription) ArticlesMapper() else ArticlesMapperNullDescription()
+        )
 
-        for (a in result) {
-            if (!finalResult.containsKey(a.id)) {
-                finalResult.put(
-                    a.id,
-                    ArticleResult(
-                        a.id,
-                        a.name,
-                        a.image,
-                        a.last_change,
-                        null,
-                        mutableListOf(LocationQuantityResult(a.locationId, a.locationName, a.quantity))
-                    )
-                )
-            } else {
-                finalResult.get(a.id)?.locations!!.add(LocationQuantityResult(a.locationId, a.locationName, a.quantity))
-            }
-        }
-
-        return finalResult.values.toMutableList()
+        return result
     }
 
     @Throws(SQLException::class)

@@ -252,7 +252,8 @@ class DatabaseConnectorTest(
 
     @Test
     fun testGetArticles() {
-        val results = databaseHandler.getArticles(listOf())
+
+        val results = databaseHandler.getArticles(listOf(), listOf(), true)
         Assert.assertThat(results.size, `is`(2))
         val firstResult = results[0]
         Assert.assertThat(firstResult.id, `is`(1))
@@ -288,7 +289,7 @@ class DatabaseConnectorTest(
     @Test
     fun testUpdateArticle() {
         // Confirm the current values
-        var results = databaseHandler.getArticles(listOf(1))
+        var results = databaseHandler.getArticles(listOf(1), listOf(), true)
         Assert.assertThat(results.size, `is`(1))
         var firstResult = results[0]
         Assert.assertThat(firstResult.id, `is`(1))
@@ -303,7 +304,7 @@ class DatabaseConnectorTest(
         databaseHandler.updateArticle(1, newName, newImage, newDescription)
 
         // Check that new values are active
-        results = databaseHandler.getArticles(listOf(1))
+        results = databaseHandler.getArticles(listOf(1), listOf(), true)
         Assert.assertThat(results.size, `is`(1))
         firstResult = results[0]
         Assert.assertThat(firstResult.id, `is`(1))
@@ -371,16 +372,16 @@ class DatabaseConnectorTest(
         databaseHandler.setArticlesAtLocation(2, 2, 4)
         databaseHandler.setArticlesAtLocation(1, 2, 1)
 
-        var result = databaseHandler.getArticlesInLocations(listOf(), listOf())
+        var result = databaseHandler.getArticles(listOf(), listOf())
         Assert.assertThat(result.size, `is`(2))
         Assert.assertThat(result[0].locations!!.size, `is`(1))
         Assert.assertThat(result[1].locations!!.size, `is`(2))
 
-        result = databaseHandler.getArticlesInLocations(listOf(1), listOf())
+        result = databaseHandler.getArticles(listOf(1), listOf())
         Assert.assertThat(result.size, `is`(1))
         Assert.assertThat(result[0].locations!!.size, `is`(1))
 
-        result = databaseHandler.getArticlesInLocations(listOf(), listOf(1))
+        result = databaseHandler.getArticles(listOf(), listOf(1))
         Assert.assertThat(result.size, `is`(2))
         Assert.assertThat(result[0].locations!!.size, `is`(1))
         Assert.assertThat(result[1].locations!!.size, `is`(1))
