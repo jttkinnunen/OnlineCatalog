@@ -5,7 +5,9 @@ import Events from './components/Events.js';
 import Navigation_bar from './components/Navigation.js';
 import Footer from './components/Footer.js';
 import Articles from "./components/content-components/Articles";
+import { Route } from "react-router-dom";
 
+// TODO: You need to also change this in ActivateUser thanks to bad coding
 const HOST = "http://localhost:8080";
 
 // TODO: Env variables for IP, POST queries
@@ -182,13 +184,13 @@ class App extends Component {
                     if (responseJson.hasOwnProperty('error'))
                     this.setState({login_state: "Käyttäjätunnus ja salasana eivät täsmää"});
                         else
-                    this.setState({login_state: "Yhteysvirhe"});
+                    this.setState({login_state: "Yhteysongelma"});
                     // TODO: inform of unsuccessful login
                 }
             })
             .catch(err => {
                 this.setState({
-                    login_state: "Yhteysvirhe",
+                    login_state: "Yhteysongelma",
                     debugval: this.state.debugval + " Error-fetching-token:" + err,
                 })
             })
@@ -238,7 +240,6 @@ class App extends Component {
     render() {
         return (
             <div className="App">
-
                     <header className="App-header">
 
                         <div className = "navigation-bar" >
