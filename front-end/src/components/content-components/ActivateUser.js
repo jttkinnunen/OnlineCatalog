@@ -118,7 +118,7 @@ class ActivateUser extends React.Component {
                         <Form>
                             <h5 className = "white-h5">Aktivoi tunnuksesi</h5>
                             <p>
-                                <h6 className = "white-h6">Tervetuloa käyttämään Matskua, Placeholder! Aseta itsellesi salasana ja pääset heti hommiin.</h6>
+                                <h6 className = "white-h6">Tervetuloa käyttämään Matskua! Aseta itsellesi salasana ja pääset heti hommiin.</h6>
                             </p>
 
                             <FormGroup>

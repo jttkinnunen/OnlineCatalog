@@ -8,33 +8,41 @@ class AddUser extends React.Component {
             first_name: '',
             last_name: '',
             email: '',
+            admin: false
         };
         this.handleFirstNameChange = this.handleFirstNameChange.bind(this);
         this.handleLastNameChange = this.handleLastNameChange.bind(this);
         this.handleEmailChange = this.handleEmailChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleAdminChange = this.handleAdminChange.bind(this);
     }
 
     handleFirstNameChange(event) {
         this.setState({
-            user: event.target.value,
+            first_name: event.target.value,
         })
     }
 
     handleLastNameChange(event) {
         this.setState({
-            pass: event.target.value,
+            last_name: event.target.value,
         })
     }
 
     handleEmailChange(event) {
         this.setState({
-            pass: event.target.value,
+            email: event.target.value,
+        })
+    }
+
+    handleAdminChange(event) {
+        this.setState({
+            admin: event.target.value,
         })
     }
 
     handleSubmit() {
-        this.props.login(this.state.user, this.state.pass);
+        this.props.addUser(this.state.email, this.state.first_name, this.state.last_name, this.state.admin);
     }
 
     render() {
@@ -57,9 +65,12 @@ class AddUser extends React.Component {
                         <Input type="text" name="lastname" id="LastName" placeholder="Sukunimi" value = {this.state.last_name} onChange = {this.handleLastNameChange}/>
                     </span>
                 </FormGroup>
+
+
+
                 <FormGroup check>
                     <Label check className = "standard-text-color">
-                        <Input type="checkbox" />{' '}
+                        <Input type="checkbox" value = {this.state.admin} onChange = {this.handleAdminChange} />{' '}
                         Ylläpitäjä
                     </Label>
                 </FormGroup>
@@ -73,6 +84,7 @@ class AddUser extends React.Component {
 
                 </FormGroup>
                 <br/>
+                <h6 className = "standard-text-color">{this.props.add_user_state}</h6>
 
             </Form>
         );

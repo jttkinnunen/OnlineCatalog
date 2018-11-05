@@ -9,6 +9,7 @@ class ForgotPassword extends React.Component {
         };
         this.handleEmailChange = this.handleEmailChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleBack = this.handleBack.bind(this);
     }
 
     handleEmailChange(event) {
@@ -17,8 +18,16 @@ class ForgotPassword extends React.Component {
         })
     }
 
-
     handleSubmit() {
+        if (this.state.email_address.length > 3) {
+            this.props.forgotPassword(this.state.email_address);
+            this.setState({
+                email_address: "",
+            })
+        }
+    }
+
+    handleBack() {
         this.props.setView("login");
     }
 
@@ -40,9 +49,10 @@ class ForgotPassword extends React.Component {
                     <br/>
                     <FormGroup className = "left-buttons">
                         <Button className="btn btn-success" onClick={() => {this.handleSubmit()}}>Lähetä</Button>
+                        <Button className="btn" onClick={() => {this.handleBack()}}>Takaisin</Button>
                     </FormGroup>
                     <br/>
-
+                    <h6 className = "standard-text-color">{this.props.pass_reset_state}</h6>
                 </Form>
             </Jumbotron>
         );

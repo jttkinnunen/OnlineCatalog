@@ -73,10 +73,6 @@ class Navigation extends React.Component {
                     <DropdownItem onClick={() => this.props.setView("audit-log")}>
                         Tapahtumat (Admin)
                     </DropdownItem>
-
-                    <DropdownItem onClick={() => this.props.setView("activate-user")}>
-                        Aktivoi tunnus (TESTI)
-                    </DropdownItem>
                 </div>
             )
         }

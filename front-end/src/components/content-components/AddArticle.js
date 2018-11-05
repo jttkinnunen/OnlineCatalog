@@ -13,13 +13,13 @@ class AddArticle extends React.Component {
 
         return (
             <div className = "standard-text-color" id="productform">
+                <h5 className = "white-h5">Lisää uusi artikkeli</h5>
                 <Form >
                     <FormGroup row>
-                        <Label for="productName" sm={2}>Tuotenimi</Label>
+                        <Label for="productName" sm={2}>Nimi</Label>
                         <Col sm={10}>
-                            <Input valid placeholder='Esim. "FCGTalent, Paita, Punainen, XL ..."' />
+                            <Input placeholder='Esim. "FCGTalent, Paita, Punainen, XL ..."' />
                         </Col>
-                        <FormFeedback valid tooltip>Tuotenimi on saatavilla</FormFeedback>
                     </FormGroup>
 
                     <FormGroup row>
@@ -34,7 +34,7 @@ class AddArticle extends React.Component {
                     </FormGroup>
 
                     <FormGroup row>
-                        <Label for="exampleText" sm={2}>Tuotteen kuvaus</Label>
+                        <Label for="exampleText" sm={2}>Kuvaus</Label>
                         <Col sm={10}>
                             <Input type="textarea" name="text" id="exampleText" />
                         </Col>

@@ -13,13 +13,12 @@ class EmailHandler(val emailSender: JavaMailSender) {
     ) {
         val message = SimpleMailMessage()
         message.setTo(to)
-        // TODO add better title
-        message.setSubject("Reset your password")
-        message.setText("Hello\n" +
-            "\n" +
-            // TODO add correct, address thigny
-            "Please go to https://localhost/ \n" +
-            "To reset your password")
+        // TODO add env variable host address
+        message.setSubject("Matsku salasanan vaihtaminen")
+        message.setText("Hei,\n" +
+                "Olet pyytänyt Matsku käyttäjätunnuksesi salasanan vaihtamista.\n"+
+                "Mene osoitteeseen http://localhost:3000/activate?forgot=true&key=" + token + " asettaaksesi tilillesi uuden salasanan.\n" +
+                "Linkki on kertakäyttöinen.")
         emailSender.send(message)
     }
 
@@ -29,13 +28,12 @@ class EmailHandler(val emailSender: JavaMailSender) {
     ) {
         val message = SimpleMailMessage()
         message.setTo(to)
-        // TODO add better title
-        message.setSubject("Activate your account")
-        message.setText("Hello" +
-            "\n" +
-            // TODO add correct, address thigny
-            "Please go to https://localhost/ \n " +
-            "To Activate your account")
+        // TODO add env variable host address
+        message.setSubject("Matsku käyttäjätunnuksen aktivointi")
+        message.setText("Hei,\n" +
+                "Sinulle on luotu FCG Talent Matsku käyttäjätunnus.\n"+
+                "Mene osoitteeseen http://localhost:3000/activate?key=" + token + " aktivoidaksesi käyttäjätunnuksesi\n" +
+                "Linkki on kertakäyttöinen.")
         emailSender.send(message)
     }
 }

@@ -19,6 +19,7 @@ class UserManagement extends React.Component {
 
         return(
             <div className = "usermanagement-body">
+                <h5 className = "white-h5">Käyttäjien hallinta</h5>
                 <Table striped bordered hover responsive size="sm" className = "usermanagement-table">
                     <thead>
                         <tr>
@@ -51,7 +52,7 @@ class UserManagement extends React.Component {
                         )
                     })}</tbody>
                 </Table>
-                <Button id="addbtn" color="primary" onClick={() => this.props.setView("add-user")}>Lisää uusi käyttäjä</Button>
+                <Button id="addbtn" color="success" onClick={() => this.props.setView("add-user")}>Lisää uusi käyttäjä</Button>
                 <Button id="deletebtn" color="danger">Poista valitut</Button>
             </div>
         );

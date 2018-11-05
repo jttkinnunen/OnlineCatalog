@@ -22,13 +22,17 @@ class App extends Component {
         this.getUsers = this.getUsers.bind(this);
         this.getArticles = this.getArticles.bind(this);
         this.setQuery = this.setQuery.bind(this);
+        this.addUser = this.addUser.bind(this);
+        this.forgotPassword = this.forgotPassword.bind(this);
 
         this.state = {
             // TODO: Tähän kaikki mahdolliset muuttujat mitä sivulla voi olla. Päivitetään alielementeille tarvittaessa.
             current_view: "login", // articles, activate-user, add-article, audit-log, article-detailed, login, manage-users, forgot-pass, change-pass, profile-page, add-user
             debugval: "",
             login_state: "",
+            add_user_state: "",
             query: "",
+            pass_reset_state: "",
             user: {
                 first_name: "",
                 last_name: "",
@@ -60,12 +64,13 @@ class App extends Component {
     getArticles() {
         this.postJsonRequest("/getArticles", {token: this.state.user.token})
         .then((responseJson) => {
-
-            this.setState({
-                articles: responseJson,
-            })
-            // Set search filter to nothing
-            this.setQuery(this.state.query);
+            if (responseJson.hasOwnProperty('error') === false){
+                this.setState({
+                    articles: responseJson,
+                });
+            }
+                // Set search filter to nothing
+                this.setQuery(this.state.query);
         })
         .catch(err => {
             this.setState({
@@ -110,43 +115,57 @@ class App extends Component {
             })
     }
 
+
+
     // TODO: Back-end ei tue vielä
-    changePassword(old_pass, new_pass){
-        this.postJsonRequest("/changePassword", {
-            oldPassword: old_pass,
-            newPassword: new_pass
+    forgotPassword(email){
+
+        this.setState({pass_reset_state: "Lähetetään ..."});
+
+        this.postJsonRequest("/startPasswordReset", {
+            email: email,
         })
             .then((responseJson) => {
-
+                if (responseJson.hasOwnProperty('error')) {
+                    this.setState({pass_reset_state: "Tapahtui virhe"})
+                }
+                else
                 this.setState({
-                    locations: responseJson,
+                    pass_reset_state: "Pyyntö lähetetty, tarkista sähköpostisi.",
                 })
             })
             .catch(err => {
                 this.setState({
-                    debugval: this.state.debugval + " Error-fetching-locations" + err,
+                    pass_reset_state: "Tapahtui virhe: " + err
                 })
             })
     }
 
-    // TODO: Back-end ei tue vielä
-    addUser(user_email, first_name, last_name){
+    addUser(user_email, first_name, last_name, admin){
+
+        this.setState({add_user_state: "Lisätään ..."});
+
         this.postJsonRequest("/addUser", {
                 token: this.state.user.token,
-                firstName: first_name,
-                lastName: last_name,
-                email: user_email
+                first_name: first_name,
+                last_name: last_name,
+                email: user_email,
+                admin: admin
             })
             .then((responseJson) => {
+                if (responseJson.hasOwnProperty('error')) {
+                    // TODO: Lue "error" sisältö ja anna tarkempi virhe
 
-                // TODO: ota vastauksesta tieto onnistuiko
-                this.setState({
-                    //
-                })
+                    this.setState({add_user_state: "Käyttäjän lisääminen epäonnistui"});
+                }
+                else
+                {
+                    this.setState({add_user_state: "Käyttäjän lisääminen onnistui."});
+                }
             })
             .catch(err => {
                 this.setState({
-                    debugval: this.state.debugval + " Error-adding-user" + err,
+                    add_user_state: "Tapahtui virhe: " + err
                 })
             })
     }
@@ -258,9 +277,12 @@ class App extends Component {
                                          user = {this.state.user}
                                          current_view = {this.state.current_view}
                                          articles = {this.state.articles_filtered}
+                                         add_user_state = {this.state.add_user_state}
                                          setView = {this.setView}
                                          login = {this.login}
-
+                                         addUser = {this.addUser}
+                                         forgotPassword = {this.forgotPassword}
+                                         pass_reset_state = {this.state.pass_reset_state}
                                 />
                             </div>
                         </div>
