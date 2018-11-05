@@ -53,12 +53,12 @@ class Content extends React.Component {
 
         if (this.props.current_view === "forgot-pass")
             return (
-                <ForgotPassword setView = {this.props.setView} />
+                <ForgotPassword setView = {this.props.setView} forgotPassword = {this.props.forgotPassword} pass_reset_state = {this.props.pass_reset_state} />
             );
 
         if (this.props.current_view === "add-user")
             return (
-                <AddUser/>
+                <AddUser addUser = {this.props.addUser} add_user_state = {this.props.add_user_state}/>
             );
 
         if (this.props.current_view === "activate-user")

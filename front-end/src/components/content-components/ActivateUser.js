@@ -10,7 +10,7 @@ const HOST = "http://localhost:8080";
 
 // Status messages
 const P_PROGRESS = "Aktivoidaan ...";
-const P_SUCCESS = "Tunnus on aktivoitu!";
+const P_SUCCESS = "Tehty. Voit nyt kirjautua Matsku palvelussa uudella salasanallasi.";
 const P_ERR_CONNECTION = "Yhteysongelma";
 const P_TOO_SHORT = "Salasanan tulee olla vähintään 6 merkkiä pitkä";
 const P_AUTH_ERROR = "Tunnus on jo aktivoitu tai sitä ei löytynyt tietokannasta";
@@ -118,7 +118,7 @@ class ActivateUser extends React.Component {
                         <Form>
                             <h5 className = "white-h5">Aktivoi tunnuksesi</h5>
                             <p>
-                                <h6 className = "white-h6">Tervetuloa käyttämään Matskua, Placeholder! Aseta itsellesi salasana ja pääset heti hommiin.</h6>
+                                <h6 className = "white-h6">Tervetuloa käyttämään Matskua! Aseta itsellesi salasana ja pääset heti hommiin.</h6>
                             </p>
 
                             <FormGroup>
@@ -140,7 +140,7 @@ class ActivateUser extends React.Component {
                             </FormGroup>
                             <h6 className = "standard-text-color">{this.state.activation_result}</h6>
                             <br/>
-
+                            <a href="/">Tästä pääset Matsku palveluun</a>
                         </Form>
                     </Jumbotron>
             </div>

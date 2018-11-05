@@ -23,6 +23,7 @@ class ProfilePage extends React.Component {
         return(
             <div>
                 <br/>
+                <h5 className = "white-h5">Oma profiili</h5>
                 <h6 className="standard-text-color">{this.props.user.first_name} {this.props.user.last_name}</h6>
                 <h6 className="standard-text-color">{this.props.user.email}</h6>
                 <h6 className="standard-text-color">{userType}</h6>
