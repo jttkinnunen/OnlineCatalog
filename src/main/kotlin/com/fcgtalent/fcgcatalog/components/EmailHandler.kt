@@ -17,7 +17,7 @@ class EmailHandler(val emailSender: JavaMailSender) {
         message.setSubject("Matsku salasanan vaihtaminen")
         message.setText("Hei,\n" +
                 "Olet pyytänyt Matsku käyttäjätunnuksesi salasanan vaihtamista.\n"+
-                "Mene osoitteeseen http://localhost:3000/activate?forgot=true&key=" + token + " asettaaksesi tilillesi uuden salasanan.\n" +
+                "Mene osoitteeseen http://localhost:3000/activate?forgot=true&key=" + token + " asettaaksesi tilillesi uuden salasanan.\n\n" +
                 "Linkki on kertakäyttöinen.")
         emailSender.send(message)
     }
@@ -32,7 +32,7 @@ class EmailHandler(val emailSender: JavaMailSender) {
         message.setSubject("Matsku käyttäjätunnuksen aktivointi")
         message.setText("Hei,\n" +
                 "Sinulle on luotu FCG Talent Matsku käyttäjätunnus.\n"+
-                "Mene osoitteeseen http://localhost:3000/activate?key=" + token + " aktivoidaksesi käyttäjätunnuksesi\n" +
+                "Mene osoitteeseen http://localhost:3000/activate?key=" + token + " aktivoidaksesi käyttäjätunnuksesi.\n\n" +
                 "Linkki on kertakäyttöinen.")
         emailSender.send(message)
     }
