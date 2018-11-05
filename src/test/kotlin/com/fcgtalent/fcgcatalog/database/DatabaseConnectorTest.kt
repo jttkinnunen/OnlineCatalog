@@ -193,6 +193,18 @@ class DatabaseConnectorTest(
     }
 
     @Test
+    fun testAddTestUser() {
+        databaseHandler.addTestUser("moo1,", "moo2", "moo3", "moo4", true)
+        val result = databaseHandler.login("moo4", "moo3")
+        Assert.assertTrue(UUID.fromString(result.token) != null)
+        Assert.assertThat(result.admin, `is`(true))
+        Assert.assertThat(result.email, `is`("moo4"))
+        Assert.assertThat(result.firstName, `is`("moo1,"))
+        Assert.assertThat(result.lastName, `is`("moo2"))
+    }
+
+
+    @Test
     fun testAuthenticateToken_success() {
         // Check one with admin privileges
         val result1: UserResult = databaseHandler.login(email1, password1)
