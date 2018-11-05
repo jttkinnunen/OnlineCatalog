@@ -7,6 +7,7 @@ import Footer from './components/Footer.js';
 import Articles from "./components/content-components/Articles";
 import { Route } from "react-router-dom";
 
+// TODO: You need to also change this in ActivateUser thanks to bad coding
 const HOST = "http://localhost:8080";
 
 // TODO: Env variables for IP, POST queries
