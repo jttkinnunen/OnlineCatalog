@@ -64,9 +64,9 @@ class DatabaseConnector(
         // TODO rethink this, this is just initial testing. But rethink the intiial table geneartion
         dropAllTables()
         createInitialTables()
-        addUser("antti", "pantti", "test2", "elefantti@hiano.fi", true)
-        addUser("Joni", "Laitala", "test1", "joni.laitala@gmail.com", true)
-        addUser("Erkki", "Esimerkki", "test3", "erkki.esimerkki@fcg.fi", true)
+        addTestUser("antti", "pantti", "test2", "elefantti@hiano.fi", true)
+        addTestUser("Joni", "Laitala", "test1", "joni.laitala@gmail.com", true)
+        addTestUser("Erkki", "Esimerkki", "test3", "erkki.esimerkki@fcg.fi", true)
         addLocation("Oulu")
         addLocation("Helsinki")
         addLocation("Kiutaköngäs")
@@ -114,7 +114,7 @@ class DatabaseConnector(
     }
 
     @Throws(SQLException::class)
-    fun addUser(firstName: String, lastName: String, email: String, admin: Boolean, id: Int? = null) {
+    fun addUser(firstName: String, lastName: String, email: String, admin: Boolean) {
         val sql =
             "INSERT INTO $TABLE_USERS($FIELD_FIRST_NAME, $FIELD_LAST_NAME, $FIELD_EMAIL, $FIELD_ADMIN, $FIELD_RESET_TOKEN) VALUES (?, ?, ?, ?, ?)"
         val resetToken = UUID.randomUUID().toString()
@@ -133,14 +133,14 @@ class DatabaseConnector(
 
     // This is for debug useasge, so that we don't neeed to deal with activateion always
     @Throws(SQLException::class)
-    fun addUser(firstName: String, lastName: String, password: String, email: String, admin: Boolean, id: Int? = null) {
+    fun addTestUser(firstName: String, lastName: String, password: String, email: String, admin: Boolean) {
         val sql =
             "INSERT INTO $TABLE_USERS($FIELD_FIRST_NAME, $FIELD_LAST_NAME, $FIELD_PASSWORD, $FIELD_EMAIL, $FIELD_ADMIN) VALUES (?, ?, ?, ?, ?)"
         jdbcTemplate.update(
             sql,
             firstName,
             lastName,
-            password,
+            BCrypt.hashpw(password, BCrypt.gensalt(4)),
             email,
             if (admin) 1 else 0
         )
@@ -298,9 +298,7 @@ class DatabaseConnector(
         val user = jdbcTemplate.query(sql, arrayOf<Any>(username), LoginMapper())
         if (user.isNotEmpty()) {
             if (BCrypt.checkpw(password, user[0].password)) {
-
                 val token = addNewTokenForUse(user[0].id)
-
                 return getUserWithToken(token)
             }
         }
