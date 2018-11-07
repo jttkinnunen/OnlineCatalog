@@ -3,6 +3,7 @@ import Articles from "./Articles";
 import {Card, Button, CardImg, CardText, CardBody, CardTitle, Row, Col, ButtonGroup, CardSubtitle, Input,TabPane, InputGroup } from 'reactstrap';
 import {Tab, Tabs, TabList, TabPanel} from 'react-tabs';
 import 'react-tabs/style/react-tabs.css';
+import '../../css/Text.css';
 import '../../css/ArticleDetailed.css';
 
 
@@ -55,7 +56,7 @@ class ArticleDetailed extends React.Component {
         return(
 
             <div className="detailed-articles">
-
+                <h5 className = "white-h5"><strong>Joku otsikko</strong></h5>
                 <div className="card-holder">
                     <Card classname ="detailed">
                         <CardImg top width="100%" src="https://placeholdit.imgix.net/~text?txtsize=33&txt=256%C3%97180&w=256&h=180" alt="Card image cap" />

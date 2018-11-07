@@ -1,4 +1,5 @@
 import React from "react";
+import '../../css/Text.css';
 
 class AuditLog extends React.Component {
     render() {

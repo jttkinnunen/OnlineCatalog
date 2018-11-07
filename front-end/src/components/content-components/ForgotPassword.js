@@ -1,5 +1,7 @@
 import React from "react";
 import { Form, Input, FormGroup,  Button, Jumbotron} from "reactstrap";
+import '../../css/Text.css';
+import '../../css/Buttons.css';
 
 class ForgotPassword extends React.Component {
     constructor(props) {
@@ -33,7 +35,7 @@ class ForgotPassword extends React.Component {
 
     render() {
         return(
-
+            <div className="logfields">
                 <Form>
                     <h5 className = "white-h5">Unohdin salasanani :(</h5>
                     <p>
@@ -49,11 +51,12 @@ class ForgotPassword extends React.Component {
                     <br/>
                     <FormGroup className = "left-buttons">
                         <Button className="btn btn-success" onClick={() => {this.handleSubmit()}}>Lähetä</Button>
-                        <Button className="btn" onClick={() => {this.handleBack()}}>Takaisin</Button>
+                        <Button className="btn-primary" onClick={() => {this.handleBack()}}>Takaisin</Button>
                     </FormGroup>
                     <br/>
-                    <h6 className = "standard-text-color">{this.props.pass_reset_state}</h6>
+                    <h6 className = "standard-dark-text-color">{this.props.pass_reset_state}</h6>
                 </Form>
+            </div>
 
         );
     }

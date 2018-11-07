@@ -1,6 +1,7 @@
 import React from "react";
 import { Form, Input, FormGroup, Label, Button, Jumbotron} from "reactstrap";
 import '../../css/ChangePassword.css';
+import '../../css/Text.css';
 
 class ChangePassword extends React.Component {
     constructor(props) {

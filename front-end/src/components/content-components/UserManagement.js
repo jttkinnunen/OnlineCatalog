@@ -1,6 +1,7 @@
 import React from "react";
 import { Table, Input, Button } from 'reactstrap';
 import '../../css/UserManagement.css';
+import '../../css/Text.css';
 
 class UserManagement extends React.Component {
     constructor(props) {

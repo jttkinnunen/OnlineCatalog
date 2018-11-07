@@ -1,6 +1,10 @@
 import React from "react";
 import { Form, Input, FormGroup, Button, Jumbotron} from "reactstrap";
 import queryString from 'query-string';
+import '../../css/App.css';
+import '../../css/Login.css';
+import '../../css/Buttons.css';
+import '../../css/Text.css';
 
 
 // TODO: What if user tries to activate multiple times? proper checks and output missing
@@ -113,10 +117,10 @@ class ActivateUser extends React.Component {
 
     render() {
         return(
-            <div className="App App-header">
-                    <Jumbotron className = "align-self-center">
+            <div className="App-header">
+                <div className = "body logfields justify-content-center">
                         <Form>
-                            <h5 className = "white-h5">Aktivoi tunnuksesi</h5>
+                            <h5 className = "white-h5">Aktivoi Matsku tunnuksesi</h5>
                             <p>
                                 <h6 className = "white-h6">Tervetuloa käyttämään Matskua! Aseta itsellesi salasana ja pääset heti hommiin.</h6>
                             </p>
@@ -135,14 +139,14 @@ class ActivateUser extends React.Component {
 
                             <FormGroup>
 
-                                <Button className="btn btn-success" onClick={this.handleSubmit}>Aktivoi</Button>
+                                <Button className="btn-primary  btn-wide" onClick={this.handleSubmit}>Aktivoi</Button>
 
                             </FormGroup>
-                            <h6 className = "standard-text-color">{this.state.activation_result}</h6>
+                            <h6 className = "standard-white-text-color">{this.state.activation_result}</h6>
                             <br/>
-                            <a href="/">Tästä pääset Matsku palveluun</a>
+                            <a href="/" id="pass" >Tästä pääset Matsku palveluun</a>
                         </Form>
-                    </Jumbotron>
+                </div>
             </div>
         );
     }

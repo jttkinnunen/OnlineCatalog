@@ -1,6 +1,8 @@
 import React from "react";
 import { Col, Button, Form, FormGroup, Label, FormFeedback, Progress, Input, Alert, FormText } from 'reactstrap';
 import '../../css/AddArticle.css';
+import '../../css/Buttons.css';
+import '../../css/Text.css';
 // TODO: All functionality, formatting
 
 class AddArticle extends React.Component {
@@ -12,8 +14,8 @@ class AddArticle extends React.Component {
         let success;
 
         return (
-            <div className = "standard-text-color" id="productform">
-                <h5 className = "white-h5"><strong>Uuden tuotteen lisäys</strong></h5>
+            <div className = "standard-dark-text-color" id="productform">
+                <h5 className = "white-h5"><strong>Uuden artikkelin lisäys</strong></h5>
                 <Form >
                     <FormGroup row>
                         <Label for="productName" id="labels" sm={2}>Nimi</Label>
@@ -57,7 +59,7 @@ class AddArticle extends React.Component {
 
                     <FormGroup check row>
                         <Col sm={{ size: 10, offset: 1 }}>
-                            <Button className="newproduct">Lähetä</Button>
+                            <Button className="btn-add-article">Lähetä</Button>
                         </Col>
                     </FormGroup>
                 </Form>

@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import './css/App.css';
+import './css/Text.css';
 import Content from './components/Content.js';
 import Events from './components/Events.js';
 import Navigation_bar from './components/Navigation.js';
@@ -269,7 +270,7 @@ class App extends Component {
                                             setQuery = {this.setQuery}
                             />
                         </div>
-                        <Events current_view = {this.state.current_view} />
+                        <Events current_view = {this.state.current_view} className = "events"/>
                         <div className = "body">
                             <div className = "content">
                                 <Content login_state = {this.state.login_state}
