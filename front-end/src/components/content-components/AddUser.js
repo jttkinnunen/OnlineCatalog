@@ -69,13 +69,13 @@ class AddUser extends React.Component {
 
 
                 <FormGroup check>
-                    <Label check className = "standard-text-color">
+                    <Label check className = "standard-dark-text-color">
                         <Input type="checkbox" value = {this.state.admin} onChange = {this.handleAdminChange} />{' '}
                         Ylläpitäjä
                     </Label>
                 </FormGroup>
 
-                <div className = "standard-text-color">Käyttäjälle lähetetään sähköpostiin linkki josta hän voi aktivoida tilin ja asettaa salasanan.</div>
+                <div className = "standard-dark-text-color">Käyttäjälle lähetetään sähköpostiin linkki josta hän voi aktivoida tilin ja asettaa salasanan.</div>
                 <br/>
 
                 <FormGroup>
@@ -84,7 +84,7 @@ class AddUser extends React.Component {
 
                 </FormGroup>
                 <br/>
-                <h6 className = "standard-text-color">{this.props.add_user_state}</h6>
+                <h6 className = "standard-dark-text-color">{this.props.add_user_state}</h6>
 
             </Form>
         );

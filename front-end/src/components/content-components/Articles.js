@@ -3,6 +3,7 @@ import {Card, CardDeck, Button, CardImg, Col, Row, Container, CardSubtitle, Card
     CardTitle } from 'reactstrap';
 
 import '../../css/Articles.css';
+import '../../css/Text.css';
 
 class Articles extends React.Component {
     constructor(props) {

@@ -8,9 +8,10 @@
     /*border: 2px solid black;*/
 }
 .navbar {
-   display: flex;
+    display: flex;
     justify-content: flex-start;
-    background-color: rgb(0,71,111);
+    background-color: rgb(0, 71, 111);
+
 }
 div .navbar .ml-auto {
     color: rgb(0,117,160);
@@ -51,8 +52,8 @@ div .navbar .ml-auto {
 .feather-unlock {
     color:#fff;
     margin-left: 3px;
-
 }
+
 .feather-unlock:hover {
     cursor: pointer;
 }

@@ -1,6 +1,8 @@
 import React from "react";
 import { Col, Button, Jumbotron, Form, FormGroup, FormFeedback, Label, Input, FormText } from 'reactstrap';
 import '../../css/Login.css';
+import '../../css/Buttons.css';
+import '../../css/Text.css';
 
 
 // TODO: Katso linkki alta, hyödyllinen
@@ -65,7 +67,7 @@ class Login extends React.Component {
             <div className="logfields">
                 <Form>
                     <h5 className = "white-h5">Kirjaudu sisään</h5>
-                    <h6 className = "white-h6">(Käytä sähköpostia erkki.esimerkki@fcg.fi ja salasanaa testi3)</h6>
+                    <h6 className = "white-h6">(Käytä sähköpostia erkki.esimerkki@fcg.fi ja salasanaa test3)</h6>
 
                     <FormGroup>
                         <span>
@@ -88,7 +90,7 @@ class Login extends React.Component {
 
                         </span>
                     </FormGroup>
-                    <h6 className = "standard-text-color">{login_result}</h6>
+                    <h6 className = "standard-white-text-color">{login_result}</h6>
                     <br/>
 
                     <FormGroup>

@@ -109,16 +109,3 @@
 div.col-sm-6, div.text-right.col-sm-6{
   padding: 0px;
 }
-
-.standard-text-color{
-    color: #000;
-}
-
-.white-h5  {
-    color: floralwhite;
-    margin-bottom: 50px;
-}
-.white-h6  {
-    color: floralwhite;
-    margin-bottom: 50px;
-}

@@ -1,0 +1,36 @@
+
+
+{/*
+TODO: Tee yhtenäiset muotoilut! nyt turhaa toistoa. Esim kaikki neutral napit voi käyttää samaa muotoilua tältä sivulta
+TODO: sen sijaan että jokaiselle olisi oma kuten nyt on.
+*/}
+
+.Button {
+
+}
+
+.btn-primary {
+    background-color: rgb(0,71,111);
+    border: 0;
+}
+.btn-primary:hover {
+    background: rgb(0,117,160);
+}
+.btn-primary:active:focus {
+    color: #ffffff;
+    background-color: rgb(0,71,111);
+}
+
+.btn-add-article {
+    background-color: rgb(0,71,111);
+    border: 0;
+    width: 100px;
+}
+
+#btn-change-pass {
+    background-color: rgb(0,117,160);
+}
+
+#btn-change-pass:hover {
+    background-color: rgb(0,71,111);
+}
