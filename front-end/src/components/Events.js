@@ -1,6 +1,6 @@
 import React from "react";
 import {Collapse, Button, Table} from 'reactstrap';
-
+import '../css/Events.css';
 // Kannattaa katsoa navbaria ja sen collapse ominaisuutta ainakin.
 // https://reactstrap.github.io/components/navbar/
 
@@ -51,6 +51,25 @@ class Events extends React.Component {
                     <td>Oulu</td>
                     <td>120 kpl</td>
                 </tr>
+            <br/>
+
+
+               {/* <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none"
+                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                     className="feather feather-arrow-up">
+                    <line x1="12" y1="19" x2="12" y2="5"></line>
+                    <polyline points="5 12 12 5 19 12"></polyline>
+
+                </svg>*/}
+                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none"
+                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                     className="feather feather-arrow-up-circle">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <polyline points="16 12 12 8 8 12"></polyline>
+                    <line x1="12" y1="16" x2="12" y2="8"></line>
+                </svg>
+
+
             </tbody>
         }
         else

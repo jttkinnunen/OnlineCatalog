@@ -33,7 +33,7 @@ class ForgotPassword extends React.Component {
 
     render() {
         return(
-            <Jumbotron>
+
                 <Form>
                     <h5 className = "white-h5">Unohdin salasanani :(</h5>
                     <p>
@@ -54,7 +54,7 @@ class ForgotPassword extends React.Component {
                     <br/>
                     <h6 className = "standard-text-color">{this.props.pass_reset_state}</h6>
                 </Form>
-            </Jumbotron>
+
         );
     }
 }

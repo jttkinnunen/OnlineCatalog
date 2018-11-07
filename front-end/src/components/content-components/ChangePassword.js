@@ -1,5 +1,6 @@
 import React from "react";
 import { Form, Input, FormGroup, Label, Button, Jumbotron} from "reactstrap";
+import '../../css/ChangePassword.css';
 
 class ChangePassword extends React.Component {
     constructor(props) {
@@ -49,9 +50,9 @@ class ChangePassword extends React.Component {
     render() {
         return(
 
-            <Jumbotron>
+            <Jumbotron id="changeword">
                 <Form>
-                    <h5 className = "white-h5">Vaihda salasanaa</h5>
+                    <h5 className = "white-h5">Vaihda salasana</h5>
                     <p>
                         <h6 className = "white-h6">Syötä ensin vanha salasanasi, ja sitten uusi salasana kaksi kertaa</h6>
                     </p>
@@ -75,7 +76,7 @@ class ChangePassword extends React.Component {
 
                     <FormGroup>
 
-                        <Button className="btn btn-success" onClick={this.handleSubmit}>Vaihda salasana</Button>
+                        <Button  id="passbutton" onClick={this.handleSubmit}>Vaihda salasana</Button>
 
                     </FormGroup>
                     <br/>

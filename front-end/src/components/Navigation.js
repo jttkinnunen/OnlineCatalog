@@ -84,9 +84,9 @@ class Navigation extends React.Component {
         if (this.props.current_view !== "login" && this.props.current_view !== "activate-user" && this.props.current_view !== "forgot-pass")
         return (
                 <div className="container-fluid">
-                    <Navbar color="light" light  expand="sm">
+                    <Navbar  expand="sm">
 
-                        <UncontrolledDropdown className="ml-auto" navbar>
+                        <UncontrolledDropdown className="left-off canvas toggle" id="outline" navbar>
 
                             <DropdownToggle >
                                 <svg xmlns="http://www.w3.org/2000/svg" className="hamburger" width="24" height="24" viewBox="0 0 24 24"
@@ -112,8 +112,8 @@ class Navigation extends React.Component {
 
                             </DropdownMenu>
                         </UncontrolledDropdown>
-                        <NavbarBrand href="#" className="mr-auto" onClick={() => this.props.setView("articles")}>&nbsp; Matsku &nbsp;</NavbarBrand>
-                        <Form className = "nav-form">
+                        <NavbarBrand href="#" className="mr-auto" id="maintitle" onClick={() => this.props.setView("articles")}>&nbsp; Matsku &nbsp;</NavbarBrand>
+                        <Form className = "nav-form" id="searchfield">
                             <InputGroup>
                                 <Input type="text" id="textSearch" placeholder="Hae nimellä ..." value = {this.state.query} onChange = {this.handleQueryChange} />
                                 {/*<InputGroupAddon addonType="append"><Button color="primary" onClick={() => this.submitSearch()}>Hae</Button></InputGroupAddon>*/}

@@ -1,0 +1,11 @@
+.feather-arrow-up-circle {
+
+    display: inline-block;
+   text-align: left;
+}
+
+.feather-arrow-up-circle:hover {
+
+    color:#fff;
+    cursor: pointer;
+}
