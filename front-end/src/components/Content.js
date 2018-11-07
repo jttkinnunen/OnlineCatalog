@@ -33,7 +33,7 @@ class Content extends React.Component {
 
         if (this.props.current_view === "manage-users")
             return (
-                <UserManagement users = {this.props.users} setView = {this.props.setView}/>
+                <UserManagement users = {this.props.users} setView = {this.props.setView} deleteUsers = {this.props.deleteUsers}/>
             );
 
         if (this.props.current_view === "change-pass")

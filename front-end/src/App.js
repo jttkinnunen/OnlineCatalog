@@ -25,6 +25,7 @@ class App extends Component {
         this.setQuery = this.setQuery.bind(this);
         this.addUser = this.addUser.bind(this);
         this.forgotPassword = this.forgotPassword.bind(this);
+        this.deleteUsers = this.deleteUsers.bind(this);
 
         this.state = {
             // TODO: Tähän kaikki mahdolliset muuttujat mitä sivulla voi olla. Päivitetään alielementeille tarvittaessa.
@@ -60,6 +61,28 @@ class App extends Component {
                 body: JSON.stringify(payload),
             }))
         .then(response => response.json());
+    }
+
+    deleteUsers(list) {
+        let payload, a;
+
+        payload = {token: null, users: []};
+        payload.token = this.state.user.token;
+        while(a = list.pop()){
+            payload.users.push(a);
+        }
+
+        this.postJsonRequest("/deleteUsers", payload)
+            .then((responseJson) => {
+
+                //TODO: Think whether should check for errors :)
+
+                // Update users list after done
+                this.getUsers();
+            })
+            .catch(err => {
+            //TODO: Think whether should check for errors :D
+        })
     }
 
     getArticles() {
@@ -284,6 +307,7 @@ class App extends Component {
                                          addUser = {this.addUser}
                                          forgotPassword = {this.forgotPassword}
                                          pass_reset_state = {this.state.pass_reset_state}
+                                         deleteUsers = {this.deleteUsers}
                                 />
                             </div>
                         </div>

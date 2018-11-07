@@ -1,5 +1,6 @@
 import React from "react";
 import { Form, Input, FormGroup, Label, Button} from "reactstrap";
+import '../../css/Buttons.css';
 
 class AddUser extends React.Component {
     constructor(props) {
@@ -8,15 +9,13 @@ class AddUser extends React.Component {
             first_name: '',
             last_name: '',
             email: '',
-            admin: false
+            admin_checkbox: false
         };
-        this.handleFirstNameChange = this.handleFirstNameChange.bind(this);
-        this.handleLastNameChange = this.handleLastNameChange.bind(this);
-        this.handleEmailChange = this.handleEmailChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
-        this.handleAdminChange = this.handleAdminChange.bind(this);
+        this.handleChange = this.handleChange.bind(this);
     }
 
+/*
     handleFirstNameChange(event) {
         this.setState({
             first_name: event.target.value,
@@ -39,10 +38,20 @@ class AddUser extends React.Component {
         this.setState({
             admin: event.target.value,
         })
-    }
+    }*/
+
+handleChange(event) {
+    const target = event.target;
+    const value = target.type === 'checkbox' ? target.checked : target.value;
+    const name = target.name;
+
+    this.setState({
+        [name]: value
+    })
+}
 
     handleSubmit() {
-        this.props.addUser(this.state.email, this.state.first_name, this.state.last_name, this.state.admin);
+        this.props.addUser(this.state.email, this.state.first_name, this.state.last_name, this.state.admin_checkbox);
     }
 
     render() {
@@ -52,25 +61,23 @@ class AddUser extends React.Component {
 
                 <FormGroup>
                     <span>
-                        <Input type="email" name="email" id="Email" placeholder="Sähköposti" value = {this.state.email} onChange = {this.handleEmailChange}/>
+                        <Input type="email" name="email" id="Email" placeholder="Sähköposti" value = {this.state.email} onChange = {this.handleChange}/>
                     </span>
                 </FormGroup>
                 <FormGroup>
                     <span>
-                        <Input type="text" name="firstname" id="FirstName" placeholder="Etunimi" value = {this.state.first_name} onChange = {this.handleFirstNameChange}/>
+                        <Input type="text" name="first_name" id="FirstName" placeholder="Etunimi" value = {this.state.first_name} onChange = {this.handleChange}/>
                     </span>
                 </FormGroup>
                 <FormGroup>
                     <span>
-                        <Input type="text" name="lastname" id="LastName" placeholder="Sukunimi" value = {this.state.last_name} onChange = {this.handleLastNameChange}/>
+                        <Input type="text" name="last_name" id="LastName" placeholder="Sukunimi" value = {this.state.last_name} onChange = {this.handleChange}/>
                     </span>
                 </FormGroup>
-
-
 
                 <FormGroup check>
                     <Label check className = "standard-dark-text-color">
-                        <Input type="checkbox" value = {this.state.admin} onChange = {this.handleAdminChange} />{' '}
+                        <Input type="checkbox" name="admin_checkbox" value = {this.state.admin_checkbox} onChange = {this.handleChange} />{' '}
                         Ylläpitäjä
                     </Label>
                 </FormGroup>
@@ -80,7 +87,7 @@ class AddUser extends React.Component {
 
                 <FormGroup>
 
-                    <Button className="btn btn-success" onClick={this.handleSubmit}>Luo</Button>
+                    <Button className="btn-primary btn-wide" onClick={this.handleSubmit}>Luo</Button>
 
                 </FormGroup>
                 <br/>
