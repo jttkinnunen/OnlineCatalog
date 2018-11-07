@@ -1,0 +1,27 @@
+
+.profiles {
+
+    color: #000;
+    display: flex;
+    height:100vh;
+    align-items: center;
+}
+
+
+
+.jumbotron {
+
+    min-width: 300px;
+    background: #fff;
+    color: #000;
+}
+.profileheader {
+    color: #000;
+}
+
+#changepass {
+   background-color: rgb(0,117,160);
+}
+#changepass:hover {
+    background-color: rgb(0,71,111);
+}

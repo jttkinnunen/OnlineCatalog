@@ -286,9 +286,9 @@ class App extends Component {
                                 />
                             </div>
                         </div>
-                        <div className="footer">
+                       {/* <div className="footer">
                         <Footer current_view = {this.state.current_view} debugval = {this.state.debugval}/>
-                        </div>
+                        </div>*/}
                     </header>
             </div>
         );
