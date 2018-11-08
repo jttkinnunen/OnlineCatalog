@@ -2,8 +2,12 @@ import React from "react";
 import {Collapse, Button, Table} from 'reactstrap';
 import '../css/Events.css';
 import '../css/Text.css';
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
+
 // Kannattaa katsoa navbaria ja sen collapse ominaisuutta ainakin.
 // https://reactstrap.github.io/components/navbar/
+
+
 
 class Events extends React.Component {
     constructor(props) {
@@ -18,6 +22,7 @@ class Events extends React.Component {
     toggle() {
         this.setState({
             isOpen: !this.state.isOpen,
+
         });
     }
 
@@ -101,14 +106,18 @@ class Events extends React.Component {
 
         if (this.props.current_view === "articles")
         return (
+
+
+
             <div className = "event-list" onClick={this.toggle}>
                 <Table className=" events-table event-text" striped hover borderless responsive size="sm">
-                        {table_content}
+                    {table_content}
                 </Table>
                 { arrow }
             </div>
         );
         return(<div></div>);
+
     }
 }
 

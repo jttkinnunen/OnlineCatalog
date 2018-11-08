@@ -76,13 +76,16 @@ handleChange(event) {
                 </FormGroup>
 
                 <FormGroup check>
-                    <Label check className = "standard-dark-text-color">
+                    <Label check className = "standard-white-text-color">
                         <Input type="checkbox" name="admin_checkbox" value = {this.state.admin_checkbox} onChange = {this.handleChange} />{' '}
                         Ylläpitäjä
                     </Label>
                 </FormGroup>
 
-                <div className = "standard-dark-text-color">Käyttäjälle lähetetään sähköpostiin linkki josta hän voi aktivoida tilin ja asettaa salasanan.</div>
+                <div className = "standard-white-text-color">
+                    <span>Käyttäjälle lähetetään sähköpostiin linkki</span>
+                    <span>josta hän voi aktivoida tilin ja asettaa salasanan.</span>
+                </div>
                 <br/>
 
                 <FormGroup>

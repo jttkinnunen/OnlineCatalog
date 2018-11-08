@@ -9,6 +9,7 @@ import ForgotPassword from './content-components/ForgotPassword.js';
 import AddArticle from './content-components/AddArticle.js';
 import AddUser from './content-components/AddUser.js';
 import ActivateUser from './content-components/ActivateUser.js';
+import AuditLog from './content-components/AuditLog.js';
 
 // Täältä löytyy kaikenlaista:
 // https://reactstrap.github.io/components/form/
@@ -64,6 +65,10 @@ class Content extends React.Component {
         if (this.props.current_view === "activate-user")
             return (
                 <ActivateUser setView = {this.props.setView}/>
+            );
+        if (this.props.current_view === "audit-log")
+            return (
+                <AuditLog setView = {this.props.setView}/>
             );
 
         return(

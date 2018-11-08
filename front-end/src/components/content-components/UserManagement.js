@@ -86,7 +86,7 @@ class UserManagement extends React.Component {
                     <br/>
                     <br/>
                         <Button color="danger" onClick={this.doDelete}>Poista</Button>{' '}
-                        <Button color="secondary" onClick={this.modalToggle}>Peruuta</Button>
+                        <Button color="secondary" id="reverse" onClick={this.modalToggle}>Peruuta</Button>
                 </Modal>
 
                 <h5 className = "white-h5">Käyttäjien hallinta</h5>

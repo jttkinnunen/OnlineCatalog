@@ -50,7 +50,7 @@ class AddArticle extends React.Component {
                     </FormGroup>
                     <FormGroup row>
                         <Label id="labels" sm={2}></Label>
-                        <Col sm={10}>
+                        <Col sm={10} id="labels">
 
                             Voit valita tuotteelle osuvan kuvan laitteeltasi.
                             Kuvan koko ei saa ylittää 999999 Mb

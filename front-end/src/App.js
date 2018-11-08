@@ -4,6 +4,7 @@ import './css/Text.css';
 import Content from './components/Content.js';
 import Events from './components/Events.js';
 import Navigation_bar from './components/Navigation.js';
+
 import Footer from './components/Footer.js';
 import Articles from "./components/content-components/Articles";
 import { Route } from "react-router-dom";
@@ -29,7 +30,7 @@ class App extends Component {
 
         this.state = {
             // TODO: Tähän kaikki mahdolliset muuttujat mitä sivulla voi olla. Päivitetään alielementeille tarvittaessa.
-            current_view: "login", // articles, activate-user, add-article, audit-log, article-detailed, login, manage-users, forgot-pass, change-pass, profile-page, add-user
+            current_view: "audit-log", // articles, activate-user, add-article, audit-log, article-detailed, login, manage-users, forgot-pass, change-pass, profile-page, add-user
             debugval: "",
             login_state: "",
             add_user_state: "",
