@@ -1,5 +1,5 @@
 import React from "react";
-import { Col, Button, Form, FormGroup, Label, FormFeedback, Progress, Input, Alert, FormText, Media } from 'reactstrap';
+import { Col, Button, Form, FormGroup, Label, FormFeedback, Progress, Input, Alert, FormText} from 'reactstrap';
 import '../../css/AddArticle.css';
 import '../../css/Buttons.css';
 import '../../css/Text.css';
@@ -10,13 +10,6 @@ const acceptedFiletypesArray = acceptedFileTypes.split(",").map((item) => {retur
 
 //import axios from 'axios';
 // TODO: All functionality, formatting
-
-class  ImgDropAndCrop extends Comment {
-
-
-}
-
-
 
 class AddArticle extends React.Component {
     constructor(props) {
@@ -134,17 +127,7 @@ class AddArticle extends React.Component {
                 </Form>
                {/* <div className="text-center">75%</div>
                 <Progress value={75} />*/}
-                <Media>
-                    <Media left href="#">
-                        <Media object data-src={this.state.productImage} alt="Generic placeholder image" />
-                    </Media>
-                    <Media body>
-                        <Media heading>
-                           Ladattava kuva
-                        </Media>
 
-                    </Media>
-                </Media>
             </div>
         );
     }
