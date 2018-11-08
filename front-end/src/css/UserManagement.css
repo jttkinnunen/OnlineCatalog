@@ -25,3 +25,7 @@
 .modal-confirm-user-delete{
 
 }
+#reverse {
+    position:relative;
+    float:right;
+}

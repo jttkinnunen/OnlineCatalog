@@ -19,6 +19,7 @@ div .navbar .ml-auto {
 #maintitle {
     font-weight: bold;
     color: #fff;
+    margin-left: -7px;
 }
 
 #textSearch {
@@ -42,11 +43,21 @@ div .navbar .ml-auto {
 }
 .ml-auto, .mx.auto {
     color: rgb(0,117,160);
+
 }
+.hamback {
+    background: rgb(0, 71, 111);
+    border: rgb(0, 71, 111);
+    margin-left: -10px;
 
 
+}
+.hamback:hover {
+background:rgb(0,117,160);
+}
 .feather-menu {
     margin-left: 3px;
+
 }
 
 .feather-unlock {
@@ -64,7 +75,7 @@ div .navbar .ml-auto {
     }
 
     #searchfield {
-        width: 65%;
+        width: 68%;
     }
 
 }
@@ -73,7 +84,7 @@ div .navbar .ml-auto {
 
 
 #searchfield {
-    width: 60%;
+    width: 63%;
 }
 
 }
@@ -87,7 +98,7 @@ div .navbar .ml-auto {
 
 
     #searchfield {
-        width: 55%;
+        width: 58%;
     }
 }
 @media only screen and (max-width: 415px) {
@@ -96,15 +107,24 @@ div .navbar .ml-auto {
 
 
     #searchfield {
-        width: 45%;
+        width: 52%;
     }
 }
-@media only screen and (max-width: 345px) {
+@media only screen and (max-width: 360px) {
 
 
 
 
     #searchfield {
-        width: 40%;
+        width: 47%;
+    }
+}
+@media only screen and (max-width: 330px) {
+
+
+
+
+    #searchfield {
+        width: 44%;
     }
 }

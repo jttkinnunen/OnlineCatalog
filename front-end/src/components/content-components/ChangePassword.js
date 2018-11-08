@@ -51,7 +51,7 @@ class ChangePassword extends React.Component {
     render() {
         return(
 
-            <Jumbotron id="changeword">
+            <div id="changeword">
                 <Form>
                     <h5 className = "white-h5">Vaihda salasana</h5>
                     <p>
@@ -62,11 +62,13 @@ class ChangePassword extends React.Component {
                         <span>
                             <Input type="password" name="pass1" id="Pass1" placeholder="Vanha salasana" value = {this.state.pass_old} onChange = {this.handlePassOneChange}/>
                         </span>
+                        <br/>
                     </FormGroup>
                     <FormGroup>
                         <span>
                             <Input type="password" name="pass2" id="Pass2" placeholder="Uusi salasana" value = {this.state.pass_first} onChange = {this.handlePassTwoChange}/>
                         </span>
+                        <br/>
                     </FormGroup>
                     <FormGroup>
                         <span>
@@ -83,7 +85,7 @@ class ChangePassword extends React.Component {
                     <br/>
 
                 </Form>
-            </Jumbotron>
+            </div>
         );
     }
 }

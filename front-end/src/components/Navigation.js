@@ -1,5 +1,8 @@
 import React from "react";
+import { slide as Menu } from 'react-burger-menu'
 import '../css/Navigation.css';
+
+
 // Importing from reactstrap like this:
 import { Collapse,
     Navbar,
@@ -20,6 +23,7 @@ import { Collapse,
     Form,
     DropdownItem } from 'reactstrap';
 import '../css/Navigation.css';
+// import OffCanvasButton from "./content-components/OffCanvasButton";
 
 class Navigation extends React.Component {
     constructor(props) {
@@ -90,15 +94,16 @@ class Navigation extends React.Component {
                 <div className="container-fluid">
                     <Navbar  expand="sm">
 
+                            {/*<OffCanvasButton/>*/}
                         <UncontrolledDropdown className="left-off canvas toggle" id="outline" navbar>
 
-                            <DropdownToggle >
+                            <DropdownToggle className="hamback" >
                                 <svg xmlns="http://www.w3.org/2000/svg" className="hamburger" width="24" height="24" viewBox="0 0 24 24"
-                                     fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                     stroke-linejoin="round" className="feather feather-menu">
-                                    <line x1="3" y1="12" x2="21" y2="12"></line>
-                                    <line x1="3" y1="6" x2="21" y2="6"></line>
-                                    <line x1="3" y1="18" x2="21" y2="18"></line>
+                                     fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"
+                                     strokeLinejoin="round">
+                                    <line x1="3" y1="12" x2="21" y2="12"/>
+                                    <line x1="3" y1="6" x2="21" y2="6"/>
+                                    <line x1="3" y1="18" x2="21" y2="18"/>
                                 </svg>
                             </DropdownToggle>
                             <DropdownMenu left="true">
