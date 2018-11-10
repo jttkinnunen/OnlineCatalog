@@ -16,6 +16,10 @@ data class UserResult @JsonCreator constructor(
     @JsonProperty val token: String? = null
 )
 
+data class AddArticleResult @JsonCreator constructor(
+    @JsonProperty val id: Int
+)
+
 /**
  *
  * article result is var, so it can be set to null if needed
@@ -69,7 +73,6 @@ data class GetSelfBody @JsonCreator constructor(
 
 data class AddArticleBody @JsonCreator constructor(
     @JsonProperty val name: String,
-    @JsonProperty val image: String?,
     @JsonProperty val description: String,
     @JsonProperty val token: String
 )
@@ -77,7 +80,6 @@ data class AddArticleBody @JsonCreator constructor(
 data class UpdateArticleBody @JsonCreator constructor(
     @JsonProperty val id: Int,
     @JsonProperty val name: String,
-    @JsonProperty val image: String?,
     @JsonProperty val description: String,
     @JsonProperty val token: String
 )

@@ -12,7 +12,7 @@ CREATE TABLE IF NOT EXISTS users (
 CREATE TABLE IF NOT EXISTS articles (
   id SERIAL PRIMARY KEY,
   article_name TEXT NOT NULL,
-  image TEXT,
+  image TEXT DEFAULT NULL,
   last_change TIMESTAMP,
   description TEXT
 );
