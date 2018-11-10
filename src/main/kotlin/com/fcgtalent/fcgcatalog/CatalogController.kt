@@ -27,6 +27,7 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.CrossOrigin
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.multipart.MultipartFile
 import java.lang.Exception
@@ -58,7 +59,7 @@ class CatalogController {
         token: String?,
         adminOnly: Boolean,
         publicCall: Boolean,
-        call: (Unit) -> Any
+        call: (Unit) -> Any?
     ): ResponseEntity<Any> {
         return try {
             // Checks that user has token and if command is adminOnly, check that use is admin
@@ -69,11 +70,14 @@ class CatalogController {
                 }
             }
             // TODO actually check if it was successfull
-            ResponseEntity(call(Unit).let { (it as? Any) ?: "{ success: true }" }, HttpStatus.OK)
+            ResponseEntity(call(Unit).let { it ?: "{ success: true }" }, HttpStatus.OK)
         } catch (e: SQLException) {
             ResponseEntity(OurError("Database Error"), HttpStatus.INTERNAL_SERVER_ERROR)
         } catch (e: AuthenticationException) {
             e.toResponseEntity() as ResponseEntity<Any>
+        } catch (e: Exception) {
+            // Generic exception
+            ResponseEntity(OurError(e.message ?: "Unknown error"), HttpStatus.OK)
         }
     }
 
@@ -106,6 +110,7 @@ class CatalogController {
                 updateUserBody.email,
                 updateUserBody.admin
             )
+            null
         }
     }
 
@@ -128,39 +133,46 @@ class CatalogController {
     @CrossOrigin
     @PostMapping("/addArticle", MediaType.APPLICATION_JSON_VALUE)
     fun addArticle(
-        // @RequestParam("image") image: MultipartFile?,
         @RequestBody addArticle: AddArticleBody
     ): ResponseEntity<Any> {
         return encapsulateCall(addArticle.token, false, false) {
             databaseConnector.addArticle(
                 addArticle.name,
-                addArticle.image,
                 addArticle.description
             )
-
-            // image?.let { uploadImage(it, "article_$id") }
-
-            Any()
         }
     }
 
     @CrossOrigin
     @PostMapping("/updateArticle", MediaType.APPLICATION_JSON_VALUE)
     fun updateArticle(
-        // @RequestParam("image") image: MultipartFile?,
         @RequestBody updateArticle: UpdateArticleBody
     ): ResponseEntity<Any> {
         return encapsulateCall(updateArticle.token, false, false) {
             databaseConnector.updateArticle(
                 updateArticle.id,
                 updateArticle.name,
-                updateArticle.image,
                 updateArticle.description
             )
+            null
+        }
+    }
 
-            // image?.let { uploadImage(it, "article_$id") }
-
-            Any()
+    @CrossOrigin
+    @PostMapping("/uploadImage", MediaType.MULTIPART_FORM_DATA_VALUE)
+    fun uploadImage(
+        @RequestParam("token") token: String,
+        @RequestParam("id") id: Int,
+        @RequestParam("image") image: MultipartFile
+    ): ResponseEntity<Any> {
+        return encapsulateCall(token, false, false) {
+            val article = databaseConnector.getArticles(articleIds = listOf(id), locationIds = listOf())
+            if(article.size == 1) {
+                uploadImage(image, id)
+            } else {
+                throw Exception("Problems finding Article.")
+            }
+            null
         }
     }
 
@@ -192,7 +204,7 @@ class CatalogController {
                 setArticlesAtLocationBody.articleId,
                 setArticlesAtLocationBody.quantity
             )
-            Any()
+            null
         }
     }
 
@@ -240,7 +252,6 @@ class CatalogController {
     fun login(
         @RequestBody loginBody: LoginBody
     ): ResponseEntity<Any> {
-        println("Got username ${loginBody.username} got password ${loginBody.password}")
         return encapsulateCall(null, false, true) { databaseConnector.login(loginBody.username, loginBody.password) }
     }
 
@@ -264,7 +275,7 @@ class CatalogController {
     }
 
     @Throws(Exception::class)
-    private fun uploadImage(image: MultipartFile, name: String) {
+    private fun uploadImage(image: MultipartFile, id: Int) {
         val fileEnding: String
         when (image.contentType) {
             "image/jpeg" -> fileEnding = "jpg"
@@ -273,9 +284,10 @@ class CatalogController {
                 throw FileTypeException()
             }
         }
-        // TODO set correct name, based on the id of the item
-        val path = Paths.get("${uploadConfiguration.path}$name$fileEnding")
+        // TODO take care of slash missing in config
+        val path = Paths.get("${uploadConfiguration.path}$id$fileEnding")
         println(path.toAbsolutePath())
         Files.copy(image.inputStream, path, StandardCopyOption.REPLACE_EXISTING)
+        databaseConnector.setArticleImage(id, path.toString())
     }
 }

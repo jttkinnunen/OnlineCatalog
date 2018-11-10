@@ -8,6 +8,7 @@ import com.fcgtalent.fcgcatalog.database.mappers.AuthenticateTokenMapper
 import com.fcgtalent.fcgcatalog.database.mappers.LocationResultMapper
 import com.fcgtalent.fcgcatalog.database.mappers.LoginMapper
 import com.fcgtalent.fcgcatalog.database.mappers.UserResultMapper
+import com.fcgtalent.fcgcatalog.util.AddArticleResult
 import com.fcgtalent.fcgcatalog.util.ArticleResult
 import com.fcgtalent.fcgcatalog.util.AuthenticationException
 import com.fcgtalent.fcgcatalog.util.LocationResult
@@ -20,6 +21,10 @@ import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.stereotype.Repository
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
+import org.springframework.jdbc.core.namedparam.SqlParameterSource
+import org.springframework.jdbc.support.GeneratedKeyHolder
+import org.sqlite.SQLiteErrorCode
+import org.sqlite.SQLiteException
 import java.sql.Timestamp
 
 // TODO explain why twice, or dont
@@ -69,34 +74,29 @@ class DatabaseConnector(
         addLocation("Oulu")
         addLocation("Helsinki")
         addLocation("Kiutaköngäs")
-        addArticle("Paita, Musta, FCGTalent, L", "/tshirt.png", "Unisex paita. Kestaa tuulta, sadetta ja luoteja")
-        addArticle("Paita, Musta, FCGTalent, XL", "/tshirt.png", "Unisex paita. Kestaa tuulta, sadetta ja luoteja")
+        addArticle("Paita, Musta, FCGTalent, L", "Unisex paita. Kestaa tuulta, sadetta ja luoteja")
+        addArticle("Paita, Musta, FCGTalent, XL",  "Unisex paita. Kestaa tuulta, sadetta ja luoteja")
         addArticle(
             "Kynä, punainen, FCGTalent",
-            "ballpenred.png",
             "Kuulakärkikynä jonka muste ei kuivu tai lopu koskaan"
         )
         addArticle(
             "Kynä, sininen, FCGTalent",
-            "ballpenblue.png",
             "Kuulakärkikynä jonka muste ei kuivu tai lopu koskaan"
         )
         addArticle(
             "Vihko, kovakantinen, FCGTalent",
-            "notepad.png",
             "Kovakantinen ruutusivullinen vihko, jonka kannesa FCG Talent logo. Lorem ipsum dolor sit amet."
         )
         addArticle(
             "Karkkirasia",
-            "candybox.png",
             "Pieni rasia hedelmäkarkkeja FCG Talent logolla. Lorem ipsum dolor sit amet."
         )
         addArticle(
             "Purukumi, Laatikko",
-            "gum.png",
             "Iso laatikko Jenkki xylitol purukumia. Lorem ipsum dolor sit amet."
         )
-        addArticle("Kirjanmerkki, FCG", "bookmark.png", "Kirjanmerkki. Lorem ipsum dolor sit amet.")
+        addArticle("Kirjanmerkki, FCG", "Kirjanmerkki. Lorem ipsum dolor sit amet.")
 
         setArticlesAtLocation(1, 1, 25)
         setArticlesAtLocation(1, 2, 52)
@@ -183,19 +183,34 @@ class DatabaseConnector(
     }
 
     @Throws(SQLException::class)
-    fun addArticle(name: String, image: String?, description: String) {
+    fun addArticle(name: String, description: String): AddArticleResult {
         val sql =
-            "INSERT INTO $TABLE_ARTICLES($FIELD_ARTICLE_NAME, $FIELD_IMAGE, $FIELD_LAST_CHANGE, $FIELD_DESCRIPTION) VALUES (?, ?, ?, ?)"
+            "INSERT INTO $TABLE_ARTICLES($FIELD_ARTICLE_NAME, $FIELD_LAST_CHANGE, $FIELD_DESCRIPTION) VALUES (:$FIELD_ARTICLE_NAME, :$FIELD_LAST_CHANGE, :$FIELD_DESCRIPTION)"
+        val keyHolder = GeneratedKeyHolder();
+        val sqlParameterSource = MapSqlParameterSource(FIELD_ARTICLE_NAME, name)
+            .addValue(FIELD_LAST_CHANGE, Timestamp(System.currentTimeMillis()))
+            .addValue(FIELD_DESCRIPTION, description)
 
-        jdbcTemplate.update(sql, name, image, Timestamp(System.currentTimeMillis()), description)
+        namedParameterJdbcTemplate.update(sql, sqlParameterSource, keyHolder, arrayOf(FIELD_ID))
+
+        if(keyHolder.key?.toInt() != null) {
+            return AddArticleResult(keyHolder.key!!.toInt())
+        }
+        throw SQLiteException("Failed to add article", SQLiteErrorCode.UNKNOWN_ERROR)
     }
 
     @Throws(SQLException::class)
-    fun updateArticle(id: Int, name: String, image: String?, description: String) {
+    fun updateArticle(id: Int, name: String, description: String) {
         val sql =
-            "UPDATE $TABLE_ARTICLES SET $FIELD_ARTICLE_NAME = ?, $FIELD_IMAGE = ?, $FIELD_LAST_CHANGE = ?, $FIELD_DESCRIPTION = ? WHERE $FIELD_ID = ?"
+            "UPDATE $TABLE_ARTICLES SET $FIELD_ARTICLE_NAME = ?, $FIELD_LAST_CHANGE = ?, $FIELD_DESCRIPTION = ? WHERE $FIELD_ID = ?"
 
-        jdbcTemplate.update(sql, name, image, Timestamp(System.currentTimeMillis()), description, id)
+        jdbcTemplate.update(sql, name, Timestamp(System.currentTimeMillis()), description, id)
+    }
+
+    @Throws(SQLException::class)
+    fun setArticleImage(id: Int, imageName: String) {
+        val sql = "UPDATE $TABLE_ARTICLES SET $FIELD_IMAGE = ?, $FIELD_LAST_CHANGE = ? WHERE $FIELD_ID = ?"
+        jdbcTemplate.update(sql, imageName, Timestamp(System.currentTimeMillis()), id)
     }
 
     @Throws(SQLException::class)
