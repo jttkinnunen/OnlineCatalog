@@ -17,6 +17,7 @@ class AddArticle extends React.Component {
         this.state = {
             productName: '',
             productDescription: '',
+            productImageName: '',
             productImage: null
 
         };
@@ -24,7 +25,13 @@ class AddArticle extends React.Component {
         this.handleChange = this.handleChange.bind(this);
     }
     handleSubmit() {
-        this.props.addArticle(this.state.productName, this.state.productDescription, this.state.productImage);
+        console.log(this.state.productName, this.state.productDescription)
+        this.props.addArticle(this.state.productName, this.state.productDescription);
+        //this.props.getArticleDetailed()
+        //console.log(token)
+        this.props.uploadImage(this.state.productImage)
+        console.log(this.props.update_article_state)
+
     }
     handleChange(event) {
         const target = event.target;
@@ -39,7 +46,8 @@ class AddArticle extends React.Component {
     fileSelectionHandler = event => {
         console.log(event.target.files[0]);
         this.setState({
-            productImage: event.target.files[0]
+            productImage: event.target.files[0],
+            productImageName: this.state.productImage.name
         })
 
     }
@@ -83,6 +91,12 @@ class AddArticle extends React.Component {
     render() {
         const {productImage} = this.state
         let success;
+        let image_result = "";
+
+        if (this.props.add_article_state !== ""){
+            image_result =
+                this.props.add_article_state
+        }
 
         return (
             <div className = "standard-dark-text-color" id="productform">
@@ -99,34 +113,33 @@ class AddArticle extends React.Component {
                         <Label for="productDescription" id="labels" sm={2}>Kuvaus</Label>
                         <Col sm={10}>
 
-                            <Input type="textarea" name="productDescription" id="productDescription" placeholder="Artikkelin kuvaus max 500 merkkiä" onChange = {this.handleChange}/>
+                            <Input type="textarea" name="productDescription" id="productDescription" placeholder="Artikkelin kuvaus max 500 merkkiä" value ={this.state.productDescription} onChange = {this.handleChange}/>
                         </Col>
                     </FormGroup>
 
                     <FormGroup row>
                         <Label for="productImage" id="labels" sm={2}>Kuva</Label>
-
-                        <Col sm={10}> {productImage !== null ? <img src={productImage} /> :
-                            <Dropzone onDrop={this.handleOnDrop} accept={acceptedFileTypes} multiple={false} maxSize={imageMaxSize}> Kuva tähän </Dropzone>} </Col>
-
+                        <div class="center">
+                        <Col sm={10}> {productImage !== null ? <img src={productImage} /> : ''
+                            } <Dropzone id="dropZone" onDrop={this.handleOnDrop} accept={acceptedFileTypes} multiple={false} maxSize={imageMaxSize}> Valitse/ vaihda kuva klikkaamalla tätä aluetta.  </Dropzone></Col>
+                            {console.log(this.props.add_article_state)}</div>
                     </FormGroup>
                     <FormGroup row>
-                        <Label id="labels" sm={2}></Label>
-                        <Col sm={10} id="labels">
+                    <Label id="labels" sm={2}></Label>
+                    <Col sm={10} id="labels">
 
-                            Voit valita tuotteelle osuvan kuvan laitteeltasi.
-                            Kuvan koko ei saa ylittää {imageMaxSize} tavua
-                        </Col>
-                    </FormGroup>
+                        Voit valita tuotteelle osuvan kuvan laitteeltasi.
+                        Kuvan koko ei saa ylittää {imageMaxSize} tavua
+                    </Col>
+                </FormGroup>
 
                     <FormGroup check row>
                         <Col sm={{ size: 10, offset: 1 }}>
-                            <Button className="btn-primary btn-wide" onClick={this.handleSubmit}>Lähetä</Button>
+                            <Button  className="btn-primary btn-wide" onClick={this.handleSubmit}>Lähetä</Button>
                         </Col>
                     </FormGroup>
                 </Form>
-               {/* <div className="text-center">75%</div>
-                <Progress value={75} />*/}
+
 
             </div>
         );

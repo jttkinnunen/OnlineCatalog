@@ -19,7 +19,8 @@ class ArticleDetailed extends React.Component {
         this.state = {
             value: "",
             count: 0,
-            index: '1'
+            index: '1',
+            selectedArticle: this.props.selectedArticle
         };
 
         this.handleIncrement = this.handleIncrement.bind(this);
@@ -52,13 +53,14 @@ class ArticleDetailed extends React.Component {
 
     };
 
+
     render() {
         return(
 
             <div className="detailed-articles">
                 <h5 className = "white-h5"><strong>Joku otsikko</strong></h5>
                 <div className="card-holder">
-                    <Card classname ="detailed">
+                    <Card className ="detailed">
                         <CardImg top width="100%" src="https://placeholdit.imgix.net/~text?txtsize=33&txt=256%C3%97180&w=256&h=180" alt="Card image cap" />
                         <CardBody>
                             <CardTitle>Card title</CardTitle>

@@ -1,13 +1,9 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import './css/App.css';
 import './css/Text.css';
 import Content from './components/Content.js';
 import Events from './components/Events.js';
 import Navigation_bar from './components/Navigation.js';
-
-import Footer from './components/Footer.js';
-import Articles from "./components/content-components/Articles";
-import { Route } from "react-router-dom";
 
 // TODO: You need to also change this in ActivateUser thanks to bad coding
 const HOST = "http://localhost:8080";
@@ -27,6 +23,11 @@ class App extends Component {
         this.addUser = this.addUser.bind(this);
         this.forgotPassword = this.forgotPassword.bind(this);
         this.deleteUsers = this.deleteUsers.bind(this);
+        this.addArticle = this.addArticle.bind(this);
+        this.setSelectedArticleId = this.setSelectedArticleId.bind(this);
+        this.updateArticle = this.updateArticle.bind(this);
+        this.uploadImage = this.uploadImage.bind(this);
+        this.getArticleDetailed = this.getArticleDetailed.bind(this);
 
         this.state = {
             // TODO: Tähän kaikki mahdolliset muuttujat mitä sivulla voi olla. Päivitetään alielementeille tarvittaessa.
@@ -48,6 +49,16 @@ class App extends Component {
             articles: [],//[{"id": "","name": "","image": "","description": "","locations": []},{"id": "","name": "","image": "","description": "","locations": []}],
             articles_filtered: [],
             events: Array(50).fill(null),
+            selectedArticle: "",
+            selectedArticle_state: "",
+            id: "",
+            token: "",
+            add_article_state: "",
+            article: {
+                id: "",
+                name: "",
+                description: "",
+            }
         };
     }
 
@@ -281,6 +292,123 @@ class App extends Component {
         this.setState({newUser});
     }
 
+    addArticle(name, description){
+
+        this.setState({add_article_state: "Lisätään ..."});
+
+        this.postJsonRequest("/addArticle", {
+            token: this.state.user.token,
+            name: name,
+            description: description,
+
+        })
+            .then((responseJson) => {
+                if (responseJson.hasOwnProperty('error')) {
+                    // TODO: Lue "error" sisältö ja anna tarkempi virhe
+
+                    this.setState({add_article_state: "Artikkelin lisääminen epäonnistui"});
+                }
+                else
+                {
+                    this.setState({add_article_state: "Artikkelin lisääminen onnistui."});
+                }
+            })
+            .catch(err => {
+                this.setState({
+                    add_article_state: "Tapahtui virhe: " + err
+                })
+            })
+    }
+
+    setSelectedArticleId(id) {
+        this.setState({
+            selectedArticleId: id
+        })
+
+    }
+
+    updateArticle(id, name, description){
+
+        this.setState({update_article_state: "Päivitetään ..."});
+
+        this.postJsonRequest("/updateArticle", {
+            token: this.state.user.token,
+            id: id,
+            name: name,
+            description: description,
+
+        })
+            .then((responseJson) => {
+                if (responseJson.hasOwnProperty('error')) {
+                    // TODO: Lue "error" sisältö ja anna tarkempi virhe
+
+                    this.setState({update_article_state: "Artikkelin päivittäminen epäonnistui"});
+                }
+                else
+                {
+                    this.setState({update_article_state: "Artikkelin päivittäminen onnistui."});
+                }
+            })
+            .catch(err => {
+                this.setState({
+                    update_article_state: "Tapahtui virhe: " + err
+                })
+            })
+    }
+
+    uploadImage( image){
+
+        this.setState({add_article_state: "Lisätään kuvaa ..."});
+
+        this.postJsonRequest("/uploadImage", {
+
+            image: image,
+
+        })
+            .then((responseJson) => {
+                if (responseJson.hasOwnProperty('error')) {
+                    // TODO: Lue "error" sisältö ja anna tarkempi virhe
+
+                    this.setState({add_article_state: "Artikkelin kuvan lisääminen epäonnistui"});
+                }
+                else
+                {
+                    this.setState({add_article_state: "Artikkelin kuvan lisääminen onnistui."});
+                }
+            })
+            .catch(err => {
+                this.setState({
+                    add_article_state: "Tapahtui virhe: " + err
+                })
+            })
+    }
+
+    getArticleDetailed(id){
+
+        this.setState({add_article_state: "Lisätään kuvaa ..."});
+
+        this.postJsonRequest("/getArticlesDetailed", {
+            id: id,
+
+        })
+            .then((responseJson) => {
+                if (responseJson.hasOwnProperty('error')) {
+                    // TODO: Lue "error" sisältö ja anna tarkempi virhe
+
+                    this.setState({update_article_state: "Artikkelin hakeminen epäonnistui"});
+                }
+                else
+                {
+                    this.setState({update_article_state: "Artikkelin hakeminen onnistui."});
+                }
+            })
+            .catch(err => {
+                this.setState({
+                    add_article_state: "Tapahtui virhe: " + err
+                })
+            })
+    }
+
     render() {
         return (
             <div className="App">
@@ -309,6 +437,10 @@ class App extends Component {
                                          forgotPassword = {this.forgotPassword}
                                          pass_reset_state = {this.state.pass_reset_state}
                                          deleteUsers = {this.deleteUsers}
+                                         addArticle = {this.addArticle}
+                                         updateArticle = {this.updateArticle}
+                                         uploadImage = {this.uploadImage}
+                                         getArticleDetailed = {this.getArticleDetailed}
                                 />
                             </div>
                         </div>

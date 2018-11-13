@@ -5,15 +5,19 @@ import {Card, CardDeck, Button, CardImg, Col, Row, Container, CardSubtitle, Card
 import '../../css/Articles.css';
 import '../../css/Text.css';
 
+
 class Articles extends React.Component {
-    constructor(props) {
+        constructor(props) {
         super(props);
-        this.openDetailed = this.openDetailed.bind(this);
-        this.addArticle = this.addArticle.bind(this);
 
         this.state = {
             result: "none", // none, success, failure
+            selectedId: null
+
         };
+        this.openDetailed = this.openDetailed.bind(this);
+        this.addArticle = this.addArticle.bind(this);
+        this.handleClick = this.handleClick.bind(this);
     }
 
     // Go to add-article page
@@ -21,9 +25,21 @@ class Articles extends React.Component {
         this.props.setView("add-article");
     }
 
+
     // Open detailed view of product when clicked
     openDetailed() {
+        this.props.setSelectedArticleId(this.state.selectedId);
+        console.log(this.props.selectedArticle);
+
         this.props.setView("article-detailed");
+    }
+    handleClick(item) {
+        this.setState({
+            selectedId: item
+        });
+
+        this.openDetailed();
+        //console.log(id);
     }
 
     // TODO: kuvan handlaus
@@ -31,8 +47,7 @@ class Articles extends React.Component {
 
     render() {
 
-
-
+let self = this;
         return (
         <div>
              <Container className = "article-main-container" >
@@ -40,15 +55,16 @@ class Articles extends React.Component {
                      {this.props.articles.map(function(item, key) {
                          return (
                              <Col  sm={{ offset: 0 }}>
-                                 <Card className = "article-card">
-                                     <CardImg top width="100%" src="https://placeholdit.imgix.net/~text?txtsize=33&txt=256%C3%97180&w=256&h=180" alt="Card image cap"  />
+                                 <Card  className = "article-card" key = {key} id={item.id} onClick={self.handleClick.bind(this,item.id)}  >
+
+                                     <CardImg   top width="100%" src="https://placeholdit.imgix.net/~text?txtsize=33&txt=256%C3%97180&w=256&h=180" alt="Card image cap"  />
                                      <CardBody className = "article-card-body">
                                          <CardSubtitle >{item.name}</CardSubtitle>
 
                                          <CardText className="article-locations">
-                                             {item.locations.map(function(item, key) {
+                                             {item.locations.map(function(item, i) {
                                                  return (
-                                                     <div>{item.name}: {item.quantity} kpl</div>
+                                                     <div  key={i}>{item.name}: {item.quantity} kpl</div>
                                                  )
                                              })
                                              }
@@ -57,7 +73,7 @@ class Articles extends React.Component {
                                  </Card>
                              </Col>
                          )
-                     })
+                     },self)
                      }
                  </Row>
             </Container>
@@ -70,5 +86,6 @@ class Articles extends React.Component {
         );
     }
 }
+
 
 export default Articles;

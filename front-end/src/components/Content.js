@@ -11,6 +11,7 @@ import AddUser from './content-components/AddUser.js';
 import ActivateUser from './content-components/ActivateUser.js';
 import AuditLog from './content-components/AuditLog.js';
 
+
 // Täältä löytyy kaikenlaista:
 // https://reactstrap.github.io/components/form/
 
@@ -19,12 +20,17 @@ class Content extends React.Component {
     render() {
         if (this.props.current_view === "articles")
             return (
-                <Articles articles = {this.props.articles} setView = {this.props.setView}/>
+                <Articles articles = {this.props.articles} setView = {this.props.setView} setSelectedArticleId = {this.props.setSelectedArticleId}/>
             );
 
         if (this.props.current_view === "add-article")
             return (
-                <AddArticle/>
+                <AddArticle addArticle = {this.props.addArticle} setView = {this.props.setView} add_article_state = {this.props.add_article_state} uploadImage = {this.props.uploadImage}/>
+            );
+
+        if (this.props.current_view === "add-image")
+            return (
+                <AddArticle uploadImage = {this.props.uploadImage} setView = {this.props.setView} add_article_state = {this.props.add_article_state}/>
             );
 
         if (this.props.current_view === "login")
@@ -49,7 +55,7 @@ class Content extends React.Component {
 
         if (this.props.current_view === "article-detailed")
             return (
-                <ArticleDetailed/>
+                <ArticleDetailed detailed = {this.props.selectedArticle} setView = {this.props.setView} update_article_state = {this.props.update_article_state} />
             );
 
         if (this.props.current_view === "forgot-pass")
