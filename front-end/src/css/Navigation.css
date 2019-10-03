@@ -1,0 +1,130 @@
+
+
+.container-fluid {
+
+    width: 100%;
+    margin:0;
+    padding:0;
+    /*border: 2px solid black;*/
+}
+.navbar {
+    display: flex;
+    justify-content: flex-start;
+    background-color: rgb(0, 71, 111);
+
+}
+div .navbar .ml-auto {
+    color: rgb(0,117,160);
+}
+#maintitle {
+    font-weight: bold;
+    color: #fff;
+    margin-left: -7px;
+}
+
+#textSearch {
+    margin-right: 3px;
+}
+#searchfield {
+    display: inline-flex;
+    width: 100%;
+}
+
+.nav-form .btn-success {
+    width:55px;
+    margin-right: 3px;
+
+}
+.feather-search {
+    margin-top: 5px;
+    margin-left: -30px;
+    color:black;
+
+}
+.ml-auto, .mx.auto {
+    color: rgb(0,117,160);
+
+}
+.hamback {
+    background: rgb(0, 71, 111);
+    border: rgb(0, 71, 111);
+    margin-left: -10px;
+
+
+}
+.hamback:hover {
+background:rgb(0,117,160);
+}
+.feather-menu {
+    margin-left: 3px;
+
+}
+
+.feather-unlock {
+    color:#fff;
+    margin-left: 3px;
+}
+
+.feather-unlock:hover {
+    cursor: pointer;
+}
+
+@media only screen and (max-width: 580px) {
+    .navbar {
+       justify-content: stretch;
+    }
+
+    #searchfield {
+        width: 68%;
+    }
+
+}
+@media only screen and (max-width: 525px) {
+
+
+
+#searchfield {
+    width: 63%;
+}
+
+}
+@media only screen and (max-width: 480px) {
+
+
+    .mr-auto {
+        font-size: 20px;
+
+    }
+
+
+    #searchfield {
+        width: 58%;
+    }
+}
+@media only screen and (max-width: 415px) {
+
+
+
+
+    #searchfield {
+        width: 52%;
+    }
+}
+@media only screen and (max-width: 360px) {
+
+
+
+
+    #searchfield {
+        width: 47%;
+    }
+}
+@media only screen and (max-width: 330px) {
+
+
+
+
+    #searchfield {
+        width: 44%;
+    }
+}

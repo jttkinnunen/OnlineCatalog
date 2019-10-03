@@ -1,0 +1,21 @@
+
+.standard-dark-text-color{
+    color: #000;
+}
+
+.standard-white-text-color{
+    color: floralwhite;
+}
+
+.standard-error-text-color{
+    color: orangered;
+}
+
+.white-h5  {
+    color: floralwhite;
+    margin-bottom: 50px;
+}
+.white-h6  {
+    color: floralwhite;
+    margin-bottom: 50px;
+}

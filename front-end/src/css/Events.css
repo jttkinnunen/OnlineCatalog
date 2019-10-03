@@ -1,0 +1,26 @@
+.feather-arrow-up-circle {
+
+    display: inline-block;
+   text-align: left;
+}
+
+.feather-arrow-up-circle:hover {
+
+    color:#fff;
+    cursor: pointer;
+}
+
+/* Events main container */
+.events {
+
+}
+
+.events-table {
+    min-height: 2rem;
+    margin: 0;
+}
+
+.events-arrow {
+    justify-self: center;
+    padding-bottom: 5px;
+}

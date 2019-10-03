@@ -1,0 +1,111 @@
+.App {
+  text-align: center;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+
+.App-header {
+  background-color: rgb(26,122,161);/*rgb(0,71,111);#282c34; background-color: #282c34;*/
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  font-size: calc(15px + 0vmin);
+  color: white;
+}
+
+.button {
+  display: flex;
+  margin: 5px;
+  align-self: flex-start;
+}
+
+
+.nav-form {
+  display: flex;
+  align-self: center;
+  flex-direction: row;
+}
+
+.event-list {
+  display: flex;
+  justify-content: flex-start;
+  flex-direction: column;
+  background-color: #6fcc6a;
+  color: #000000;
+}
+./*event-list:hover {
+    cursor:pointer;
+}*/
+
+.event-text {
+    font-size: calc(15px + 0vmin);
+    color: #000000;
+}
+
+.footer {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  background-color: rgb(0,71,111);/*#282c34;*/
+  color: #000000;
+}
+
+.navigation-bar {
+
+}
+
+.justify-content-center {
+    display: flex;
+    justify-content: center;
+}
+
+.align-self-left {
+    display:flex;
+    align-self: flex-start;
+}
+
+.align-self-center {
+    display: flex;
+    align-self: center;
+}
+
+.body {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  align-content: center;
+  align-self: center;
+
+  min-width: 320px;
+  max-width: 1024px;
+    margin-top: 1rem;
+  width: 100%;
+  font-size: calc(15px + 0vmin);
+  /*background-color: rgb(0,117,160);!*#464c52; background-color: #242a30;*!*/
+  color: black;
+
+    /*border: red 2px solid; //////////////////////DELETE AFTER TESTING/////////////////////////////*/
+
+}
+
+.content {
+    display: flex;
+    justify-content: center;
+
+    /*border: blue 2px solid; ////////////////////////DELETE AFTER TESTING///////////////////////////*/
+
+}
+
+.h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
+  color: black;
+}
+@media only screen and (max-width: 400px) {
+
+}
+
+div.col-sm-6, div.text-right.col-sm-6{
+  padding: 0px;
+}

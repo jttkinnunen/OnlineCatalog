@@ -1,0 +1,20 @@
+
+.profiles {
+
+    color: #000;
+    display: flex;
+    align-items: center;
+}
+
+
+
+.jumbotron {
+
+    min-width: 300px;
+    background: #fff;
+    color: #000;
+}
+.profileheader {
+    color: #000;
+}
+

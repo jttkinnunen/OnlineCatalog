@@ -1,0 +1,54 @@
+.gradle
+/build/
+!gradle/wrapper/gradle-wrapper.jar
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+/out/
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+
+## Dont add sqlite databases
+*.db
+
+#
+#
+#
+
+# dependencies
+front-end/node_modules
+
+# testing
+front-end/coverage
+
+# production
+front-end/build
+
+# misc
+./front-end/DS_Store
+./front-end/env.local
+./front-end/env.development.local
+./front-end/env.test.local
+./front-end/env.production.local
+
+front-end/npm-debug.log*
+front-end/yarn-debug.log*
+front-end/yarn-error.log*
+front-end/package-lock.json
